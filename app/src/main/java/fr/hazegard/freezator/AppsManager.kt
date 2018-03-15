@@ -1,0 +1,55 @@
+package fr.hazegard.freezator
+
+import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.util.Log
+
+/**
+ * Created by maxime on 01/03/18.
+ */
+class AppsManager(private var context: Context) {
+    private val suProcess: SuProcess by lazy {
+        SuProcess()
+    }
+    val packages by lazy { listPackages() }
+    val installedPackages by lazy { listInstalledPackages() }
+
+    private fun listPackages(): List<ApplicationInfo> {
+        val packages: List<ApplicationInfo> = context.packageManager
+                .getInstalledApplications(PackageManager.GET_META_DATA)
+                .distinctBy { it.processName }
+        Log.d("AppsManager", "Packages : " + packages.size)
+        return packages
+    }
+
+    private fun listInstalledPackages(): List<ApplicationInfo> {
+        val installedPackages = listPackages().filter {
+            ((it.flags and ApplicationInfo.FLAG_SYSTEM) == 0)
+        }
+        Log.d("AppsManager", "Packages : " + installedPackages.size)
+        return installedPackages
+    }
+
+    fun listDisabledPackages(): List<ApplicationInfo> {
+        val packagesName = suProcess.listDisabledPackages()
+        return getPackagesListFromPackageNames(packagesName)
+    }
+
+    private fun getPackagesListFromPackageNames(packageNames: List<String>): List<ApplicationInfo> {
+        return packages.filter {
+            packageNames.contains(it.processName)
+        }.sortedBy {
+            it.processName
+        }
+    }
+
+    fun enablePackage(packageName: String): String {
+        return suProcess.enablePackage(packageName)
+    }
+
+    fun disablePackage(packageName: String): String {
+        return suProcess.disablePackage(packageName)
+    }
+
+}
