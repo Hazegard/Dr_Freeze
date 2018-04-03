@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.row_process.view.*
  * Created by maxime on 26/02/18.
  */
 
-class ProcessAdapter(private val context: Context, private var processNames: List<ApplicationInfo>) : RecyclerView.Adapter<ProcessAdapter.ProcessHolder>() {
+class ProcessAdapter(context: Context, private var processNames: List<ApplicationInfo>) : RecyclerView.Adapter<ProcessAdapter.ProcessHolder>() {
     override fun onBindViewHolder(holder: ProcessHolder, position: Int) {
         val process: ApplicationInfo = processNames[position]
         holder.setContent(process)
@@ -30,10 +30,10 @@ class ProcessAdapter(private val context: Context, private var processNames: Lis
             notifyDataSetChanged()
         }
 
-    var sp: SharedPreferenceHelper = SharedPreferenceHelper()
+    private var sp: SharedPreferenceHelper = SharedPreferenceHelper(context)
 
-    lateinit var isApplicationWatchedBak: MutableMap<String, Boolean>
-    var isApplicationWatched: MutableMap<String, Boolean> = sp.getWatchedApplication(context)
+    private lateinit var isApplicationWatchedBak: MutableMap<String, Boolean>
+    var isApplicationWatched: MutableMap<String, Boolean> = sp.getMapMonitoredApplication()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProcessHolder {
         val itemView: View = LayoutInflater.from(parent.context)
@@ -46,7 +46,7 @@ class ProcessAdapter(private val context: Context, private var processNames: Lis
     }
 
     fun validateChange() {
-        sp.saveWatchedApplication(context, isApplicationWatched)
+        sp.saveMonitoredApplication(isApplicationWatched)
     }
 
     fun cancelChange() {
@@ -56,7 +56,9 @@ class ProcessAdapter(private val context: Context, private var processNames: Lis
     inner class ProcessHolder(private val view: View, private val context: Context) : RecyclerView.ViewHolder(view) {
 
         fun setContent(process: ApplicationInfo) = with(view) {
-            process_checkbox.setOnCheckedChangeListener { _, isChecked -> isApplicationWatched[process.processName] = isChecked }
+            process_checkbox.setOnCheckedChangeListener { _, isChecked ->
+                isApplicationWatched[process.processName] = isChecked
+            }
 
             process_checkbox.isChecked = isApplicationWatched[process.processName] ?: false
             process_checkbox.isEnabled = isEdit

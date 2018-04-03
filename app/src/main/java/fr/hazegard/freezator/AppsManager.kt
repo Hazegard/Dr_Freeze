@@ -9,7 +9,8 @@ import android.util.Log
  * Created by maxime on 01/03/18.
  */
 class AppsManager(private var context: Context) {
-    private val suProcess: SuProcess by lazy {
+    private val suProcess:
+            SuProcess by lazy {
         SuProcess()
     }
     val packages by lazy { listPackages() }
@@ -25,10 +26,14 @@ class AppsManager(private var context: Context) {
 
     private fun listInstalledPackages(): List<ApplicationInfo> {
         val installedPackages = listPackages().filter {
-            ((it.flags and ApplicationInfo.FLAG_SYSTEM) == 0)
+            (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0
         }
         Log.d("AppsManager", "Packages : " + installedPackages.size)
         return installedPackages
+    }
+
+    fun listDisabledApp(): List<String> {
+        return suProcess.listDisabledPackages()
     }
 
     fun listDisabledPackages(): List<ApplicationInfo> {

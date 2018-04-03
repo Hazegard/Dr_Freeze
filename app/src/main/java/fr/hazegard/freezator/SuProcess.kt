@@ -17,21 +17,23 @@ class SuProcess {
     private val osRes = DataInputStream(su.inputStream)
 
     fun enablePackage(packageName: String): String {
-        os.writeBytes("pm enable $packageName && echo \"EOF\"\n")
-        os.flush()
-        val res = readOutput()
-        return res
+//        os.writeBytes("pm enable $packageName && echo \"EOF\"\n")
+//        os.flush()
+        writeInput("pm enable $packageName")
+        return readOutput()
     }
 
     fun disablePackage(packageName: String): String {
-        os.writeBytes("pm disable $packageName && echo \"EOF\"\n")
-        os.flush()
+//        os.writeBytes("pm disable $packageName && echo \"EOF\"\n")
+//        os.flush()
+        writeInput("pm disable $packageName")
         return readOutput()
     }
 
     fun listDisabledPackages(): List<String> {
-        os.writeBytes("pm list packages -d | cut -d ':' -f 2 && echo \"EOF\"\n")
-        os.flush()
+//        os.writeBytes("pm list packages -d | cut -d ':' -f 2 && echo \"EOF\"\n")
+//        os.flush()
+        writeInput("pm list packages -d | cut -d ':' -f 2")
         val buffer = BufferedReader(osRes.bufferedReader())
         val disabledPackages = ArrayList<String>()
         var line = buffer.readLine()
@@ -50,6 +52,9 @@ class SuProcess {
             os.writeBytes("id -u\n")
             os.flush()
             val currUid: String? = BufferedReader(osRes.bufferedReader()).readLine()
+//            assert(currUid?.trim()?.toInt() == 0) {
+//                "No Su process"
+//            }
             if (currUid == null || currUid.trim().toInt() != 0) {
                 throw NotRootException("No Su process")
             } else {
@@ -77,5 +82,10 @@ class SuProcess {
             line = buffer.readLine()
         }
         return response.toString().trim()
+    }
+
+    private fun writeInput(input: String) {
+        os.writeBytes("$input && echo \"EOF\"\n\" ")
+        os.flush()
     }
 }

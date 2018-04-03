@@ -17,7 +17,7 @@ class PackageUtils {
         }
 
         fun getPackageName(context: Context, packageName: String): String {
-            val appInfo =  context.packageManager.getApplicationInfo(packageName,
+            val appInfo = context.packageManager.getApplicationInfo(packageName,
                     PackageManager.GET_META_DATA)
             return context.packageManager.getApplicationLabel(appInfo).toString()
         }

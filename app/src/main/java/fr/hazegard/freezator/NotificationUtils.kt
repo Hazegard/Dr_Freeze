@@ -13,32 +13,35 @@ import android.util.Log
 /**
  * Created by maxime on 04/03/18.
  */
-class NotificationUtils(private val context: Context) {
-    fun notify(packageName: String) {
+class NotificationUtils {
 
-        val appName = PackageUtils.getPackageName(context, packageName)
-        val appIconBitmap: Bitmap = (PackageUtils.getPackageIcon(context,
-                packageName) as BitmapDrawable).bitmap
-
-        val onClickIntent = Intent(context, NotificationActionService::class.java)
-        onClickIntent.action = packageName
-        val pendingIntent: PendingIntent = PendingIntent.getService(
-                context, 0, onClickIntent, PendingIntent.FLAG_ONE_SHOT)
-
-        val notification = NotificationCompat.Builder(context, "test")
-                .setContentTitle(appName)
-                .setContentText(packageName)
-                .setLargeIcon(appIconBitmap)
-                .setSmallIcon(R.drawable.snowflake)
-                .setOngoing(true)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build()
-        val notificationManagerCompat: NotificationManagerCompat = NotificationManagerCompat.from(context)
-        notificationManagerCompat.notify(packageName.hashCode(), notification)
-    }
 
     companion object {
+        fun notify(context: Context, packageName: String) {
+
+            val appName = PackageUtils.getPackageName(context, packageName)
+            val appIconBitmap: Bitmap = (PackageUtils.getPackageIcon(context,
+                    packageName) as BitmapDrawable).bitmap
+
+            val onClickIntent = Intent(context, NotificationActionService::class.java)
+            onClickIntent.action = packageName
+            val pendingIntent: PendingIntent = PendingIntent.getService(
+                    context, 0, onClickIntent, PendingIntent.FLAG_ONE_SHOT)
+
+            val notification = NotificationCompat.Builder(context, "test")
+                    .setContentTitle(appName)
+                    .setContentText(packageName)
+                    .setLargeIcon(appIconBitmap)
+                    .setSmallIcon(R.drawable.snowflake)
+                    .setOngoing(true)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .build()
+            val notificationManagerCompat: NotificationManagerCompat = NotificationManagerCompat.from(context)
+            notificationManagerCompat.notify(packageName.hashCode(), notification)
+        }
+
+
         class NotificationActionService : IntentService("NotificationActionService") {
             private val appsManager by lazy { AppsManager(this@NotificationActionService) }
             override fun onHandleIntent(intent: Intent?) {

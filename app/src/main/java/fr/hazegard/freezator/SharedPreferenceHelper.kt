@@ -5,27 +5,42 @@ import android.content.Context
 /**
  * Created by maxime on 05/03/18.
  */
-class SharedPreferenceHelper() {
-    private val WATCHED_APPLICATION = "WATCHED_APPLICATION"
-    fun saveWatchedApplication(context: Context, mapWatchedApplication: Map<String, Boolean>) {
-        val prefs = context.getSharedPreferences(WATCHED_APPLICATION, Context.MODE_PRIVATE)
+class SharedPreferenceHelper(private val context: Context) {
+
+    fun saveMonitoredApplication(listApp: List<String>) {
+        val set = listApp.toSet()
+        val prefs = context.getSharedPreferences(Companion.MONITORED_APPLICATION, Context.MODE_PRIVATE)
         val edit = prefs.edit()
-        mapWatchedApplication.filter {
-            it.value
-        }.map {
-            edit.putBoolean(it.key, it.value)
-        }
+        edit.putStringSet(LIST, set)
         edit.apply()
     }
 
-    fun getWatchedApplication(context: Context): MutableMap<String, Boolean> {
-        val map = context.getSharedPreferences(WATCHED_APPLICATION, Context.MODE_PRIVATE).all
-        val mapWatchedApplication: MutableMap<String, Boolean> = HashMap()
-        map.map {
-            if (it.value is Boolean) {
-                mapWatchedApplication[it.key] = it.value as Boolean
-            }
+    fun saveMonitoredApplication(mapApp: MutableMap<String, Boolean>) {
+        saveMonitoredApplication(mapToList(mapApp))
+    }
+
+    fun getListMonitoredApplication(): List<String> {
+        return context.getSharedPreferences(MONITORED_APPLICATION, Context.MODE_PRIVATE)
+                .getStringSet(LIST, HashSet<String>()).toList()
+    }
+
+    fun getMapMonitoredApplication(): MutableMap<String, Boolean> {
+        return listToMap(getListMonitoredApplication())
+    }
+
+    private fun listToMap(list: List<String>): MutableMap<String, Boolean> {
+        return list.fold(HashMap()) { map, app ->
+            map[app] = true
+            return@fold map
         }
-        return mapWatchedApplication
+    }
+
+    private fun mapToList(map: MutableMap<String, Boolean>): List<String> {
+        return map.filter { it.value }.keys.toList()
+    }
+
+    companion object {
+        private const val MONITORED_APPLICATION = "MONITORED_APPLICATION"
+        private const val LIST = "LIST"
     }
 }

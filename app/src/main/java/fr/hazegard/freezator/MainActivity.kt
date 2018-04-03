@@ -26,9 +26,9 @@ class MainActivity : AppCompatActivity() {
     private val appsManager by lazy {
         AppsManager(this@MainActivity)
     }
-    private val notificationUtils: NotificationUtils by lazy {
-        NotificationUtils(this@MainActivity)
-    }
+//    private val notificationUtils: NotificationUtils by lazy {
+//        NotificationUtils(this@MainActivity)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         }
         button_ena.setOnClickListener {
             asyncEnablePackage("org.mozilla.klar")
-            notificationUtils.notify("org.mozilla.klar")
+            NotificationUtils.notify(this, "org.mozilla.klar")
         }
 
         button_start.setOnClickListener {
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             async(CommonPool) {
                 val disPackages = appsManager.listDisabledPackages()
                 disPackages.forEach {
-                    notificationUtils.notify(it.processName)
+                    NotificationUtils.notify(this@MainActivity, it.processName)
                 }
             }
         }
