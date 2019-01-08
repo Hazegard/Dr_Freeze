@@ -37,6 +37,12 @@
             android:layout_height="wrap_content"
             android:text="enable" />
 
+        <Button
+            android:id="@+id/button_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="t" />
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -50,12 +56,12 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/process_fab"
-        android:src="@drawable/ic_mode_edit_white_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_mode_edit_white_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

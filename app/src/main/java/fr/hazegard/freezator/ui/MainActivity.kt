@@ -17,6 +17,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.coroutines.experimental.Ref
 import org.jetbrains.anko.coroutines.experimental.asReference
+import android.support.v4.view.accessibility.AccessibilityEventCompat.setAction
+import fr.hazegard.freezator.R.mipmap.ic_launcher
+import android.content.Intent
+import android.os.Build
+import android.support.v4.content.pm.ShortcutManagerCompat.requestPinShortcut
+import android.R.attr.label
+import android.R.attr.shortcutId
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.Icon
+import android.support.v4.content.pm.ShortcutManagerCompat
+import fr.hazegard.freezator.PackageUtils
 
 
 class MainActivity : AppCompatActivity() {
@@ -61,6 +75,9 @@ class MainActivity : AppCompatActivity() {
                     NotificationUtils.notify(this@MainActivity, it.processName)
                 }
             }
+        }
+        button_test.setOnClickListener {
+            addShortcut("org.mozilla.focus")
         }
         process_fab.setOnClickListener {
             processAdapter.isEdit = true
@@ -145,6 +162,41 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.d("async", "intent null")
             }
+        }
+    }
+
+    private fun addShortcut(packageName: String) {
+        val label = PackageUtils.getPackageName(applicationContext, packageName)
+        val icon = PackageUtils.getPackageIconBitmap(applicationContext, packageName)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (ShortcutManagerCompat.isRequestPinShortcutSupported(applicationContext)) {
+                val intent = ShortcutReceiverActivity.newIntent(applicationContext,packageName)
+                val shortcutManager = getSystemService(ShortcutManager::class.java)
+                val pinShortcutInfo = ShortcutInfo.Builder(applicationContext, "ID")
+                        .setIcon(Icon.createWithBitmap(icon))
+                        .setShortLabel(label)
+                        .setIntent(intent)
+                        .build()
+                shortcutManager.requestPinShortcut(pinShortcutInfo, null)
+            }
+        } else {
+            //Adding shortcut for MainActivity
+            //on Home screen
+            val shortcutIntent = Intent(applicationContext,
+                    MainActivity::class.java)
+
+            shortcutIntent.action = Intent.ACTION_MAIN
+
+            val addIntent = Intent()
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "HelloWorldShortcut")
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                    Intent.ShortcutIconResource.fromContext(applicationContext,
+                            R.drawable.snowflake))
+            addIntent.action = "com.android.launcher.action.INSTALL_SHORTCUT"
+            addIntent.putExtra("duplicate", false)  //may it's already there so don't duplicate
+            applicationContext.sendBroadcast(addIntent)
+            Log.d("shortcut", "done")
         }
     }
 }

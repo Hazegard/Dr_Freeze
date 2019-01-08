@@ -23,19 +23,11 @@ class NotificationUtils {
 
 
     companion object {
-        private fun getBitmapFromDrawable(drawable: Drawable): Bitmap {
-            val bmp = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bmp)
-            drawable.setBounds(0, 0, canvas.width, canvas.height)
-            drawable.draw(canvas)
-            return bmp
-        }
 
         fun notify(context: Context, packageName: String) {
 
             val appName = PackageUtils.getPackageName(context, packageName)
-            val appIconBitmap: Bitmap = getBitmapFromDrawable(PackageUtils.getPackageIcon(context,
-                    packageName))
+            val appIconBitmap: Bitmap = PackageUtils.getPackageIconBitmap(context, packageName)
 
             val onClickIntent = Intent(context, NotificationActionService::class.java)
             onClickIntent.action = packageName

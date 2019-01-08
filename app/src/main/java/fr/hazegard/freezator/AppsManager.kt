@@ -3,6 +3,7 @@ package fr.hazegard.freezator
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.support.v4.content.ContextCompat.startActivity
 import android.util.Log
 
 /**
@@ -62,6 +63,18 @@ class AppsManager(private var context: Context) {
         val watchedApplications: List<String> = sp.getListMonitoredApplication()
         val disabledApps: List<String> = listDisabledApp()
         return watchedApplications.minus(disabledApps).toList()
+    }
+
+    fun startPackage(packageName: String, packageManager: PackageManager) {
+        val test = enablePackage(packageName)
+        Log.d("async", test)
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+        if (launchIntent != null) {
+            Log.d("async", "intent good")
+            startActivity(context, launchIntent, null)//null pointer check in case package name was not found
+        } else {
+            Log.d("async", "intent null")
+        }
     }
 
 }
