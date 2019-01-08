@@ -1,4 +1,4 @@
-package fr.hazegard.freezator
+package fr.hazegard.freezator.ui
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import fr.hazegard.freezator.R
+import fr.hazegard.freezator.SharedPreferenceHelper
 import kotlinx.android.synthetic.main.row_process.view.*
 
 /**
@@ -62,16 +64,19 @@ class ProcessAdapter(context: Context, private var processNames: List<Applicatio
 
             process_checkbox.isChecked = isApplicationWatched[process.processName] ?: false
             process_checkbox.isEnabled = isEdit
-            processName.text = getAppName(process, context)
+            val (processNameText, processAppName) = getAppName(process, context)
+
+            processNameTv.text = processNameText
+            processAppNameTv.text = processAppName
             process_image.setImageDrawable(getAppIcon(process, context))
         }
 
-        private fun getAppName(process: ApplicationInfo, context: Context): String {
+        private fun getAppName(process: ApplicationInfo, context: Context): Pair<String, String> {
             return try {
                 val appInfo: ApplicationInfo? = this.context.packageManager.getApplicationInfo(process.processName, 0)
-                context.packageManager.getApplicationLabel(appInfo).toString() + "\n" + process.processName
+                Pair(context.packageManager.getApplicationLabel(appInfo).toString(), process.processName)
             } catch (e: PackageManager.NameNotFoundException) {
-                process.processName
+                Pair("", process.processName)
             }
         }
 

@@ -1,15 +1,16 @@
 package fr.hazegard.freezator
 
 import android.content.Context
+import java.util.*
 
 /**
  * Created by maxime on 05/03/18.
  */
 class SharedPreferenceHelper(private val context: Context) {
 
-    fun saveMonitoredApplication(listApp: List<String>) {
+    private fun saveMonitoredApplication(listApp: List<String>) {
         val set = listApp.toSet()
-        val prefs = context.getSharedPreferences(Companion.MONITORED_APPLICATION, Context.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences(MONITORED_APPLICATION, Context.MODE_PRIVATE)
         val edit = prefs.edit()
         edit.putStringSet(LIST, set)
         edit.apply()
@@ -21,7 +22,7 @@ class SharedPreferenceHelper(private val context: Context) {
 
     fun getListMonitoredApplication(): List<String> {
         return context.getSharedPreferences(MONITORED_APPLICATION, Context.MODE_PRIVATE)
-                .getStringSet(LIST, HashSet<String>()).toList()
+                .getStringSet(LIST, HashSet<String>())?.toList() ?: Collections.emptyList()
     }
 
     fun getMapMonitoredApplication(): MutableMap<String, Boolean> {

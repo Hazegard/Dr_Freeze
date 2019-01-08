@@ -9,9 +9,9 @@ import android.util.Log
  * Created by maxime on 01/03/18.
  */
 class AppsManager(private var context: Context) {
-    private val suProcess:
-            SuProcess by lazy {
-        SuProcess()
+    private val commands:
+            Commands by lazy {
+        Commands()
     }
     val packages by lazy { listPackages() }
     val installedPackages by lazy { listInstalledPackages() }
@@ -33,11 +33,11 @@ class AppsManager(private var context: Context) {
     }
 
     fun listDisabledApp(): List<String> {
-        return suProcess.listDisabledPackages()
+        return commands.listDisabledPackages()
     }
 
     fun listDisabledPackages(): List<ApplicationInfo> {
-        val packagesName = suProcess.listDisabledPackages()
+        val packagesName = commands.listDisabledPackages()
         return getPackagesListFromPackageNames(packagesName)
     }
 
@@ -50,11 +50,18 @@ class AppsManager(private var context: Context) {
     }
 
     fun enablePackage(packageName: String): String {
-        return suProcess.enablePackage(packageName)
+        return commands.enablePackage(packageName).trim()
     }
 
     fun disablePackage(packageName: String): String {
-        return suProcess.disablePackage(packageName)
+        return commands.disablePackage(packageName).trim()
+    }
+
+    fun getEnabledAndMonitored(): List<String> {
+        val sp = SharedPreferenceHelper(context)
+        val watchedApplications: List<String> = sp.getListMonitoredApplication()
+        val disabledApps: List<String> = listDisabledApp()
+        return watchedApplications.minus(disabledApps).toList()
     }
 
 }

@@ -22,7 +22,7 @@ class OnBootService : BroadcastReceiver() {
         override fun onHandleIntent(intent: Intent?) {
             if (intent?.action == ACTION_LIST_MONITORED_APP) {
                 try {
-                    val monitoredAndEnabledApps = FreezatorUtils.getEnabledAndMonitored(this)
+                    val monitoredAndEnabledApps = AppsManager(this).getEnabledAndMonitored()
                     monitoredAndEnabledApps.forEach {
                         NotificationUtils.notify(this, it)
                     }
@@ -38,10 +38,8 @@ class OnBootService : BroadcastReceiver() {
                 intent.action = ACTION_LIST_MONITORED_APP
                 context.startService(intent)
             }
-
             const val ACTION_LIST_MONITORED_APP = "ACTION_LIST_MONITORED_APP"
         }
-
     }
 
     companion object {

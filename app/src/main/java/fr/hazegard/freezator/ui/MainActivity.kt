@@ -1,4 +1,4 @@
-package fr.hazegard.freezator
+package fr.hazegard.freezator.ui
 
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
@@ -10,11 +10,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import fr.hazegard.freezator.AppsManager
+import fr.hazegard.freezator.NotificationUtils
+import fr.hazegard.freezator.R
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.*
 import org.jetbrains.anko.coroutines.experimental.Ref
 import org.jetbrains.anko.coroutines.experimental.asReference
 
@@ -35,20 +35,29 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initListView()
         button_dis.setOnClickListener {
-            asyncDisablePackage("org.mozilla.klar")
+            Toast.makeText(this@MainActivity, "DIS", Toast.LENGTH_LONG).show()
+            GlobalScope.async(Dispatchers.IO) {
+                val res = appsManager.disablePackage("org.mozilla.focus")
+                Log.d("dis", res)
+                Toast.makeText(this@MainActivity, res, Toast.LENGTH_LONG).show()
+            }
         }
         button_ena.setOnClickListener {
-            asyncEnablePackage("org.mozilla.klar")
-            NotificationUtils.notify(this, "org.mozilla.klar")
+            GlobalScope.async(Dispatchers.IO) {
+                val res = appsManager.enablePackage("org.mozilla.focus")
+                Log.d("ena", res)
+                NotificationUtils.notify(this@MainActivity, "org.mozilla.focus")
+                Toast.makeText(this@MainActivity, res, Toast.LENGTH_LONG).show()
+            }
         }
 
         button_start.setOnClickListener {
-            asyncStart("org.mozilla.klar")
+            asyncStart("org.mozilla.focus")
         }
         button_onboot.setOnClickListener {
-            async(CommonPool) {
+            GlobalScope.async(Dispatchers.IO) {
                 val disPackages = appsManager.listDisabledPackages()
-                disPackages.forEach {
+                disPackages.forEach { it ->
                     NotificationUtils.notify(this@MainActivity, it.processName)
                 }
             }
@@ -96,14 +105,14 @@ class MainActivity : AppCompatActivity() {
     fun test() {
         Log.d("cor", "start")
         val ref: Ref<MainActivity> = this.asReference()
-        val disPack = async(CommonPool) {
+        val disPack = GlobalScope.async(Dispatchers.Default) {
             Log.d("CommonPool", "start")
             val disabledPackages = appsManager.listDisabledPackages()
 
             Log.d("CommonPool", "toastpost")
             return@async disabledPackages
         }
-        async(UI) {
+        GlobalScope.async(Dispatchers.Main) {
             Log.d("UI", "start")
             Toast.makeText(ref().baseContext, disPack.await().size.toString(), Toast.LENGTH_SHORT).show()
             Log.d("UI", "stop")
@@ -111,13 +120,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun asyncDisablePackage(packageName: String): Deferred<String> {
-        return async(CommonPool) {
+        return GlobalScope.async(Dispatchers.Default) {
             return@async appsManager.disablePackage(packageName)
         }
     }
 
     fun asyncEnablePackage(packageName: String): Deferred<String> {
-        return async(CommonPool) {
+        return GlobalScope.async(Dispatchers.Default) {
             return@async appsManager.enablePackage(packageName)
 
         }
@@ -125,7 +134,8 @@ class MainActivity : AppCompatActivity() {
 
 
     fun asyncStart(packageName: String) {
-        async(CommonPool) {
+        Log.d("Start", "start")
+        GlobalScope.async(Dispatchers.Default) {
             val test = asyncEnablePackage(packageName)
             Log.d("async", test.await())
             val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
@@ -137,6 +147,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
 }

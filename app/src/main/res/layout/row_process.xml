@@ -2,10 +2,13 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_process"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginTop="4dp"
     android:layout_marginEnd="4dp"
-    android:layout_marginStart="4dp">
+    android:layout_marginBottom="4dp">
 
     <ImageView
         android:id="@+id/process_image"
@@ -18,15 +21,27 @@
         tools:src="@mipmap/ic_launcher" />
 
     <TextView
-        android:id="@+id/processName"
+        android:id="@+id/processAppNameTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/processNameTv"
         app:layout_constraintEnd_toStartOf="@id/process_checkbox"
         app:layout_constraintStart_toEndOf="@id/process_image"
         app:layout_constraintTop_toTopOf="parent"
+        tools:text="Toto" />
+
+    <TextView
+        android:id="@+id/processNameTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/process_checkbox"
+        app:layout_constraintStart_toEndOf="@id/process_image"
+        app:layout_constraintTop_toBottomOf="@id/processAppNameTv"
         tools:text="com.toto.toto" />
 
     <CheckBox
