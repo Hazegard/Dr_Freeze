@@ -13,7 +13,7 @@ import android.graphics.drawable.Drawable
  */
 class PackageUtils {
     companion object {
-        private fun getPackageIconDrawable(context: Context, packageName: String): Drawable {
+        fun getPackageIconDrawable(context: Context, packageName: String): Drawable {
             return context.packageManager.getApplicationIcon(packageName)
                     ?: ColorDrawable(Color.TRANSPARENT)
         }

@@ -14,25 +14,23 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.graphics.Color
 import android.os.Build
+import fr.hazegard.freezator.ui.MainActivity
 
 
 /**
  * Created by maxime on 04/03/18.
  */
 class NotificationUtils {
-
-
     companion object {
-
         fun notify(context: Context, packageName: String) {
 
             val appName = PackageUtils.getPackageName(context, packageName)
             val appIconBitmap: Bitmap = PackageUtils.getPackageIconBitmap(context, packageName)
 
-            val onClickIntent = Intent(context, NotificationActionService::class.java)
-            onClickIntent.action = packageName
+            val onClickIntent = NotificationActionService.newIntent(context, packageName)
+//            val onClickIntent = Intent(context,MainActivity::class.java)
             val pendingIntent: PendingIntent = PendingIntent.getService(
-                    context, 0, onClickIntent, PendingIntent.FLAG_ONE_SHOT)
+                    context, System.currentTimeMillis().toInt(), onClickIntent, PendingIntent.FLAG_ONE_SHOT)
 
             val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val channelId = "1664"
@@ -47,28 +45,34 @@ class NotificationUtils {
                 mNotificationManager.createNotificationChannel(mChannel)
             }
             val notification = NotificationCompat.Builder(context, channelId)
+                    .setContentIntent(pendingIntent)
                     .setContentTitle(appName)
                     .setContentText("Click to disable $appName")
                     .setLargeIcon(appIconBitmap)
                     .setSmallIcon(R.drawable.snowflake)
                     .setOngoing(true)
-                    .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
                     .build()
             val notificationManagerCompat: NotificationManagerCompat = NotificationManagerCompat.from(context)
             notificationManagerCompat.notify(packageName.hashCode(), notification)
         }
 
-
         class NotificationActionService : IntentService("NotificationActionService") {
             private val appsManager by lazy { AppsManager(this@NotificationActionService) }
             override fun onHandleIntent(intent: Intent?) {
                 val packageName: String = intent?.action ?: "null"
                 Log.d("NotifCLick", packageName)
-                val res = appsManager.enablePackage(packageName)
+                val res = appsManager.disablePackage(packageName)
                 Log.d("NotifClick", res)
             }
 
+            companion object {
+                fun newIntent(context: Context, packageName: String): Intent {
+                    val intent = Intent(context, NotificationActionService::class.java)
+                    intent.action = packageName
+                    return intent
+                }
+            }
         }
     }
 }

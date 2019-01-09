@@ -60,18 +60,24 @@ class AppsManager(private var context: Context) {
 
     fun getEnabledAndMonitored(): List<String> {
         val sp = SharedPreferenceHelper(context)
-        val watchedApplications: List<String> = sp.getListMonitoredApplication()
+        val watchedApplications: List<String> = sp.getListTrackedApplications()
         val disabledApps: List<String> = listDisabledApp()
         return watchedApplications.minus(disabledApps).toList()
     }
 
-    fun startPackage(packageName: String, packageManager: PackageManager) {
+    fun getTrackedApp(): List<String> {
+        val sp = SharedPreferenceHelper(context)
+        return sp.getListTrackedApplications()
+    }
+
+    fun startPackage(packageName: String, context: Context) {
         val test = enablePackage(packageName)
         Log.d("async", test)
-        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+        val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
         if (launchIntent != null) {
             Log.d("async", "intent good")
             startActivity(context, launchIntent, null)//null pointer check in case package name was not found
+            NotificationUtils.notify(context, packageName)
         } else {
             Log.d("async", "intent null")
         }

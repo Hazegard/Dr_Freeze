@@ -17,17 +17,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.coroutines.experimental.Ref
 import org.jetbrains.anko.coroutines.experimental.asReference
-import android.support.v4.view.accessibility.AccessibilityEventCompat.setAction
-import fr.hazegard.freezator.R.mipmap.ic_launcher
 import android.content.Intent
 import android.os.Build
-import android.support.v4.content.pm.ShortcutManagerCompat.requestPinShortcut
-import android.R.attr.label
-import android.R.attr.shortcutId
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.support.v4.content.pm.ShortcutManagerCompat
 import fr.hazegard.freezator.PackageUtils
@@ -60,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.async(Dispatchers.IO) {
                 val res = appsManager.enablePackage("org.mozilla.focus")
                 Log.d("ena", res)
-                NotificationUtils.notify(this@MainActivity, "org.mozilla.focus")
+                NotificationUtils.notify(applicationContext, "org.mozilla.focus")
                 Toast.makeText(this@MainActivity, res, Toast.LENGTH_LONG).show()
             }
         }
@@ -77,7 +70,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         button_test.setOnClickListener {
-            addShortcut("org.mozilla.focus")
+//            addShortcut("org.mozilla.focus")
+            startActivity(ManageTrackedAppActivity.newIntent(this@MainActivity))
         }
         process_fab.setOnClickListener {
             processAdapter.isEdit = true
@@ -170,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         val icon = PackageUtils.getPackageIconBitmap(applicationContext, packageName)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (ShortcutManagerCompat.isRequestPinShortcutSupported(applicationContext)) {
-                val intent = ShortcutReceiverActivity.newIntent(applicationContext,packageName)
+                val intent = ShortcutBroadcastActivity.newIntent(applicationContext,packageName)
                 val shortcutManager = getSystemService(ShortcutManager::class.java)
                 val pinShortcutInfo = ShortcutInfo.Builder(applicationContext, "ID")
                         .setIcon(Icon.createWithBitmap(icon))

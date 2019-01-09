@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".NotificationUtils$Companion$NotificationActionService" />
         <service android:name=".OnBootService$Test" />
+        <service android:name=".NotificationUtils$Companion$NotificationActionService" />
 
         <receiver android:name=".OnBootService">
             <intent-filter>
@@ -30,8 +30,11 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.ShortcutReceiverActivity">
-        </activity>
+        <activity
+            android:name=".ui.ShortcutBroadcastActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.Transparent"></activity>
+        <activity android:name=".ui.ManageTrackedAppActivity"></activity>
     </application>
 
 </manifest> <!-- TODO search launch -->

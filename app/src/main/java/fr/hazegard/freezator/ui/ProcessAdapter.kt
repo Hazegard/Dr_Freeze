@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import fr.hazegard.freezator.PackageUtils
 import fr.hazegard.freezator.R
 import fr.hazegard.freezator.SharedPreferenceHelper
 import kotlinx.android.synthetic.main.row_process.view.*
@@ -27,15 +28,15 @@ class ProcessAdapter(context: Context, private var processNames: List<Applicatio
         set(value) {
             field = value
             if (value) {
-                isApplicationWatchedBak = HashMap(isApplicationWatched)
+                isApplicationTrackedBak = HashMap(isApplicationTracked)
             }
             notifyDataSetChanged()
         }
 
     private var sp: SharedPreferenceHelper = SharedPreferenceHelper(context)
 
-    private lateinit var isApplicationWatchedBak: MutableMap<String, Boolean>
-    var isApplicationWatched: MutableMap<String, Boolean> = sp.getMapMonitoredApplication()
+    private lateinit var isApplicationTrackedBak: MutableMap<String, Boolean>
+    var isApplicationTracked: MutableMap<String, Boolean> = sp.getMapTrackedApplications()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProcessHolder {
         val itemView: View = LayoutInflater.from(parent.context)
@@ -48,27 +49,25 @@ class ProcessAdapter(context: Context, private var processNames: List<Applicatio
     }
 
     fun validateChange() {
-        sp.saveMonitoredApplication(isApplicationWatched)
+        sp.saveTrackedApplication(isApplicationTracked)
     }
 
     fun cancelChange() {
-        isApplicationWatched = isApplicationWatchedBak
+        isApplicationTracked = isApplicationTrackedBak
     }
 
     inner class ProcessHolder(private val view: View, private val context: Context) : RecyclerView.ViewHolder(view) {
 
         fun setContent(process: ApplicationInfo) = with(view) {
             process_checkbox.setOnCheckedChangeListener { _, isChecked ->
-                isApplicationWatched[process.processName] = isChecked
+                isApplicationTracked[process.processName] = isChecked
             }
 
-            process_checkbox.isChecked = isApplicationWatched[process.processName] ?: false
+            process_checkbox.isChecked = isApplicationTracked[process.processName] ?: false
             process_checkbox.isEnabled = isEdit
-            val (processNameText, processAppName) = getAppName(process, context)
-
-            processNameTv.text = processNameText
-            processAppNameTv.text = processAppName
-            process_image.setImageDrawable(getAppIcon(process, context))
+            processNameTv.text = PackageUtils.getPackageName(context, process.packageName)
+            processAppNameTv.text = process.packageName
+            process_image.setImageDrawable(PackageUtils.getPackageIconDrawable(context, process.packageName))
         }
 
         private fun getAppName(process: ApplicationInfo, context: Context): Pair<String, String> {

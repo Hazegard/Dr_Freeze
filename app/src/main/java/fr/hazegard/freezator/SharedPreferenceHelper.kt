@@ -8,25 +8,25 @@ import java.util.*
  */
 class SharedPreferenceHelper(private val context: Context) {
 
-    private fun saveMonitoredApplication(listApp: List<String>) {
+    private fun saveTrackedApplication(listApp: List<String>) {
         val set = listApp.toSet()
-        val prefs = context.getSharedPreferences(MONITORED_APPLICATION, Context.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
         val edit = prefs.edit()
         edit.putStringSet(LIST, set)
         edit.apply()
     }
 
-    fun saveMonitoredApplication(mapApp: MutableMap<String, Boolean>) {
-        saveMonitoredApplication(mapToList(mapApp))
+    fun saveTrackedApplication(mapApp: MutableMap<String, Boolean>) {
+        saveTrackedApplication(mapToList(mapApp))
     }
 
-    fun getListMonitoredApplication(): List<String> {
-        return context.getSharedPreferences(MONITORED_APPLICATION, Context.MODE_PRIVATE)
+    fun getListTrackedApplications(): List<String> {
+        return context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
                 .getStringSet(LIST, HashSet<String>())?.toList() ?: Collections.emptyList()
     }
 
-    fun getMapMonitoredApplication(): MutableMap<String, Boolean> {
-        return listToMap(getListMonitoredApplication())
+    fun getMapTrackedApplications(): MutableMap<String, Boolean> {
+        return listToMap(getListTrackedApplications())
     }
 
     private fun listToMap(list: List<String>): MutableMap<String, Boolean> {
@@ -41,7 +41,7 @@ class SharedPreferenceHelper(private val context: Context) {
     }
 
     companion object {
-        private const val MONITORED_APPLICATION = "MONITORED_APPLICATION"
+        private const val TRACKED_APPLICATION = "TRACKED_APPLICATION"
         private const val LIST = "LIST"
     }
 }
