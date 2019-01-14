@@ -1,11 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:buttonStyle">@style/ButtonTheme</item>
+        <item name="imageButtonStyle">@style/ImageButtonThem</item>
     </style>
 
     <style name="AppTheme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
@@ -15,6 +17,15 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="ButtonTheme" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="ImageButtonThem" parent="Widget.AppCompat.ImageButton">
+        <item name="backgroundTint">@color/button_background</item>
+        <item name="tint">@color/button_foreground</item>
     </style>
 
 </resources>

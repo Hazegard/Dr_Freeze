@@ -3,4 +3,12 @@
     <string name="validate">Valider</string>
     <string name="channel_description">Enabled apps</string>
     <string name="channel_name">Enabled Apps</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="settings">Settings</string>
+    <string name="preferences_disable_notification">preferences_disable_notification</string>
+    <string name="preferences_disable_boot_notification">preferences_disable_boot_notification</string>
+    <string name="preferences_show_system_apps">preferences_show_system_apps</string>
+    <string name="package_icon">Package Icon</string>
+    <string name="manage_apps">Manage Apps</string>
+    <string name="preferences_disable_persistent_notification">preferences_disable_persistent_notification</string>
 </resources>

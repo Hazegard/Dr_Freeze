@@ -30,14 +30,29 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                      <entry key="foregroundText">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="2d2d2d" />
+                                      <entry key="backgroundLayerName" value="ic_launcher_background" />
+                                      <entry key="foregroundAssetType" value="TEXT" />
                                       <entry key="foregroundImage" value="$PROJECT_DIR$/app/src/main/res/drawable/ic_android_robot1.xml" />
+                                      <entry key="foregroundLayerName" value="ic_launcher_foreground" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
+                                      <entry key="outputName" value="test" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -64,8 +79,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="clear" />
-                            <entry key="sourceFile" value="$USER_HOME$/Downloads/baseline-clear-24px.svg" />
+                            <entry key="outputName" value="add" />
+                            <entry key="sourceFile" value="$USER_HOME$/Downloads/baseline-add-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

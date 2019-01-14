@@ -12,14 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.ListAppActivity" />
 
         <service android:name=".OnBootService$Test" />
         <service android:name=".NotificationUtils$Companion$NotificationActionService" />
@@ -31,10 +24,19 @@
         </receiver>
 
         <activity
-            android:name=".ui.ShortcutBroadcastActivity"
+            android:name=".ui.ShortcutDispatcherActivity"
             android:launchMode="singleInstance"
-            android:theme="@style/AppTheme.Transparent"></activity>
-        <activity android:name=".ui.ManageTrackedAppActivity"></activity>
+            android:theme="@style/AppTheme.Transparent" />
+        <activity android:name=".ui.ManageTrackedAppActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.SettingsActivity" />
     </application>
 
 </manifest> <!-- TODO search launch -->

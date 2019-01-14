@@ -1,76 +1,126 @@
 package fr.hazegard.freezator
 
 import android.app.IntentService
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import android.util.Log
-import android.graphics.drawable.Drawable
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.graphics.Color
-import android.os.Build
-import fr.hazegard.freezator.ui.MainActivity
 
 
 /**
- * Created by maxime on 04/03/18.
+ * Created by Hazegard on 04/03/18.
  */
 class NotificationUtils {
     companion object {
-        fun notify(context: Context, packageName: String) {
 
-            val appName = PackageUtils.getPackageName(context, packageName)
-            val appIconBitmap: Bitmap = PackageUtils.getPackageIconBitmap(context, packageName)
+        /**
+         * Send multiple notifications displaying that the packages are currently running
+         * Allowing the user to disable the packages by clicking on the notification
+         * @param context The current context
+         * @param packages THe packages targeted by the notifications
+         */
+        fun sendNotification(context: Context, packages: List<PackageApp>) {
+            val isPersistent = PreferencesHelper.isNotificationPersistent(context)
+            packages.forEach {
+                sendNotification(context, it, isPersistent)
+            }
+        }
 
-            val onClickIntent = NotificationActionService.newIntent(context, packageName)
-//            val onClickIntent = Intent(context,MainActivity::class.java)
+        /**
+         * Send a notification displaying that the package is currently running
+         * Allowing the user to disable the package by clicking on the notification
+         * @param context The current context
+         * @param pkg THe package targeted by the notification
+         */
+        fun sendNotification(context: Context, pkg: PackageApp) {
+            val isPersistent = PreferencesHelper.isNotificationPersistent(context)
+            sendNotification(context, pkg, isPersistent)
+        }
+
+        /**
+         * Send a notification displaying that the package is currently running
+         * Allowing the user to disable the package by clicking on the notification
+         * @param context The current context
+         * @param pkg THe package targeted by the notification
+         * @param isPersistent Whether the notification should be persistent
+         */
+        private fun sendNotification(context: Context, pkg: PackageApp, isPersistent: Boolean) {
+            if (PreferencesHelper.isNotificationDisabled(context)) {
+                return
+            }
+
+            val onClickIntent = NotificationActionService.newDisablePackageIntent(context, pkg.packageName)
             val pendingIntent: PendingIntent = PendingIntent.getService(
                     context, System.currentTimeMillis().toInt(), onClickIntent, PendingIntent.FLAG_ONE_SHOT)
 
-            val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val channelId = "1664"
             val name = context.getString(R.string.channel_name)
             val description = context.getString(R.string.channel_description)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val importance = NotificationManager.IMPORTANCE_LOW;
-                val mChannel = NotificationChannel(channelId, name, importance)
-                mChannel.description = description
-                mChannel.enableLights(false)
-                mChannel.enableVibration(false)
-                mNotificationManager.createNotificationChannel(mChannel)
+                val importance = NotificationManager.IMPORTANCE_LOW
+                val channel = NotificationChannel(channelId, name, importance)
+                channel.description = description
+                channel.enableLights(false)
+                channel.enableVibration(false)
+                notificationManager.createNotificationChannel(channel)
             }
             val notification = NotificationCompat.Builder(context, channelId)
                     .setContentIntent(pendingIntent)
-                    .setContentTitle(appName)
-                    .setContentText("Click to disable $appName")
-                    .setLargeIcon(appIconBitmap)
+                    .setContentTitle(pkg.appName)
+                    .setContentText("Click to disable ${pkg.appName}")
+                    .setLargeIcon(pkg.getIconBitmap(context))
                     .setSmallIcon(R.drawable.snowflake)
-                    .setOngoing(true)
+                    .setOngoing(isPersistent)
                     .setAutoCancel(true)
                     .build()
             val notificationManagerCompat: NotificationManagerCompat = NotificationManagerCompat.from(context)
-            notificationManagerCompat.notify(packageName.hashCode(), notification)
+            notificationManagerCompat.notify(pkg.packageName.hashCode(), notification)
         }
 
+        /**
+         * Remove a notification
+         * @param context The current context
+         * @param packageName THe package targeted by the notification that should be removed
+         */
+        fun removeNotification(context: Context, packageName: String) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancel(packageName.hashCode())
+        }
+
+        /**
+         * The class that handle intent send by notifications
+         * The intent actions are:
+         *  - ACTION_DISABLE: Disable the package given as extra
+         */
         class NotificationActionService : IntentService("NotificationActionService") {
-            private val appsManager by lazy { AppsManager(this@NotificationActionService) }
+            private val appsManager by lazy { PackageManager(this@NotificationActionService) }
             override fun onHandleIntent(intent: Intent?) {
-                val packageName: String = intent?.action ?: "null"
-                Log.d("NotifCLick", packageName)
-                val res = appsManager.disablePackage(packageName)
-                Log.d("NotifClick", res)
+                val action = intent?.action
+                if (action.equals(ACTION_DISABLE)) {
+                    intent?.extras?.getString(KEY_PACKAGE, null)?.let {
+                        appsManager.disablePackage(it)
+                    }
+                }
             }
 
             companion object {
-                fun newIntent(context: Context, packageName: String): Intent {
-                    val intent = Intent(context, NotificationActionService::class.java)
-                    intent.action = packageName
-                    return intent
+                private const val ACTION_DISABLE = "ACTION_DISABLE"
+                private const val KEY_PACKAGE = "KAY_PACKAGE"
+                /**
+                 * Create a new Intent that disable the package
+                 * @param context The current context
+                 * @param packageName The package tha tshould be disabled
+                 */
+                fun newDisablePackageIntent(context: Context, packageName: String): Intent {
+                    return Intent(context, NotificationActionService::class.java).apply {
+                        action = ACTION_DISABLE
+                        putExtra(KEY_PACKAGE, packageName)
+                    }
                 }
             }
         }

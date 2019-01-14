@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Notifications">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/notifications_off"
+            android:key="@string/preferences_disable_notification"
+            android:summary="Disable notifications when a tracked app is enabled"
+            android:title="Disable notifications" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/preferences_disable_boot_notification"
+            android:title="Disable notifications on boot" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/preferences_disable_persistent_notification"
+            android:title="Set persistent notifications" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Other">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/robot_icon"
+            android:key="@string/preferences_show_system_apps"
+            android:summary="This may cause damage to your phone
+Use carefully!"
+            android:title="Show system apps" />
+    </PreferenceCategory>
+</PreferenceScreen>
+
+
+    <!--
+        -> Désactiver notifications
+        -> Désactiver notifications au boot
+        -> Afficher applications systèmes
+        ->
+    -->

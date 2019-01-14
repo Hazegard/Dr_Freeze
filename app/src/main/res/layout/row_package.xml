@@ -2,50 +2,53 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/row_process"
+    android:id="@+id/row_package"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="4dp"
     android:layout_marginTop="4dp"
     android:layout_marginEnd="4dp"
-    android:layout_marginBottom="4dp">
+    android:layout_marginBottom="4dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="false">
 
     <ImageView
-        android:id="@+id/process_image"
+        android:id="@+id/package_image"
         android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/package_icon"
         app:layout_constraintDimensionRatio="H,1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@mipmap/ic_launcher" />
 
     <TextView
-        android:id="@+id/processAppNameTv"
+        android:id="@+id/packageAppNameTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/processNameTv"
-        app:layout_constraintEnd_toStartOf="@id/process_checkbox"
-        app:layout_constraintStart_toEndOf="@id/process_image"
+        app:layout_constraintBottom_toTopOf="@+id/packageNameTv"
+        app:layout_constraintEnd_toStartOf="@id/package_checkbox"
+        app:layout_constraintStart_toEndOf="@id/package_image"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Toto" />
 
     <TextView
-        android:id="@+id/processNameTv"
+        android:id="@+id/packageNameTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/process_checkbox"
-        app:layout_constraintStart_toEndOf="@id/process_image"
-        app:layout_constraintTop_toBottomOf="@id/processAppNameTv"
+        app:layout_constraintEnd_toStartOf="@id/package_checkbox"
+        app:layout_constraintStart_toEndOf="@id/package_image"
+        app:layout_constraintTop_toBottomOf="@id/packageAppNameTv"
         tools:text="com.toto.toto" />
 
     <CheckBox
-        android:id="@+id/process_checkbox"
+        android:id="@+id/package_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

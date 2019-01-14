@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/processList_validate"
-        android:icon="@drawable/ic_check_black_24dp"
+        android:id="@+id/packageList_validate"
+        android:icon="@drawable/check_black"
         android:title="@string/validate"
         android:visible="false"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/processList_cancel"
-        android:icon="@drawable/ic_close_black_24dp"
+        android:id="@+id/packageList_cancel"
+        android:icon="@drawable/close_black"
         android:title="@string/validate"
         android:visible="false"
         app:showAsAction="ifRoom" />
