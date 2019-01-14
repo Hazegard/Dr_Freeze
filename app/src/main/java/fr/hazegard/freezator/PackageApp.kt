@@ -14,7 +14,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.util.Log
 import fr.hazegard.freezator.extensions.toBitmap
-import fr.hazegard.freezator.ui.ListAppActivity
 import fr.hazegard.freezator.ui.ShortcutDispatcherActivity
 
 data class PackageApp(val packageName: String, val appName: String) {
@@ -104,12 +103,13 @@ data class PackageApp(val packageName: String, val appName: String) {
                 shortcutManager.requestPinShortcut(pinShortcutInfo, null)
             }
         } else {
-            val shortcutIntent = Intent(context, ListAppActivity::class.java)
+            val shortcutIntent = ShortcutDispatcherActivity.newIntent(context, packageName)
             shortcutIntent.action = Intent.ACTION_MAIN
+            val icon = Bitmap.createScaledBitmap(getIconBitmap(context), 128, 128, true)
             val addIntent = Intent().apply {
                 putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
                 putExtra(Intent.EXTRA_SHORTCUT_NAME, appName)
-                putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, getIconBitmap(context))
+                putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
                 action = "com.android.launcher.action.INSTALL_SHORTCUT"
                 putExtra("duplicate", false)
             }

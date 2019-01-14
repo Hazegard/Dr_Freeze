@@ -50,6 +50,8 @@
             app:layout_constraintEnd_toEndOf="@id/manage_untrack_app"
             app:layout_constraintStart_toEndOf="@id/manage_add_shortcut"
             app:layout_constraintTop_toBottomOf="@id/manage_app_name"
+            app:layout_constraintTop_toTopOf="@id/manage_add_shortcut"
+            app:layout_constraintBottom_toBottomOf="@id/manage_add_shortcut"
             app:srcCompat="@drawable/snowflake" />
 
         <ImageButton

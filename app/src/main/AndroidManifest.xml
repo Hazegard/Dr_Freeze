@@ -6,6 +6,7 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <application
+        android:name=".FreezeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,7 +15,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ui.ListAppActivity" />
 
-        <service android:name=".OnBootService$Test" />
         <service android:name=".NotificationUtils$Companion$NotificationActionService" />
 
         <receiver android:name=".OnBootService">
@@ -24,6 +24,7 @@
         </receiver>
 
         <activity
+            android:exported="true"
             android:name=".ui.ShortcutDispatcherActivity"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.Transparent" />

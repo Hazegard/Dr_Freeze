@@ -42,10 +42,10 @@ class Su private constructor() {
         try {
             val su: Process = Runtime.getRuntime().exec("su")
             val (os, osRes, osErr) = getDataStream(su)
-            os.writeBytes("id -u\n")
+            os.writeBytes("id\n")
             os.flush()
             val currUid: String? = BufferedReader(osRes.bufferedReader()).readLine()
-            if (currUid?.trim()?.toInt() != 0) {
+            if (currUid?.contains(MATCH_ROOT) != true) {
                 throw NotRootException("No Su process")
             } else {
                 Log.d("Process", "su process granted")
@@ -94,6 +94,7 @@ class Su private constructor() {
     }
 
     companion object {
+        private const val MATCH_ROOT = "uid=0"
         val instance by lazy { Su() }
         private const val EOF = "EOF"
     }

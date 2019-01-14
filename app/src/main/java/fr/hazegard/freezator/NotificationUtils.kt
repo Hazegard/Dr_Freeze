@@ -69,12 +69,17 @@ class NotificationUtils {
                 channel.enableVibration(false)
                 notificationManager.createNotificationChannel(channel)
             }
+
             val notification = NotificationCompat.Builder(context, channelId)
                     .setContentIntent(pendingIntent)
                     .setContentTitle(pkg.appName)
                     .setContentText("Click to disable ${pkg.appName}")
                     .setLargeIcon(pkg.getIconBitmap(context))
-                    .setSmallIcon(R.drawable.snowflake)
+                    .setSmallIcon(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        R.drawable.snowflake
+                    } else {
+                        R.drawable.snowflake_compat
+                    })
                     .setOngoing(isPersistent)
                     .setAutoCancel(true)
                     .build()
