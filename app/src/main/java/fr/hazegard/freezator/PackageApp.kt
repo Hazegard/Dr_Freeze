@@ -106,7 +106,7 @@ data class PackageApp(val packageName: String, val appName: String) {
             val shortcutIntent = ShortcutDispatcherActivity.newIntent(context, packageName)
             shortcutIntent.action = Intent.ACTION_MAIN
             val icon = Bitmap.createScaledBitmap(getIconBitmap(context), 128, 128, true)
-            val addIntent = Intent().apply {
+            @Suppress("DEPRECATION") val addIntent = Intent().apply {
                 putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
                 putExtra(Intent.EXTRA_SHORTCUT_NAME, appName)
                 putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
