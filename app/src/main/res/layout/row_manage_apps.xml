@@ -4,13 +4,13 @@
     android:id="@+id/manage_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:layout_margin="4dp"
+    android:background="@color/background"
+    android:foreground="?attr/selectableItemBackground">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="2dp"
         android:padding="4dp">
 
         <ImageView
@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
+            android:textColor="@color/textColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/manage_app_icon" />
@@ -47,11 +48,11 @@
             android:layout_height="wrap_content"
             android:contentDescription="Freeze App"
             android:tint="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="@id/manage_add_shortcut"
             app:layout_constraintEnd_toEndOf="@id/manage_untrack_app"
             app:layout_constraintStart_toEndOf="@id/manage_add_shortcut"
             app:layout_constraintTop_toBottomOf="@id/manage_app_name"
             app:layout_constraintTop_toTopOf="@id/manage_add_shortcut"
-            app:layout_constraintBottom_toBottomOf="@id/manage_add_shortcut"
             app:srcCompat="@drawable/snowflake" />
 
         <ImageButton

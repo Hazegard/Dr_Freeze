@@ -1,6 +1,7 @@
 package fr.hazegard.freezator.ui
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -60,8 +61,18 @@ class TrackedPackageAdapter(private val c: Context,
          * @param packageApp The package to be displayed
          */
         fun setContent(packageApp: PackageApp) {
+            val isPkgEnabled = packageApp.isEnable(c)
             with(view) {
                 manage_app_name.text = packageApp.appName
+
+
+                with(manage_card_view) {
+                    setBackgroundColor(ContextCompat.getColor(c, if (!isPkgEnabled) {
+                        R.color.colorBackgroundBlueLight
+                    } else {
+                        R.color.background
+                    }))
+                }
 
                 with(manage_add_shortcut) {
                     setOnClickListener {
@@ -87,15 +98,13 @@ class TrackedPackageAdapter(private val c: Context,
                         Toast.makeText(context, "Freeze ${packageApp.appName}", Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
-                    if (packageApp.packageName in listDisabledPackages) {
-                        isEnabled = false
-                    }
+                    isEnabled = isPkgEnabled
                 }
 
                 with(manage_untrack_app) {
                     setOnClickListener {
                         Log.d("Manage", "Untrack - ${packageApp.packageName}")
-                        appsManager.removeTrackedPackage(packageApp.packageName)
+                        appsManager.removeTrackedPackage(packageApp)
                         requestUpdate()
                     }
                     setOnLongClickListener {

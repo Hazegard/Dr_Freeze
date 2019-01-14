@@ -12,6 +12,7 @@
         android:id="@+id/tracked_view_animator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/backgroundDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
@@ -31,35 +32,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="No Tracked application found" />
+                android:text="No Tracked application found"
+                android:textColor="@color/textColor" />
 
             <LinearLayout
                 android:id="@+id/no_tracked_applications"
                 style="@style/ButtonTheme"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:orientation="horizontal">
+
                 <ImageView
-                    app:srcCompat="@drawable/add"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/add" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Select Application"
                     android:textAllCaps="true"
-                    android:textColor="@color/colorPrimaryDark"
-                    />
+                    android:textColor="@color/colorPrimaryDark" />
             </LinearLayout>
-            <!--<Button-->
-            <!--android:id="@+id/no_tracked_applications"-->
-            <!--style="@style/ButtonTheme"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:drawableStart="@drawable/add"-->
-            <!--android:drawableLeft="@drawable/add"-->
-            <!--android:text="Select Application" />-->
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
@@ -68,6 +63,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp" />
     </ViewAnimator>
 </android.support.constraint.ConstraintLayout>

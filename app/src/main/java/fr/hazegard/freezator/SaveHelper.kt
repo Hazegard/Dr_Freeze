@@ -20,7 +20,16 @@ class SaveHelper(private val context: Context) {
         val set = packages.toSet()
         context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
                 .edit().apply {
+                    clear()
                     putStringSet(LIST, set)
+                    apply()
+                }
+    }
+
+    fun removeTrackedPackage(pkg: PackageApp) {
+        context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
+                .edit().apply {
+                    remove(pkg.packageName)
                     apply()
                 }
     }
@@ -32,6 +41,7 @@ class SaveHelper(private val context: Context) {
     fun saveTrackedPackages(packages: Set<String>) {
         context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
                 .edit().apply {
+                    clear()
                     putStringSet(LIST, packages)
                     apply()
                 }

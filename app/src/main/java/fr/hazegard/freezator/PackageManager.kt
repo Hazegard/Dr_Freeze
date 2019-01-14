@@ -118,12 +118,21 @@ class PackageManager(private var context: Context) {
 
     /**
      * Untrack the package
+     * @param pkg The package to untrack
+     */
+    fun removeTrackedPackage(pkg: PackageApp) {
+        saveHelper.removeTrackedPackage(pkg)
+        pkg.enable()
+    }
+
+    /**
+     * Track the package
      * @param packageName The package to untrack
      */
-    fun removeTrackedPackage(packageName: String) {
+    fun addTrackedPackage(packageName: String) {
         with(saveHelper) {
             val newPackages = getTrackedPackages()
-            newPackages.remove(packageName)
+            newPackages.add(packageName)
             saveTrackedPackages(newPackages)
         }
     }

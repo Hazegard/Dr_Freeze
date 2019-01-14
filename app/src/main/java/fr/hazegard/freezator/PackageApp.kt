@@ -34,6 +34,10 @@ data class PackageApp(val packageName: String, val appName: String) {
         commands.enablePackage(packageName)
     }
 
+    fun isEnable(context: Context): Boolean {
+        return context.packageManager.getApplicationInfo(packageName, 0).enabled
+    }
+
     /**
      * Get the icon of package as drawable
      * @param context The current context
@@ -116,5 +120,4 @@ data class PackageApp(val packageName: String, val appName: String) {
             context.sendBroadcast(addIntent)
         }
     }
-
 }

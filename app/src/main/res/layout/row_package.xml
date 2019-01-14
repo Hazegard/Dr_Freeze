@@ -1,58 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/row_package"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="4dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginEnd="4dp"
-    android:layout_marginBottom="4dp"
-    android:background="?android:attr/selectableItemBackground"
-    android:clickable="false">
+    android:background="@color/background">
 
-    <ImageView
-        android:id="@+id/package_image"
-        android:layout_width="48dp"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/row_package"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/package_icon"
-        app:layout_constraintDimensionRatio="H,1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@mipmap/ic_launcher" />
+        android:padding="4dp"
+        android:clickable="false"
+        android:foreground="?android:attr/selectableItemBackground">
 
-    <TextView
-        android:id="@+id/packageAppNameTv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/packageNameTv"
-        app:layout_constraintEnd_toStartOf="@id/package_checkbox"
-        app:layout_constraintStart_toEndOf="@id/package_image"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Toto" />
+        <ImageView
+            android:id="@+id/package_image"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/package_icon"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@mipmap/ic_launcher" />
 
-    <TextView
-        android:id="@+id/packageNameTv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/package_checkbox"
-        app:layout_constraintStart_toEndOf="@id/package_image"
-        app:layout_constraintTop_toBottomOf="@id/packageAppNameTv"
-        tools:text="com.toto.toto" />
+        <TextView
+            android:id="@+id/packageAppNameTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/packageNameTv"
+            app:layout_constraintEnd_toStartOf="@id/package_checkbox"
+            app:layout_constraintStart_toEndOf="@id/package_image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Toto" />
 
-    <CheckBox
-        android:id="@+id/package_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/packageNameTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/package_checkbox"
+            app:layout_constraintStart_toEndOf="@id/package_image"
+            app:layout_constraintTop_toBottomOf="@id/packageAppNameTv"
+            tools:text="com.toto.toto" />
 
-</android.support.constraint.ConstraintLayout>
+        <CheckBox
+            android:id="@+id/package_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>
