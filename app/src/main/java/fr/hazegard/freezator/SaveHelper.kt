@@ -26,11 +26,37 @@ class SaveHelper(private val context: Context) {
                 }
     }
 
-    fun removeTrackedPackage(pkg: PackageApp) {
+    /**
+     * Remove a package from the tracking list
+     * @param pkg The package to remove
+     */
+    fun removeTrackedPackage(pkg: String) {
         context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
-                .edit().apply {
-                    remove(pkg.packageName)
-                    apply()
+                .apply {
+                    val packages = getStringSet(LIST, emptySet()) ?: emptySet()
+                    packages.remove(pkg)
+                    edit().apply {
+                        clear()
+                        putStringSet(LIST, packages)
+                        apply()
+                    }
+                }
+    }
+
+    /**
+     * Remove a package from the tracking list
+     * @param pkg The package to remove
+     */
+    fun saveTrackedpackage(pkg: String) {
+        context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
+                .apply {
+                    val packages = getStringSet(LIST, emptySet()) ?: emptySet()
+                    packages.add(pkg)
+                    edit().apply {
+                        clear()
+                        putStringSet(LIST, packages)
+                        apply()
+                    }
                 }
     }
 
@@ -53,7 +79,7 @@ class SaveHelper(private val context: Context) {
      */
     fun getTrackedPackages(): MutableSet<String> {
         return context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
-                .getStringSet(LIST, HashSet<String>()) ?: Collections.emptySet()
+                .getStringSet(LIST, emptySet()) ?: Collections.emptySet()
     }
 
     companion object {
