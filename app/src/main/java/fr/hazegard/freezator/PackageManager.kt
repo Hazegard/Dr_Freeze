@@ -3,6 +3,8 @@ package fr.hazegard.freezator
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import fr.hazegard.freezator.extensions.isLaunchableApp
+import fr.hazegard.freezator.extensions.isSystemApp
 import fr.hazegard.freezator.model.PackageApp
 import fr.hazegard.freezator.model.Pkg
 
@@ -24,7 +26,6 @@ class PackageManager(private var context: Context) {
         return context.packageManager
                 .getInstalledApplications(PackageManager.GET_META_DATA)
                 .distinctBy { it.processName }
-                .sortedBy { it.loadLabel(context.packageManager).toString() }
     }
 
     /**
@@ -33,7 +34,7 @@ class PackageManager(private var context: Context) {
      */
     private fun getInstalledPackages(): List<ApplicationInfo> {
         return getAllPackages().filter {
-            (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0
+            !it.isSystemApp()
         }
     }
 
@@ -43,14 +44,14 @@ class PackageManager(private var context: Context) {
      * @return The list of package (All packages or Installed packages)
      */
     fun getPackages(): List<PackageApp> {
-        return (if (PreferencesHelper.isSystemAppsEnabled(context)) {
-            getAllPackages()
-        } else {
-            getInstalledPackages()
-        }).map {
-            val pkg = Pkg(it.packageName)
-            return@map PackageApp(pkg, getAppName(context, pkg))
-        }
+        val doKeepSystemApps = PreferencesHelper.isSystemAppsEnabled(context)
+        return getAllPackages()
+                .filter { doKeepSystemApps || it.isSystemApp() }
+                .map {
+                    val pkg = Pkg(it.packageName)
+                    return@map PackageApp(pkg, getAppName(context, pkg))
+                }
+                .sortedBy { it.appName }
     }
 
     /**
