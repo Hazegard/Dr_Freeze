@@ -45,8 +45,10 @@ class PackageManager(private var context: Context) {
      */
     fun getPackages(): List<PackageApp> {
         val doKeepSystemApps = PreferencesHelper.isSystemAppsEnabled(context)
+        val showOnlyLaunchApps = PreferencesHelper.isOnlyLauncherApp(context)
         return getAllPackages()
                 .filter { doKeepSystemApps || it.isSystemApp() }
+                .filter { !showOnlyLaunchApps || it.isLaunchableApp(context) }
                 .map {
                     val pkg = Pkg(it.packageName)
                     return@map PackageApp(pkg, getAppName(context, pkg))

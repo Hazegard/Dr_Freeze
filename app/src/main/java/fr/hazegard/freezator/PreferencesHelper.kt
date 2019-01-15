@@ -19,6 +19,15 @@ class PreferencesHelper {
         }
 
         /**
+         * Get the preference on system apps listing
+         * @return whether the User choose to manage system apps
+         */
+        fun isOnlyLauncherApp(context: Context): Boolean {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                    .getBoolean(context.getString(R.string.preferences_show_only_launcher_apps), true)
+        }
+
+        /**
          * Get the preference on boot notification
          * @return whether the user choose to enable notification on boot
          */

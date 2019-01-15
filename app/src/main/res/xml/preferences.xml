@@ -19,6 +19,11 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Other">
         <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/home"
+            android:key="@string/preferences_show_only_launcher_apps"
+            android:title="Show only launcher apps" />
+        <SwitchPreference
             android:defaultValue="false"
             android:icon="@drawable/robot_icon"
             android:key="@string/preferences_show_system_apps"
