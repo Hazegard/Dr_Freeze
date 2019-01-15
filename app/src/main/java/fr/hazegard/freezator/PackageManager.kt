@@ -130,7 +130,7 @@ class PackageManager(private var context: Context) {
      * @param pkg The package to untrack
      */
     fun addTrackedPackage(pkg: PackageApp) {
-        saveHelper.saveTrackedpackage(pkg.packageName)
+        saveHelper.saveTrackedPackage(pkg.packageName)
     }
 
     /**

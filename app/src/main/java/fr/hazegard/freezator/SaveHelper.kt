@@ -47,7 +47,7 @@ class SaveHelper(private val context: Context) {
      * Remove a package from the tracking list
      * @param pkg The package to remove
      */
-    fun saveTrackedpackage(pkg: String) {
+    fun saveTrackedPackage(pkg: String) {
         context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
                 .apply {
                     val packages = getStringSet(LIST, emptySet()) ?: emptySet()
