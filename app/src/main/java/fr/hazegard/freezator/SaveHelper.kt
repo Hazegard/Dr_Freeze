@@ -1,6 +1,7 @@
 package fr.hazegard.freezator
 
 import android.content.Context
+import fr.hazegard.freezator.model.Pkg
 import java.util.*
 
 /**
@@ -13,11 +14,11 @@ import java.util.*
 class SaveHelper(private val context: Context) {
 
     /**
-     * Save the list of tracked packages
-     * @param packages List<String> The list of packages to save
+     * Save the list of tracked pkg
+     * @param pkg List<String> The list of pkg to save
      */
-    fun saveTrackedPackages(packages: List<String>) {
-        val set = packages.toSet()
+    fun saveTrackedPackages(pkg: List<Pkg>) {
+        val set = pkg.map { it.s }.toSet()
         context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
                 .edit().apply {
                     clear()
@@ -30,11 +31,11 @@ class SaveHelper(private val context: Context) {
      * Remove a package from the tracking list
      * @param pkg The package to remove
      */
-    fun removeTrackedPackage(pkg: String) {
+    fun removeTrackedPackage(pkg: Pkg) {
         context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
                 .apply {
                     val packages = getStringSet(LIST, emptySet()) ?: emptySet()
-                    packages.remove(pkg)
+                    packages.remove(pkg.s)
                     edit().apply {
                         clear()
                         putStringSet(LIST, packages)
@@ -47,11 +48,11 @@ class SaveHelper(private val context: Context) {
      * Remove a package from the tracking list
      * @param pkg The package to remove
      */
-    fun saveTrackedPackage(pkg: String) {
+    fun saveTrackedPackage(pkg: Pkg) {
         context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
                 .apply {
                     val packages = getStringSet(LIST, emptySet()) ?: emptySet()
-                    packages.add(pkg)
+                    packages.add(pkg.s)
                     edit().apply {
                         clear()
                         putStringSet(LIST, packages)
@@ -64,11 +65,11 @@ class SaveHelper(private val context: Context) {
      * Save the list of tracked packages
      * @param packages Set<String> The set of packages to save
      */
-    fun saveTrackedPackages(packages: Set<String>) {
+    fun saveTrackedPackages(packages: Set<Pkg>) {
         context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
                 .edit().apply {
                     clear()
-                    putStringSet(LIST, packages)
+                    putStringSet(LIST, packages.map { it.s }.toSet())
                     apply()
                 }
     }
@@ -77,9 +78,10 @@ class SaveHelper(private val context: Context) {
      * get the list of tracked packages
      * @return Set<String> The set of saved tracked packages
      */
-    fun getTrackedPackages(): MutableSet<String> {
+    fun getTrackedPackages(): MutableSet<Pkg> {
         return context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
-                .getStringSet(LIST, emptySet()) ?: Collections.emptySet()
+                .getStringSet(LIST, emptySet())?.map { Pkg(it) }?.toMutableSet()
+                ?: Collections.emptySet()
     }
 
     companion object {

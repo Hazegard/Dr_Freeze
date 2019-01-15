@@ -5,9 +5,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import fr.hazegard.freezator.PackageApp
 import fr.hazegard.freezator.PackageManager
 import fr.hazegard.freezator.R
+import fr.hazegard.freezator.model.PackageApp
+import fr.hazegard.freezator.model.Pkg
 import kotlinx.android.synthetic.main.row_package.view.*
 
 /**
@@ -33,8 +34,8 @@ class PackageAdapter(context: Context,
         }
     private val appsManager = PackageManager(context)
 
-    private var trackedPackages: MutableSet<String> = appsManager.getTrackedPackagesAsSet().toMutableSet()
-    private lateinit var trackedPackagesBak: MutableSet<String>
+    private var trackedPackages: MutableSet<Pkg> = appsManager.getTrackedPackagesAsSet().toMutableSet()
+    private lateinit var trackedPackagesBak: MutableSet<Pkg>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PackageHolder {
         val itemView: View = LayoutInflater.from(parent.context)
@@ -61,14 +62,14 @@ class PackageAdapter(context: Context,
 
     inner class PackageHolder(private val view: View, private val c: Context) : RecyclerView.ViewHolder(view) {
 
-        fun setContent(pkg: PackageApp) {
+        fun setContent(packageApp: PackageApp) {
             with(view) {
                 package_checkbox.setOnCheckedChangeListener { _, isChecked ->
                     with(trackedPackages) {
                         if (isChecked) {
-                            add(pkg.packageName)
+                            add(packageApp.pkg)
                         } else {
-                            remove(pkg.packageName)
+                            remove(packageApp.pkg)
                         }
                     }
                     onUpdateList()
@@ -80,12 +81,12 @@ class PackageAdapter(context: Context,
                     }
                 }
                 with(package_checkbox) {
-                    isChecked = trackedPackages.contains(pkg.packageName)
-                    isEnabled = isEdit && pkg.packageName != c.packageName
+                    isChecked = trackedPackages.contains(packageApp.pkg)
+                    isEnabled = isEdit && packageApp.pkg.s != c.packageName
                 }
-                packageNameTv.text = pkg.packageName
-                packageAppNameTv.text = pkg.appName
-                package_image.setImageDrawable(pkg.getIconDrawable(c))
+                packageNameTv.text = packageApp.pkg.s
+                packageAppNameTv.text = packageApp.appName
+                package_image.setImageDrawable(packageApp.getIconDrawable(c))
             }
         }
     }

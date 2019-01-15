@@ -5,8 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import fr.hazegard.freezator.PackageApp
 import fr.hazegard.freezator.PackageManager
+import fr.hazegard.freezator.model.PackageApp
+import fr.hazegard.freezator.model.Pkg
 
 /**
  * This activity is used to dispatch the intent coming from the shortcut
@@ -19,12 +20,13 @@ class ShortcutDispatcherActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         val packageName: String = intent?.extras?.getString(BUNDLE_PACKAGE_NAME) ?: ""
-        val pkg = PackageApp(packageName, PackageManager.getAppName(this, packageName))
-        if ("" != packageName) {
-            pkg.start(this)
-        } else {
+        if ("" == packageName) {
             Toast.makeText(this, "Application not found, it may have been uninstalled",
                     Toast.LENGTH_SHORT).show()
+        } else {
+            val pkg = Pkg(packageName)
+            val targetPackage = PackageApp(pkg, PackageManager.getAppName(this, pkg))
+            targetPackage.start(this)
         }
         finish()
     }
@@ -32,10 +34,10 @@ class ShortcutDispatcherActivity : AppCompatActivity() {
     companion object {
         private const val BUNDLE_PACKAGE_NAME = "BUNDLE_PACKAGE_NAME"
         private const val INTENT_SHORTCUT = "INTENT_SHORTCUT"
-        fun newIntent(context: Context, targetPackageName: String): Intent {
+        fun newIntent(context: Context, targetPackage: Pkg): Intent {
             return Intent(context, ShortcutDispatcherActivity::class.java)
                     .setAction(INTENT_SHORTCUT)
-                    .putExtra(BUNDLE_PACKAGE_NAME, targetPackageName)
+                    .putExtra(BUNDLE_PACKAGE_NAME, targetPackage.s)
         }
     }
 }

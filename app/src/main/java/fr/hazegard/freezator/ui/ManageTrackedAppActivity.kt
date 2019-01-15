@@ -9,7 +9,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import fr.hazegard.freezator.PackageApp
+import fr.hazegard.freezator.model.PackageApp
 import fr.hazegard.freezator.PackageManager
 import fr.hazegard.freezator.R
 import kotlinx.android.synthetic.main.activity_manage_tracked_app.*

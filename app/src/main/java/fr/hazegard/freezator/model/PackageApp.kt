@@ -1,4 +1,4 @@
-package fr.hazegard.freezator
+package fr.hazegard.freezator.model
 
 import android.content.Context
 import android.content.Intent
@@ -13,10 +13,12 @@ import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.util.Log
+import fr.hazegard.freezator.Commands
+import fr.hazegard.freezator.NotificationUtils
 import fr.hazegard.freezator.extensions.toBitmap
 import fr.hazegard.freezator.ui.ShortcutDispatcherActivity
 
-data class PackageApp(val packageName: String, val appName: String) {
+data class PackageApp(val pkg: Pkg, val appName: String) {
 
     private val commands by lazy { Commands() }
 
@@ -24,18 +26,18 @@ data class PackageApp(val packageName: String, val appName: String) {
      * Disable the package
      */
     fun disable() {
-        commands.disablePackage(packageName)
+        commands.disablePackage(pkg)
     }
 
     /**
      * Enable the package
      */
     fun enable() {
-        commands.enablePackage(packageName)
+        commands.enablePackage(pkg)
     }
 
     fun isEnable(context: Context): Boolean {
-        return context.packageManager.getApplicationInfo(packageName, 0).enabled
+        return context.packageManager.getApplicationInfo(pkg.s, 0).enabled
     }
 
     /**
@@ -44,7 +46,7 @@ data class PackageApp(val packageName: String, val appName: String) {
      * @return The icon of the package as drawable
      */
     fun getIconDrawable(context: Context): Drawable {
-        return context.packageManager.getApplicationIcon(packageName)
+        return context.packageManager.getApplicationIcon(pkg.s)
                 ?: ColorDrawable(Color.TRANSPARENT)
     }
 
@@ -71,7 +73,7 @@ data class PackageApp(val packageName: String, val appName: String) {
      * @param context The current context
      */
     fun removeNotification(context: Context) {
-        NotificationUtils.removeNotification(context, packageName)
+        NotificationUtils.removeNotification(context, pkg)
     }
 
     /**
@@ -80,7 +82,7 @@ data class PackageApp(val packageName: String, val appName: String) {
      */
     fun start(context: Context) {
         enable()
-        val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
+        val launchIntent = context.packageManager.getLaunchIntentForPackage(pkg.s)
         if (launchIntent != null) {
             ContextCompat.startActivity(context, launchIntent, null)
             notify(context)
@@ -97,9 +99,9 @@ data class PackageApp(val packageName: String, val appName: String) {
     fun addShortcut(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-                val intent = ShortcutDispatcherActivity.newIntent(context, packageName)
+                val intent = ShortcutDispatcherActivity.newIntent(context, pkg)
                 val shortcutManager = context.getSystemService(ShortcutManager::class.java)
-                val pinShortcutInfo = ShortcutInfo.Builder(context, packageName)
+                val pinShortcutInfo = ShortcutInfo.Builder(context, pkg.s)
                         .setIcon(Icon.createWithBitmap(getIconBitmap(context)))
                         .setShortLabel(appName)
                         .setIntent(intent)
@@ -107,7 +109,7 @@ data class PackageApp(val packageName: String, val appName: String) {
                 shortcutManager.requestPinShortcut(pinShortcutInfo, null)
             }
         } else {
-            val shortcutIntent = ShortcutDispatcherActivity.newIntent(context, packageName)
+            val shortcutIntent = ShortcutDispatcherActivity.newIntent(context, pkg)
             shortcutIntent.action = Intent.ACTION_MAIN
             val icon = Bitmap.createScaledBitmap(getIconBitmap(context), 128, 128, true)
             @Suppress("DEPRECATION") val addIntent = Intent().apply {

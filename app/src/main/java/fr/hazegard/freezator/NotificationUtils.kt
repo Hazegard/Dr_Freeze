@@ -9,6 +9,8 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import fr.hazegard.freezator.model.PackageApp
+import fr.hazegard.freezator.model.Pkg
 
 
 /**
@@ -45,15 +47,15 @@ class NotificationUtils {
          * Send a notification displaying that the package is currently running
          * Allowing the user to disable the package by clicking on the notification
          * @param context The current context
-         * @param pkg THe package targeted by the notification
+         * @param packageApp THe package targeted by the notification
          * @param isPersistent Whether the notification should be persistent
          */
-        private fun sendNotification(context: Context, pkg: PackageApp, isPersistent: Boolean) {
+        private fun sendNotification(context: Context, packageApp: PackageApp, isPersistent: Boolean) {
             if (PreferencesHelper.isNotificationDisabled(context)) {
                 return
             }
 
-            val onClickIntent = NotificationActionService.newDisablePackageIntent(context, pkg.packageName)
+            val onClickIntent = NotificationActionService.newDisablePackageIntent(context, packageApp.appName)
             val pendingIntent: PendingIntent = PendingIntent.getService(
                     context, System.currentTimeMillis().toInt(), onClickIntent, PendingIntent.FLAG_ONE_SHOT)
 
@@ -72,9 +74,9 @@ class NotificationUtils {
 
             val notification = NotificationCompat.Builder(context, channelId)
                     .setContentIntent(pendingIntent)
-                    .setContentTitle(pkg.appName)
-                    .setContentText("Click to disable ${pkg.appName}")
-                    .setLargeIcon(pkg.getIconBitmap(context))
+                    .setContentTitle(packageApp.appName)
+                    .setContentText("Click to disable ${packageApp.appName}")
+                    .setLargeIcon(packageApp.getIconBitmap(context))
                     .setSmallIcon(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         R.drawable.snowflake
                     } else {
@@ -84,17 +86,17 @@ class NotificationUtils {
                     .setAutoCancel(true)
                     .build()
             val notificationManagerCompat: NotificationManagerCompat = NotificationManagerCompat.from(context)
-            notificationManagerCompat.notify(pkg.packageName.hashCode(), notification)
+            notificationManagerCompat.notify(packageApp.pkg.hashCode(), notification)
         }
 
         /**
          * Remove a notification
          * @param context The current context
-         * @param packageName THe package targeted by the notification that should be removed
+         * @param pkg THe package targeted by the notification that should be removed
          */
-        fun removeNotification(context: Context, packageName: String) {
+        fun removeNotification(context: Context, pkg: Pkg) {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.cancel(packageName.hashCode())
+            notificationManager.cancel(pkg.s.hashCode())
         }
 
         /**
@@ -108,7 +110,7 @@ class NotificationUtils {
                 val action = intent?.action
                 if (action.equals(ACTION_DISABLE)) {
                     intent?.extras?.getString(KEY_PACKAGE, null)?.let {
-                        appsManager.disablePackage(it)
+                        appsManager.disablePackage(Pkg(it))
                     }
                 }
             }

@@ -1,29 +1,35 @@
 package fr.hazegard.freezator
 
+import fr.hazegard.freezator.model.Pkg
+
 class Commands {
     private val su = Su.instance
 
     /**
      * Enable the package
-     * @param packageName The package to enable
+     * @param pkg The package to enable
      */
-    fun enablePackage(packageName: String): String {
-        return su.exec("pm enable $packageName")
+    fun enablePackage(pkg: Pkg): String {
+        return su.exec("pm enable $pkg")
     }
 
     /**
      * Disable the package
-     * @param packageName The package to disable
+     * @param pkg The package to disable
      */
-    fun disablePackage(packageName: String): String {
-        return su.exec("pm disable $packageName")
+    fun disablePackage(pkg: Pkg): String {
+        return su.exec("pm disable ${pkg.s}")
     }
 
     /**
      * List all disable packages
      * @return The list of disabled packages
      */
-    fun listDisabledPackages(): List<String> {
-        return su.exec("pm list packages -d | cut -d ':' -f 2").split("\n")
+    fun listDisabledPackages(): List<Pkg> {
+        return su.exec("pm list packages -d | cut -d ':' -f 2")
+                .split("\n")
+                .map {
+                    Pkg(it)
+                }
     }
 }

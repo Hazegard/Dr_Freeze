@@ -3,6 +3,8 @@ package fr.hazegard.freezator
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import fr.hazegard.freezator.model.PackageApp
+import fr.hazegard.freezator.model.Pkg
 
 /**
  * Created by Hazegard on 01/03/18.
@@ -46,7 +48,8 @@ class PackageManager(private var context: Context) {
         } else {
             getInstalledPackages()
         }).map {
-            PackageApp(it.packageName, getAppName(context, it.packageName))
+            val pkg = Pkg(it.packageName)
+            return@map PackageApp(pkg, getAppName(context, pkg))
         }
     }
 
@@ -54,7 +57,7 @@ class PackageManager(private var context: Context) {
      * Get a set of enabled packages
      * @return The set of enabled packages
      */
-    fun getTrackedPackagesAsSet(): MutableSet<String> {
+    fun getTrackedPackagesAsSet(): MutableSet<Pkg> {
         return saveHelper.getTrackedPackages()
     }
 
@@ -62,7 +65,7 @@ class PackageManager(private var context: Context) {
      * Get a list of disabled packages
      * @return The list of disabled packages
      */
-    fun getDisabledPackages(): List<String> {
+    fun getDisabledPackages(): List<Pkg> {
         return commands.listDisabledPackages()
     }
 
@@ -71,8 +74,8 @@ class PackageManager(private var context: Context) {
      * @return The list of enabled and tracked packages
      */
     fun getEnabledAndTracked(): List<PackageApp> {
-        val trackedApplications: List<String> = this.getTrackedPackagesAsList()
-        val disabledApps: List<String> = getDisabledPackages()
+        val trackedApplications: List<Pkg> = getTrackedPackagesAsList()
+        val disabledApps: List<Pkg> = getDisabledPackages()
         return trackedApplications.minus(disabledApps).toList().map {
             PackageApp(it, getAppName(context, it))
         }
@@ -82,9 +85,9 @@ class PackageManager(private var context: Context) {
      * Get a list of tracked packages
      * @return THe list of tracked packages
      */
-    private fun getTrackedPackagesAsList(): List<String> {
+    private fun getTrackedPackagesAsList(): List<Pkg> {
         return saveHelper.getTrackedPackages()
-                .sortedBy { it }
+                .sortedBy { it.s }
                 .toList()
     }
 
@@ -94,7 +97,7 @@ class PackageManager(private var context: Context) {
      */
     fun getTrackedPackages(): List<PackageApp> {
         return saveHelper.getTrackedPackages()
-                .sortedBy { it }
+                .sortedBy { it.s }
                 .toList().map {
                     PackageApp(it, getAppName(context, it))
                 }
@@ -104,7 +107,7 @@ class PackageManager(private var context: Context) {
      * Save a list of tracked packages
      * @param packages The list of packages to save
      */
-    fun saveTrackedPackages(packages: List<String>) {
+    fun saveTrackedPackages(packages: List<Pkg>) {
         saveHelper.saveTrackedPackages(packages)
     }
 
@@ -112,7 +115,7 @@ class PackageManager(private var context: Context) {
      * Save a set of tracked packages
      * @param packages The set of packages to save
      */
-    fun saveTrackedPackages(packages: Set<String>) {
+    fun saveTrackedPackages(packages: Set<Pkg>) {
         saveHelper.saveTrackedPackages(packages)
     }
 
@@ -121,7 +124,7 @@ class PackageManager(private var context: Context) {
      * @param pkg The package to untrack
      */
     fun removeTrackedPackage(pkg: PackageApp) {
-        saveHelper.removeTrackedPackage(pkg.packageName)
+        saveHelper.removeTrackedPackage(pkg.pkg)
         pkg.enable()
     }
 
@@ -129,15 +132,15 @@ class PackageManager(private var context: Context) {
      * Track the package
      * @param pkg The package to untrack
      */
-    fun addTrackedPackage(pkg: PackageApp) {
-        saveHelper.saveTrackedPackage(pkg.packageName)
+    fun addTrackedPackage(pkg: Pkg) {
+        saveHelper.saveTrackedPackage(pkg)
     }
 
     /**
      * Disable the package
      * @param pkg The package to disable
      */
-    fun disablePackage(pkg: String): String {
+    fun disablePackage(pkg: Pkg): String {
         return commands.disablePackage(pkg).trim()
     }
 
@@ -145,11 +148,11 @@ class PackageManager(private var context: Context) {
         /**
          * Get the application of a package
          * @param context The current context
-         * @param packageName The package of the application name to fetch
+         * @param pkg The package of the application name to fetch
          * @return The application name
          */
-        fun getAppName(context: Context, packageName: String): String {
-            val appInfo = context.packageManager.getApplicationInfo(packageName,
+        fun getAppName(context: Context, pkg: Pkg): String {
+            val appInfo = context.packageManager.getApplicationInfo(pkg.s,
                     PackageManager.GET_META_DATA)
             return context.packageManager.getApplicationLabel(appInfo).toString()
         }
