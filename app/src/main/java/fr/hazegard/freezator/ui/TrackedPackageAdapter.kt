@@ -65,7 +65,6 @@ class TrackedPackageAdapter(private val c: Context,
             with(view) {
                 manage_app_name.text = packageApp.appName
 
-
                 with(manage_card_view) {
                     setBackgroundColor(ContextCompat.getColor(c, if (!isPkgEnabled) {
                         R.color.colorBackgroundBlueLight
