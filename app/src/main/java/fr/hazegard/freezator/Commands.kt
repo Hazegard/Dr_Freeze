@@ -10,7 +10,7 @@ class Commands {
      * @param pkg The package to enable
      */
     fun enablePackage(pkg: Pkg): String {
-        return su.exec("pm enable $pkg")
+        return su.exec("pm enable ${pkg.s}")
     }
 
     /**
