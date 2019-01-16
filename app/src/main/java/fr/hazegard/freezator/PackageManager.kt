@@ -100,10 +100,10 @@ class PackageManager(private var context: Context) {
      */
     fun getTrackedPackages(): List<PackageApp> {
         return saveHelper.getTrackedPackages()
-                .sortedBy { it.s }
                 .toList().map {
                     PackageApp(it, getAppName(context, it))
                 }
+                .sortedBy { it.appName }
     }
 
     /**
