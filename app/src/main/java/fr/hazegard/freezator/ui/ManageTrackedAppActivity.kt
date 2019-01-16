@@ -4,16 +4,20 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import fr.hazegard.freezator.model.PackageApp
 import fr.hazegard.freezator.PackageManager
 import fr.hazegard.freezator.R
+import fr.hazegard.freezator.extensions.onAnimationEnd
+import fr.hazegard.freezator.model.PackageApp
 import kotlinx.android.synthetic.main.activity_manage_tracked_app.*
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -26,9 +30,9 @@ class ManageTrackedAppActivity : AppCompatActivity() {
         set(value) {
             runOnUiThread {
                 tracked_view_animator.displayedChild = if (value.isEmpty()) {
-                    0
-                } else {
                     1
+                } else {
+                    2
                 }
             }
             field = value
@@ -40,6 +44,16 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_tracked_app)
+        with(animation_android.drawable as AnimatedVectorDrawableCompat) {
+            start()
+            onAnimationEnd {
+                if (isVisible) {
+                    runOnUiThread {
+                        start()
+                    }
+                }
+            }
+        }
         initListView()
         setSupportActionBar(findViewById(R.id.toolbar))
         no_tracked_applications.setOnClickListener {
@@ -52,24 +66,28 @@ class ManageTrackedAppActivity : AppCompatActivity() {
      * Initialize the list view
      */
     private fun initListView() {
-        listTrackedApp = getTrackedPackages()
-        val layout: RecyclerView.LayoutManager = GridLayoutManager(this, 2)
-        trackedPackageAdapter = TrackedPackageAdapter(this, listTrackedApp,
+        GlobalScope.launch {
+            listTrackedApp = getTrackedPackages().await()
+            val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, 2)
+            trackedPackageAdapter = TrackedPackageAdapter(this@ManageTrackedAppActivity, listTrackedApp,
+                    {
+                        finishAffinity()
+                    },
+                    {
+                        listTrackedApp = appsManager.getTrackedPackages()
+                        runOnUiThread {
+                            trackedPackageAdapter.updateList(listTrackedApp)
+                        }
+                    })
+            runOnUiThread {
+                with(managed_app_list)
                 {
-                    finishAffinity()
-                },
-                {
-                    listTrackedApp = getTrackedPackages()
-                    runOnUiThread {
-                        trackedPackageAdapter.updateList(listTrackedApp)
-                    }
-                })
-        with(managed_app_list)
-        {
-            layoutManager = layout
-            adapter = trackedPackageAdapter
-
+                    layoutManager = layout
+                    adapter = trackedPackageAdapter
+                }
+            }
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -103,7 +121,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ListAppActivity.UPDATE_TRACKED_APPS_CODE && resultCode == Activity.RESULT_OK) {
             GlobalScope.launch {
-                listTrackedApp = getTrackedPackages()
+                listTrackedApp = getTrackedPackages().await()
                 runOnUiThread { trackedPackageAdapter.updateList(listTrackedApp) }
             }
         }
@@ -114,10 +132,8 @@ class ManageTrackedAppActivity : AppCompatActivity() {
      * Get a list of tracked packages, sorted by application name
      * @return THe list of tracked packages
      */
-    private fun getTrackedPackages(): List<PackageApp> {
-        return appsManager.getTrackedPackages().sortedBy {
-            it.appName
-        }
+    private fun getTrackedPackages(): Deferred<List<PackageApp>> {
+        return GlobalScope.async { appsManager.getTrackedPackages() }
     }
 
     companion object {

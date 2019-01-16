@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:repeatMode="restart">
+    <set
+        android:interpolator="@android:anim/anticipate_overshoot_interpolator"
+        android:ordering="sequentially"
+        android:repeatCount="infinite"
+        android:repeatMode="restart">
+        <objectAnimator
+            android:duration="1000"
+            android:propertyName="rotation"
+            android:valueFrom="0"
+            android:valueTo="360" />
+        <objectAnimator
+            android:duration="3000"
+            android:propertyName="rotation"
+            android:valueFrom="360"
+            android:valueTo="0" />
+    </set>
+</set>

@@ -19,6 +19,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
+        <ImageView
+            android:id="@+id/animation_android"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/animated_android_robot"
+            android:contentDescription="@string/loading_icon" />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="No application found"
+                android:text="@string/no_application_found"
                 android:textColor="@color/textColor" />
         </LinearLayout>
 

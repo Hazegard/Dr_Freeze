@@ -4,17 +4,21 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import fr.hazegard.freezator.model.PackageApp
 import fr.hazegard.freezator.PackageManager
 import fr.hazegard.freezator.R
+import fr.hazegard.freezator.extensions.onAnimationEnd
+import fr.hazegard.freezator.model.PackageApp
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -26,10 +30,12 @@ class ListAppActivity : AppCompatActivity() {
     private var sendDoUpdate = false
     private var listPackage: List<PackageApp> = Collections.emptyList()
         set(value) {
-            main_view_annimator.displayedChild = if (value.isEmpty()) {
-                0
-            } else {
-                1
+            runOnUiThread {
+                main_view_annimator.displayedChild = if (value.isEmpty()) {
+                    1
+                } else {
+                    2
+                }
             }
             field = value
         }
@@ -40,6 +46,16 @@ class ListAppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        with(animation_android.drawable as AnimatedVectorDrawableCompat) {
+            start()
+            onAnimationEnd {
+                if (isVisible) {
+                    runOnUiThread {
+                        start()
+                    }
+                }
+            }
+        }
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -82,29 +98,35 @@ class ListAppActivity : AppCompatActivity() {
         if (requestCode == SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE && resultCode == Activity.RESULT_OK) {
             if (data?.getBooleanExtra(SettingsActivity.RESULT, false) == true) {
                 GlobalScope.launch {
-                    listPackage = getPackages()
+                    listPackage = getPackages().await()
                     runOnUiThread { packageAdapter.updateList(listPackage) }
                 }
             }
         }
     }
 
-    private fun getPackages(): List<PackageApp> {
-        return packageManager.getPackages()
+    private fun getPackages(): Deferred<List<PackageApp>> {
+        return GlobalScope.async {
+            packageManager.getPackages()
+        }
     }
 
     private fun initListView() {
-        listPackage = getPackages()
-        val layout: RecyclerView.LayoutManager = LinearLayoutManager(
-                this@ListAppActivity, LinearLayoutManager.VERTICAL, false)
-        packageAdapter = PackageAdapter(this@ListAppActivity, listPackage) {
-            sendDoUpdate = true
-        }
-        with(packageList) {
-            layoutManager = layout
-            adapter = packageAdapter
-            visibility = View.VISIBLE
+        GlobalScope.launch {
+            listPackage = getPackages().await()
+            val layout: RecyclerView.LayoutManager = LinearLayoutManager(
+                    this@ListAppActivity, LinearLayoutManager.VERTICAL, false)
+            packageAdapter = PackageAdapter(this@ListAppActivity, listPackage) {
+                sendDoUpdate = true
+            }
+            runOnUiThread {
+                with(packageList) {
+                    layoutManager = layout
+                    adapter = packageAdapter
+                    visibility = View.VISIBLE
 
+                }
+            }
         }
     }
 

@@ -12,4 +12,6 @@
     <string name="package_icon">Package Icon</string>
     <string name="manage_apps">Manage Apps</string>
     <string name="preferences_disable_persistent_notification">preferences_disable_persistent_notification</string>
+    <string name="loading_icon">loading_icon</string>
+    <string name="no_application_found">No application found</string>
 </resources>
