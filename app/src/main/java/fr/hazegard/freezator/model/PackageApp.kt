@@ -87,7 +87,7 @@ data class PackageApp(val pkg: Pkg, val appName: String) {
             ContextCompat.startActivity(context, launchIntent, null)
             notify(context)
         } else {
-            Log.d("async", "intent null")
+            Log.d("PackageApp", "Unable to start ${this.appName} (Launch intent fo package: ${pkg.s} is null)")
         }
     }
 

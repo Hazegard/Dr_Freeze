@@ -3,14 +3,13 @@ package fr.hazegard.freezator.ui
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import fr.hazegard.freezator.model.PackageApp
 import fr.hazegard.freezator.PackageManager
 import fr.hazegard.freezator.R
+import fr.hazegard.freezator.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -76,7 +75,6 @@ class TrackedPackageAdapter(private val c: Context,
                 with(manage_add_shortcut) {
                     setOnClickListener {
                         packageApp.addShortcut(c)
-                        Log.d("Manage", "add_shortcut - ${packageApp.pkg}")
                     }
                     setOnLongClickListener {
                         Toast.makeText(context, "Add Shortcut for ${packageApp.appName}", Toast.LENGTH_SHORT).show()
@@ -86,7 +84,6 @@ class TrackedPackageAdapter(private val c: Context,
 
                 with(manage_freeze_app) {
                     setOnClickListener {
-                        Log.d("Manage", "freeze - ${packageApp.pkg}")
                         GlobalScope.launch {
                             packageApp.disable()
                             packageApp.removeNotification(context)
@@ -102,7 +99,6 @@ class TrackedPackageAdapter(private val c: Context,
 
                 with(manage_untrack_app) {
                     setOnClickListener {
-                        Log.d("Manage", "Untrack - ${packageApp.pkg}")
                         appsManager.removeTrackedPackage(packageApp)
                         requestUpdate()
                     }
