@@ -21,7 +21,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         callback = activity as OnListAppsSettingChangeListener
     }
 
-
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
         preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)

@@ -160,5 +160,4 @@ class PackageManager(private var context: Context) {
             return context.packageManager.getApplicationLabel(appInfo).toString()
         }
     }
-
 }

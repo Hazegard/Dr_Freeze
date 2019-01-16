@@ -124,7 +124,6 @@ class ListAppActivity : AppCompatActivity() {
                     layoutManager = layout
                     adapter = packageAdapter
                     visibility = View.VISIBLE
-
                 }
             }
         }

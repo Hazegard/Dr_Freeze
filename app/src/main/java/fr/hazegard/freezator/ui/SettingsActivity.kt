@@ -52,6 +52,4 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.OnListAppsSetting
             return Intent(context, SettingsActivity::class.java)
         }
     }
-
-
 }

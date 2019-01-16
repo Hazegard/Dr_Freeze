@@ -51,7 +51,6 @@ class TrackedPackageAdapter(private val c: Context,
         notifyDataSetChanged()
     }
 
-
     inner class ManagedAppHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val appsManager by lazy { PackageManager(c) }
 

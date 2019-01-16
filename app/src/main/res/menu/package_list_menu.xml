@@ -4,14 +4,14 @@
 
     <item
         android:id="@+id/packageList_validate"
+        android:icon="@drawable/check_black"
         android:title="@string/validate"
         android:visible="false"
-        android:icon="@drawable/check_black"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/packageList_cancel"
+        android:icon="@drawable/close_black"
         android:title="@string/validate"
         android:visible="false"
-        android:icon="@drawable/close_black"
         app:showAsAction="ifRoom" />
 </menu>

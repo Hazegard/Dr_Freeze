@@ -87,7 +87,6 @@ class ManageTrackedAppActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
