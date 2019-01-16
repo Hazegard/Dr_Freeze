@@ -75,8 +75,8 @@ class Su private constructor() {
     private fun readOutput(): String {
         val buffer = BufferedReader(osRes.bufferedReader())
         val response = StringBuffer()
-        var line = buffer.readLine()
-        while (EOF != line) {
+        var line: String? = buffer.readLine()
+        while (line != null || EOF != line) {
             response.append(line)
             response.append("\n")
             line = buffer.readLine()
