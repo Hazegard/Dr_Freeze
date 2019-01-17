@@ -3,8 +3,8 @@ package fr.hazegard.freezator.ui
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Animatable
 import android.os.Bundle
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -46,8 +46,8 @@ class ListAppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        with(animation_android.drawable as AnimatedVectorDrawableCompat) {
-            start()
+        with(animation_android.drawable) {
+            (this as Animatable).start()
             onAnimationEnd {
                 if (isVisible) {
                     runOnUiThread {
