@@ -20,23 +20,24 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.properties.Delegates
 
 class ManageTrackedAppActivity : AppCompatActivity() {
     private lateinit var trackedPackageAdapter: TrackedPackageAdapter
     /**
      * Updating the list of tracked packages update also the view depending on the list size
      */
-    private var listTrackedApp: List<PackageApp> = Collections.emptyList()
-        set(value) {
-            runOnUiThread {
-                tracked_view_animator.displayedChild = if (value.isEmpty()) {
-                    1
-                } else {
-                    2
-                }
+    private var listTrackedApp: List<PackageApp> by Delegates.observable(
+            Collections.emptyList()) { _, _, newValue ->
+        runOnUiThread {
+            tracked_view_animator.displayedChild = if (newValue.isEmpty()) {
+                1
+            } else {
+                2
             }
-            field = value
         }
+    }
+
     private val appsManager by lazy {
         PackageManager(this)
     }

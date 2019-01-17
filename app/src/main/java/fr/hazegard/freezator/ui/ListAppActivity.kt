@@ -21,6 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.properties.Delegates
 
 
 class ListAppActivity : AppCompatActivity() {
@@ -28,17 +29,17 @@ class ListAppActivity : AppCompatActivity() {
     private lateinit var packageAdapter: PackageAdapter
     private lateinit var menu: Menu
     private var sendDoUpdate = false
-    private var listPackage: List<PackageApp> = Collections.emptyList()
-        set(value) {
-            runOnUiThread {
-                main_view_annimator.displayedChild = if (value.isEmpty()) {
-                    1
-                } else {
-                    2
-                }
+    private var listPackage: List<PackageApp> by Delegates.observable(
+            Collections.emptyList()) { _, _, newValue ->
+        runOnUiThread {
+            main_view_annimator.displayedChild = if (newValue.isEmpty()) {
+                1
+            } else {
+                2
             }
-            field = value
         }
+    }
+
     private val packageManager by lazy {
         PackageManager(this@ListAppActivity)
     }
