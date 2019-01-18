@@ -5,18 +5,18 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import fr.hazegard.freezator.PackageManager
 import fr.hazegard.freezator.R
 import fr.hazegard.freezator.model.PackageApp
 import fr.hazegard.freezator.model.Pkg
 import kotlinx.android.synthetic.main.row_package.view.*
+import kotlin.properties.Delegates
 
 /**
  * Created by Hazegard on 26/02/18.
  */
 
-class PackageAdapter(context: Context,
-                     private var packages: List<PackageApp>,
+class PackageAdapter(private var packages: List<PackageApp>,
+                     var trackedPackages: MutableSet<Pkg>,
                      private val onUpdateList: () -> Unit)
     : RecyclerView.Adapter<PackageAdapter.PackageHolder>() {
     override fun onBindViewHolder(holder: PackageHolder, position: Int) {
@@ -24,18 +24,10 @@ class PackageAdapter(context: Context,
         holder.setContent(pkg)
     }
 
-    var isEdit = false
-        set(value) {
-            field = value
-            if (value) {
-                trackedPackagesBak = trackedPackages.toMutableSet()
-            }
-            notifyDataSetChanged()
-        }
-    private val appsManager = PackageManager(context)
+    var isEdit by Delegates.observable(false) { _, _, _ ->
+        notifyDataSetChanged()
 
-    private var trackedPackages: MutableSet<Pkg> = appsManager.getTrackedPackagesAsSet().toMutableSet()
-    private lateinit var trackedPackagesBak: MutableSet<Pkg>
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PackageHolder {
         val itemView: View = LayoutInflater.from(parent.context)
@@ -45,14 +37,6 @@ class PackageAdapter(context: Context,
 
     override fun getItemCount(): Int {
         return packages.size
-    }
-
-    fun validateChange() {
-        appsManager.saveTrackedPackages(trackedPackages)
-    }
-
-    fun cancelChange() {
-        trackedPackages = trackedPackagesBak
     }
 
     fun updateList(newPackageName: List<PackageApp>) {

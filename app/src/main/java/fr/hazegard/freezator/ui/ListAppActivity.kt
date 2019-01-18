@@ -15,6 +15,7 @@ import fr.hazegard.freezator.PackageManager
 import fr.hazegard.freezator.R
 import fr.hazegard.freezator.extensions.onAnimationEnd
 import fr.hazegard.freezator.model.PackageApp
+import fr.hazegard.freezator.model.Pkg
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
@@ -72,10 +73,10 @@ class ListAppActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.packageList_validate -> {
-                packageAdapter.validateChange()
+                validateChanges()
             }
             R.id.packageList_cancel -> {
-                packageAdapter.cancelChange()
+                resetAdapterContent()
             }
             R.id.menu_settings -> {
                 startActivityForResult(SettingsActivity.newIntent(this@ListAppActivity),
@@ -106,6 +107,16 @@ class ListAppActivity : AppCompatActivity() {
         }
     }
 
+    private fun resetAdapterContent() {
+        val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
+        packageAdapter.trackedPackages = trackedPackages
+    }
+
+    private fun validateChanges() {
+        val newTrackedPackages = packageAdapter.trackedPackages
+        packageManager.saveTrackedPackages(newTrackedPackages)
+    }
+
     private fun getPackages(): Deferred<List<PackageApp>> {
         return GlobalScope.async {
             packageManager.getPackages()
@@ -115,9 +126,10 @@ class ListAppActivity : AppCompatActivity() {
     private fun initListView() {
         GlobalScope.launch {
             listPackage = getPackages().await()
+            val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
             val layout: RecyclerView.LayoutManager = LinearLayoutManager(
                     this@ListAppActivity, LinearLayoutManager.VERTICAL, false)
-            packageAdapter = PackageAdapter(this@ListAppActivity, listPackage) {
+            packageAdapter = PackageAdapter(this@ListAppActivity, listPackage, trackedPackages) {
                 sendDoUpdate = true
             }
             runOnUiThread {
