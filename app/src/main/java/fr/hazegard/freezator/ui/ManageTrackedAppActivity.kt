@@ -58,8 +58,8 @@ class ManageTrackedAppActivity : AppCompatActivity() {
         initListView()
         setSupportActionBar(findViewById(R.id.toolbar))
         no_tracked_applications.setOnClickListener {
-            val listAppActivityIntent = ListAppActivity.newIntent(this)
-            startActivityForResult(listAppActivityIntent, ListAppActivity.UPDATE_TRACKED_APPS_CODE)
+            val listAppActivityIntent = ListPackagesActivity.newIntent(this)
+            startActivityForResult(listAppActivityIntent, ListPackagesActivity.UPDATE_TRACKED_APPS_CODE)
         }
     }
 
@@ -104,8 +104,8 @@ class ManageTrackedAppActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_list_apps -> {
-                val listAppActivityIntent = ListAppActivity.newIntent(this)
-                startActivityForResult(listAppActivityIntent, ListAppActivity.UPDATE_TRACKED_APPS_CODE)
+                val listAppActivityIntent = ListPackagesActivity.newIntent(this)
+                startActivityForResult(listAppActivityIntent, ListPackagesActivity.UPDATE_TRACKED_APPS_CODE)
                 true
             }
             android.R.id.home -> {
@@ -119,7 +119,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == ListAppActivity.UPDATE_TRACKED_APPS_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == ListPackagesActivity.UPDATE_TRACKED_APPS_CODE && resultCode == Activity.RESULT_OK) {
             GlobalScope.launch {
                 listTrackedApp = getTrackedPackages().await()
                 runOnUiThread { trackedPackageAdapter.updateList(listTrackedApp) }

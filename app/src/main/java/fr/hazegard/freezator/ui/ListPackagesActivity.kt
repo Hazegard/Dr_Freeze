@@ -16,7 +16,7 @@ import fr.hazegard.freezator.R
 import fr.hazegard.freezator.extensions.onAnimationEnd
 import fr.hazegard.freezator.model.PackageApp
 import fr.hazegard.freezator.model.Pkg
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_list_packages.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -25,8 +25,8 @@ import java.util.*
 import kotlin.properties.Delegates
 
 
-class ListAppActivity : AppCompatActivity() {
-    private val TAG: String = "ListAppActivity"
+class ListPackagesActivity : AppCompatActivity() {
+    private val TAG: String = "ListPackagesActivity"
     private lateinit var packageAdapter: PackageAdapter
     private lateinit var menu: Menu
     private var sendDoUpdate = false
@@ -42,12 +42,12 @@ class ListAppActivity : AppCompatActivity() {
     }
 
     private val packageManager by lazy {
-        PackageManager(this@ListAppActivity)
+        PackageManager(this@ListPackagesActivity)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_list_packages)
         with(animation_android.drawable) {
             (this as Animatable).start()
             onAnimationEnd {
@@ -79,7 +79,7 @@ class ListAppActivity : AppCompatActivity() {
                 resetAdapterContent()
             }
             R.id.menu_settings -> {
-                startActivityForResult(SettingsActivity.newIntent(this@ListAppActivity),
+                startActivityForResult(SettingsActivity.newIntent(this@ListPackagesActivity),
                         SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE)
                 return true
             }
@@ -128,8 +128,8 @@ class ListAppActivity : AppCompatActivity() {
             listPackage = getPackages().await()
             val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
             val layout: RecyclerView.LayoutManager = LinearLayoutManager(
-                    this@ListAppActivity, LinearLayoutManager.VERTICAL, false)
-            packageAdapter = PackageAdapter(this@ListAppActivity, listPackage, trackedPackages) {
+                    this@ListPackagesActivity, LinearLayoutManager.VERTICAL, false)
+            packageAdapter = PackageAdapter(this@ListPackagesActivity, listPackage, trackedPackages) {
                 sendDoUpdate = true
             }
             runOnUiThread {
@@ -160,7 +160,7 @@ class ListAppActivity : AppCompatActivity() {
         const val UPDATE_TRACKED_APPS_CODE = 64
         const val RESULT = "UPDATE_TRACKED_APPS"
         fun newIntent(context: Context): Intent {
-            return Intent(context, ListAppActivity::class.java)
+            return Intent(context, ListPackagesActivity::class.java)
         }
     }
 }
