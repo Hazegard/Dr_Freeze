@@ -97,5 +97,14 @@ class Su private constructor() {
         private const val MATCH_ROOT = "uid=0"
         val instance by lazy { Su() }
         private const val EOF = "EOF"
+        val isRootAvailable = testRootAvailability()
+        private fun testRootAvailability(): Boolean {
+            return try {
+                instance
+                true
+            } catch (e: NotRootException) {
+                false
+            }
+        }
     }
 }

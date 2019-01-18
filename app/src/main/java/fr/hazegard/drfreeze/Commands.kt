@@ -5,7 +5,6 @@ import fr.hazegard.drfreeze.model.Pkg
 import java.util.*
 
 class Commands {
-    private val su = Su.instance
 
     /**
      * Enable the package
@@ -13,7 +12,7 @@ class Commands {
      */
     fun enablePackage(pkg: Pkg): String {
         return try {
-            su.exec("pm enable ${pkg.s}")
+            Su.instance.exec("pm enable ${pkg.s}")
         } catch (e: NotRootException) {
             ""
         }
@@ -25,7 +24,7 @@ class Commands {
      */
     fun disablePackage(pkg: Pkg): String {
         return try {
-            su.exec("pm disable ${pkg.s}")
+            Su.instance.exec("pm disable ${pkg.s}")
         } catch (e: NotRootException) {
             ""
         }
@@ -37,7 +36,7 @@ class Commands {
      */
     fun listDisabledPackages(): List<Pkg> {
         return try {
-            su.exec("pm list packages -d | cut -d ':' -f 2")
+            Su.instance.exec("pm list packages -d | cut -d ':' -f 2")
                     .split("\n")
                     .map {
                         Pkg(it)

@@ -1,6 +1,7 @@
 package fr.hazegard.drfreeze
 
 import android.content.Context
+import android.preference.Preference
 import android.preference.PreferenceManager
 
 
@@ -52,6 +53,18 @@ class PreferencesHelper {
         fun isNotificationPersistent(context: Context): Boolean {
             return PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(context.getString(R.string.preferences_disable_persistent_notification), true)
+        }
+
+        fun setBypassRootNeeded(context: Context) {
+            PreferenceManager.getDefaultSharedPreferences(context)
+                    .edit()
+                    .putBoolean(context.getString(R.string.preferences_bypass_root_needed), true)
+                    .apply()
+        }
+
+        fun doBypassRootNeeded(context: Context): Boolean {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                    .getBoolean(context.getString(R.string.preferences_bypass_root_needed), false)
         }
     }
 }

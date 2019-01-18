@@ -73,6 +73,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
             trackedPackageAdapter = TrackedPackageAdapter(this@ManageTrackedAppActivity, listTrackedApp,
                     {
                         finishAffinity()
+                        System.exit(0)
                     },
                     {
                         listTrackedApp = appsManager.getTrackedPackages()

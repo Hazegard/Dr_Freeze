@@ -14,4 +14,6 @@
     <string name="preferences_disable_persistent_notification">preferences_disable_persistent_notification</string>
     <string name="loading_icon">loading_icon</string>
     <string name="no_application_found">No application found</string>
+    <string name="preferences_bypass_root_needed">preferences_bypass_root_needed</string>
+    <string name="no_root_warning">The application need root access to work properly. It may crash or dysfunction. However you can still try it at your own risks</string>
 </resources>
