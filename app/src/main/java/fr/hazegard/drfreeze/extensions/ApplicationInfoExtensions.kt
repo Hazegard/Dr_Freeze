@@ -1,4 +1,4 @@
-package fr.hazegard.freezator.extensions
+package fr.hazegard.drfreeze.extensions
 
 import android.content.Context
 import android.content.Intent

@@ -1,4 +1,4 @@
-package fr.hazegard.freezator.ui
+package fr.hazegard.drfreeze.ui
 
 import android.app.Activity
 import android.content.Context
@@ -11,11 +11,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import fr.hazegard.freezator.PackageManager
-import fr.hazegard.freezator.R
-import fr.hazegard.freezator.extensions.onAnimationEnd
-import fr.hazegard.freezator.model.PackageApp
-import fr.hazegard.freezator.model.Pkg
+import fr.hazegard.drfreeze.PackageManager
+import fr.hazegard.drfreeze.R
+import fr.hazegard.drfreeze.extensions.onAnimationEnd
+import fr.hazegard.drfreeze.model.PackageApp
+import fr.hazegard.drfreeze.model.Pkg
 import kotlinx.android.synthetic.main.activity_list_packages.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
@@ -33,7 +33,7 @@ class ListPackagesActivity : AppCompatActivity() {
     private var listPackage: List<PackageApp> by Delegates.observable(
             Collections.emptyList()) { _, _, newValue ->
         runOnUiThread {
-            main_view_annimator.displayedChild = if (newValue.isEmpty()) {
+            main_view_animator.displayedChild = if (newValue.isEmpty()) {
                 1
             } else {
                 2

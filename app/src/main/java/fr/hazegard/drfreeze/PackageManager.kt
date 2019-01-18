@@ -1,12 +1,12 @@
-package fr.hazegard.freezator
+package fr.hazegard.drfreeze
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import fr.hazegard.freezator.extensions.isLaunchableApp
-import fr.hazegard.freezator.extensions.isSystemApp
-import fr.hazegard.freezator.model.PackageApp
-import fr.hazegard.freezator.model.Pkg
+import fr.hazegard.drfreeze.extensions.isLaunchableApp
+import fr.hazegard.drfreeze.extensions.isSystemApp
+import fr.hazegard.drfreeze.model.PackageApp
+import fr.hazegard.drfreeze.model.Pkg
 
 /**
  * Created by Hazegard on 01/03/18.

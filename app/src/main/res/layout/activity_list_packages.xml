@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="fr.hazegard.freezator.ui.ListPackagesActivity">
+    tools:context="fr.hazegard.drfreeze.ui.ListPackagesActivity">
 
     <include
         android:id="@+id/toolbar"

@@ -1,4 +1,4 @@
-package fr.hazegard.freezator.exception
+package fr.hazegard.drfreeze.exception
 
 /**
  * Created by Hazegard on 01/03/18.

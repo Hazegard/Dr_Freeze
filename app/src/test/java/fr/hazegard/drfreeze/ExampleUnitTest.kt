@@ -1,4 +1,4 @@
-package fr.hazegard.freezator
+package fr.hazegard.drfreeze
 
 import org.junit.Test
 

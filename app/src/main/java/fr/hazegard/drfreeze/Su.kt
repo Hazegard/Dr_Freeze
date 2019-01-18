@@ -1,7 +1,7 @@
-package fr.hazegard.freezator
+package fr.hazegard.drfreeze
 
 import android.util.Log
-import fr.hazegard.freezator.exception.NotRootException
+import fr.hazegard.drfreeze.exception.NotRootException
 import java.io.BufferedReader
 import java.io.DataInputStream
 import java.io.DataOutputStream

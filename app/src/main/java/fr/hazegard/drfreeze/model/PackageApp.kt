@@ -1,4 +1,4 @@
-package fr.hazegard.freezator.model
+package fr.hazegard.drfreeze.model
 
 import android.content.Context
 import android.content.Intent
@@ -13,10 +13,10 @@ import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.util.Log
-import fr.hazegard.freezator.Commands
-import fr.hazegard.freezator.NotificationUtils
-import fr.hazegard.freezator.extensions.toBitmap
-import fr.hazegard.freezator.ui.ShortcutDispatcherActivity
+import fr.hazegard.drfreeze.Commands
+import fr.hazegard.drfreeze.NotificationUtils
+import fr.hazegard.drfreeze.extensions.toBitmap
+import fr.hazegard.drfreeze.ui.ShortcutDispatcherActivity
 
 data class PackageApp(val pkg: Pkg, val appName: String) {
 

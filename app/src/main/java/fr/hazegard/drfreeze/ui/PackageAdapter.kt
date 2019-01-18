@@ -1,13 +1,13 @@
-package fr.hazegard.freezator.ui
+package fr.hazegard.drfreeze.ui
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import fr.hazegard.freezator.R
-import fr.hazegard.freezator.model.PackageApp
-import fr.hazegard.freezator.model.Pkg
+import fr.hazegard.drfreeze.R
+import fr.hazegard.drfreeze.model.PackageApp
+import fr.hazegard.drfreeze.model.Pkg
 import kotlinx.android.synthetic.main.row_package.view.*
 import kotlin.properties.Delegates
 

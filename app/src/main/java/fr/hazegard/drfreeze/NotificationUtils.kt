@@ -1,4 +1,4 @@
-package fr.hazegard.freezator
+package fr.hazegard.drfreeze
 
 import android.app.IntentService
 import android.app.NotificationChannel
@@ -9,8 +9,8 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import fr.hazegard.freezator.model.PackageApp
-import fr.hazegard.freezator.model.Pkg
+import fr.hazegard.drfreeze.model.PackageApp
+import fr.hazegard.drfreeze.model.Pkg
 
 
 /**

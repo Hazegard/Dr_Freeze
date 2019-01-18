@@ -1,4 +1,4 @@
-package fr.hazegard.freezator.extensions
+package fr.hazegard.drfreeze.extensions
 
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable

@@ -1,13 +1,13 @@
-package fr.hazegard.freezator.ui
+package fr.hazegard.drfreeze.ui
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import fr.hazegard.freezator.PackageManager
-import fr.hazegard.freezator.model.PackageApp
-import fr.hazegard.freezator.model.Pkg
+import fr.hazegard.drfreeze.PackageManager
+import fr.hazegard.drfreeze.model.PackageApp
+import fr.hazegard.drfreeze.model.Pkg
 
 /**
  * This activity is used to dispatch the intent coming from the shortcut

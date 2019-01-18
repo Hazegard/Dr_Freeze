@@ -1,10 +1,10 @@
-package fr.hazegard.freezator.ui
+package fr.hazegard.drfreeze.ui
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.preference.PreferenceFragmentCompat
-import fr.hazegard.freezator.R
+import fr.hazegard.drfreeze.R
 
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {

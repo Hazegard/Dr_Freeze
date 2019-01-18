@@ -1,7 +1,7 @@
-package fr.hazegard.freezator
+package fr.hazegard.drfreeze
 
 import android.content.Context
-import fr.hazegard.freezator.model.Pkg
+import fr.hazegard.drfreeze.model.Pkg
 import java.util.*
 
 /**

@@ -1,4 +1,4 @@
-package fr.hazegard.freezator
+package fr.hazegard.drfreeze
 
 import android.content.Context
 import android.preference.PreferenceManager

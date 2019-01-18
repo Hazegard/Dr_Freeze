@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="fr.hazegard.freezator">
+    package="fr.hazegard.drfreeze">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.NotRootActivity"></activity>
         <activity android:name=".ui.ListPackagesActivity" />
 
         <service android:name=".NotificationUtils$Companion$NotificationActionService" />
@@ -24,12 +25,11 @@
         </receiver>
 
         <activity
-            android:exported="true"
             android:name=".ui.ShortcutDispatcherActivity"
+            android:exported="true"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.Transparent" />
         <activity android:name=".ui.ManageTrackedAppActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -40,4 +40,4 @@
         <activity android:name=".ui.SettingsActivity" />
     </application>
 
-</manifest> <!-- TODO search launch -->
+</manifest>

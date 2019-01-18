@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Freezator</string>
+    <string name="app_name">Dr Freeze</string>
     <string name="validate">Valider</string>
     <string name="channel_description">Enabled apps</string>
     <string name="channel_name">Enabled Apps</string>

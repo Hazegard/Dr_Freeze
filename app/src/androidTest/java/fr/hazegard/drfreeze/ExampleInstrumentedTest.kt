@@ -1,4 +1,4 @@
-package fr.hazegard.freezator
+package fr.hazegard.drfreeze
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

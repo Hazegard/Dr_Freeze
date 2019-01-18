@@ -1,4 +1,4 @@
-package fr.hazegard.freezator.ui
+package fr.hazegard.drfreeze.ui
 
 import android.app.Activity
 import android.content.Context
@@ -10,10 +10,10 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import fr.hazegard.freezator.PackageManager
-import fr.hazegard.freezator.R
-import fr.hazegard.freezator.extensions.onAnimationEnd
-import fr.hazegard.freezator.model.PackageApp
+import fr.hazegard.drfreeze.PackageManager
+import fr.hazegard.drfreeze.R
+import fr.hazegard.drfreeze.extensions.onAnimationEnd
+import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.activity_manage_tracked_app.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope

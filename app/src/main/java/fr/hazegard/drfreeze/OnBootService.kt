@@ -1,9 +1,9 @@
-package fr.hazegard.freezator
+package fr.hazegard.drfreeze
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import fr.hazegard.freezator.exception.NotRootException
+import fr.hazegard.drfreeze.exception.NotRootException
 
 /**
  * Created by hazegard on 16/03/18.

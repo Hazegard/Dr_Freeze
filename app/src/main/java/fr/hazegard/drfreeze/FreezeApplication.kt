@@ -1,4 +1,4 @@
-package fr.hazegard.freezator
+package fr.hazegard.drfreeze
 
 import android.app.Application
 import android.support.v7.app.AppCompatDelegate

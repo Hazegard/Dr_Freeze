@@ -1,4 +1,4 @@
-package fr.hazegard.freezator.ui
+package fr.hazegard.drfreeze.ui
 
 import android.app.Activity
 import android.content.Context
@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import fr.hazegard.freezator.R
+import fr.hazegard.drfreeze.R
 
 
 class SettingsActivity : AppCompatActivity(), SettingsFragment.OnListAppsSettingChangeListener {

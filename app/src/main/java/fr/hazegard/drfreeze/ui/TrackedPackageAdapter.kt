@@ -1,4 +1,4 @@
-package fr.hazegard.freezator.ui
+package fr.hazegard.drfreeze.ui
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import fr.hazegard.freezator.PackageManager
-import fr.hazegard.freezator.R
-import fr.hazegard.freezator.model.PackageApp
+import fr.hazegard.drfreeze.PackageManager
+import fr.hazegard.drfreeze.R
+import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
