@@ -12,7 +12,7 @@
         layout="@layout/toolbar_layout" />
 
     <ViewAnimator
-        android:id="@+id/main_view_annimator"
+        android:id="@+id/main_view_animator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/background"
