@@ -129,7 +129,7 @@ class ListPackagesActivity : AppCompatActivity() {
             val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
             val layout: RecyclerView.LayoutManager = LinearLayoutManager(
                     this@ListPackagesActivity, LinearLayoutManager.VERTICAL, false)
-            packageAdapter = PackageAdapter(this@ListPackagesActivity, listPackage, trackedPackages) {
+            packageAdapter = PackageAdapter(listPackage, trackedPackages) {
                 sendDoUpdate = true
             }
             runOnUiThread {
