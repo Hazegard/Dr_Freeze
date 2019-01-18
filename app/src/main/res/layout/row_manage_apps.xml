@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/manage_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:background="@color/background"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    tools:layout_width="200dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,7 +22,8 @@
             android:contentDescription="@string/package_icon"
             android:src="@mipmap/ic_launcher"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/manage_app_name"
@@ -49,7 +52,7 @@
             android:contentDescription="Freeze App"
             android:tint="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="@id/manage_add_shortcut"
-            app:layout_constraintEnd_toEndOf="@id/manage_untrack_app"
+            app:layout_constraintEnd_toStartOf="@id/manage_untrack_app"
             app:layout_constraintStart_toEndOf="@id/manage_add_shortcut"
             app:layout_constraintTop_toBottomOf="@id/manage_app_name"
             app:layout_constraintTop_toTopOf="@id/manage_add_shortcut"
