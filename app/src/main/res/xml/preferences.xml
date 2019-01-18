@@ -32,11 +32,3 @@ Use carefully!"
             android:title="Show system apps" />
     </PreferenceCategory>
 </PreferenceScreen>
-
-
-    <!--
-        -> Désactiver notifications
-        -> Désactiver notifications au boot
-        -> Afficher applications systèmes
-        ->
-    -->

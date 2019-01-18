@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("fr.hazegard.freezator", appContext.packageName)
+        assertEquals("fr.hazegard.dr_freeze", appContext.packageName)
     }
 }

@@ -121,7 +121,7 @@ class NotificationUtils {
                 /**
                  * Create a new Intent that disable the package
                  * @param context The current context
-                 * @param packageName The package tha tshould be disabled
+                 * @param packageName The package that should be disabled
                  */
                 fun newDisablePackageIntent(context: Context, packageName: String): Intent {
                     return Intent(context, NotificationActionService::class.java).apply {
