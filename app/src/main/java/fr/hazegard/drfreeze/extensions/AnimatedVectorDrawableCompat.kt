@@ -4,8 +4,8 @@ import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
-import android.support.graphics.drawable.Animatable2Compat
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 /**
  * Set Callback when the animation finish

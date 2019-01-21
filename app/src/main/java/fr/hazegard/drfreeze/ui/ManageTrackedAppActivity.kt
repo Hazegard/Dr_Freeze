@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import fr.hazegard.drfreeze.PackageManager
@@ -69,7 +69,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     private fun initListView() {
         GlobalScope.launch {
             listTrackedApp = getTrackedPackages().await()
-            val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, 2)
+            val layout: androidx.recyclerview.widget.RecyclerView.LayoutManager = androidx.recyclerview.widget.GridLayoutManager(this@ManageTrackedAppActivity, 2)
             trackedPackageAdapter = TrackedPackageAdapter(this@ManageTrackedAppActivity, listTrackedApp,
                     {
                         finishAffinity()

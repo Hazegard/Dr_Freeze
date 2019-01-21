@@ -3,7 +3,7 @@ package fr.hazegard.drfreeze.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceFragmentCompat
 import fr.hazegard.drfreeze.R
 
 
@@ -16,7 +16,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private var callback: OnListAppsSettingChangeListener? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         callback = activity as OnListAppsSettingChangeListener
     }

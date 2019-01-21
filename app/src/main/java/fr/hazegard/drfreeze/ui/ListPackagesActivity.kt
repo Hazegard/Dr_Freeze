@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -127,8 +127,8 @@ class ListPackagesActivity : AppCompatActivity() {
         GlobalScope.launch {
             listPackage = getPackages().await()
             val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
-            val layout: RecyclerView.LayoutManager = LinearLayoutManager(
-                    this@ListPackagesActivity, LinearLayoutManager.VERTICAL, false)
+            val layout: androidx.recyclerview.widget.RecyclerView.LayoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+                    this@ListPackagesActivity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
             packageAdapter = PackageAdapter(listPackage, trackedPackages) {
                 sendDoUpdate = true
             }

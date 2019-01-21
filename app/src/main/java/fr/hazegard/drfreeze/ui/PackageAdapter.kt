@@ -1,7 +1,7 @@
 package fr.hazegard.drfreeze.ui
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +18,7 @@ import kotlin.properties.Delegates
 class PackageAdapter(private var packages: List<PackageApp>,
                      var trackedPackages: MutableSet<Pkg>,
                      private val onUpdateList: () -> Unit)
-    : RecyclerView.Adapter<PackageAdapter.PackageHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<PackageAdapter.PackageHolder>() {
     override fun onBindViewHolder(holder: PackageHolder, position: Int) {
         val pkg: PackageApp = packages[position]
         holder.setContent(pkg)
@@ -44,7 +44,7 @@ class PackageAdapter(private var packages: List<PackageApp>,
         notifyDataSetChanged()
     }
 
-    inner class PackageHolder(private val view: View, private val c: Context) : RecyclerView.ViewHolder(view) {
+    inner class PackageHolder(private val view: View, private val c: Context) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
         fun setContent(packageApp: PackageApp) {
             with(view) {

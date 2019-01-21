@@ -10,8 +10,8 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Build
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.pm.ShortcutManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.pm.ShortcutManagerCompat
 import android.util.Log
 import fr.hazegard.drfreeze.Commands
 import fr.hazegard.drfreeze.NotificationUtils

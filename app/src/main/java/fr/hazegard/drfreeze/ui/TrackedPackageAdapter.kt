@@ -1,8 +1,8 @@
 package fr.hazegard.drfreeze.ui
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +21,7 @@ class TrackedPackageAdapter(private val c: Context,
                             private var managedPackage: List<PackageApp>,
                             private val callback: () -> Unit,
                             private val requestUpdate: () -> Unit)
-    : RecyclerView.Adapter<TrackedPackageAdapter.ManagedAppHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<TrackedPackageAdapter.ManagedAppHolder>() {
 
     private val appsManager = PackageManager(c)
     private var listDisabledPackages = appsManager.getDisabledPackages()
@@ -51,7 +51,7 @@ class TrackedPackageAdapter(private val c: Context,
         notifyDataSetChanged()
     }
 
-    inner class ManagedAppHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    inner class ManagedAppHolder(private val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         private val appsManager by lazy { PackageManager(c) }
 
         /**
