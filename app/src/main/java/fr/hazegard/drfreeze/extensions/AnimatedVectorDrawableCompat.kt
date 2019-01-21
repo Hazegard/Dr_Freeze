@@ -7,6 +7,10 @@ import android.os.Looper
 import android.support.graphics.drawable.Animatable2Compat
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 
+/**
+ * Set Callback when the animation finish
+ * @param callback The callback to execute
+ */
 fun Animatable.onAnimationEnd(callback: () -> Unit) {
     AnimatedVectorDrawableCompat.registerAnimationCallback(
             this as Drawable,

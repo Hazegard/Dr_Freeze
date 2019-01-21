@@ -1,7 +1,6 @@
 package fr.hazegard.drfreeze
 
 import android.content.Context
-import android.preference.Preference
 import android.preference.PreferenceManager
 
 
@@ -55,6 +54,10 @@ class PreferencesHelper {
                     .getBoolean(context.getString(R.string.preferences_disable_persistent_notification), true)
         }
 
+        /**
+         * Update the shared preferences to bypass the not rooted screen
+         *
+         */
         fun setBypassRootNeeded(context: Context) {
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
@@ -62,6 +65,10 @@ class PreferencesHelper {
                     .apply()
         }
 
+        /**
+         * Get the preference to whether show not rooted screen
+         *
+         */
         fun doBypassRootNeeded(context: Context): Boolean {
             return PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(context.getString(R.string.preferences_bypass_root_needed), false)
