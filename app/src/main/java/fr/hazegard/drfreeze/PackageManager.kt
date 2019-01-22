@@ -16,6 +16,10 @@ class PackageManager(private var context: Context) {
         Commands()
     }
 
+    private val preferencesHelper: PreferencesHelper by lazy {
+        PreferencesHelper(context)
+    }
+
     private val saveHelper: SaveHelper by lazy { SaveHelper(context) }
 
     /**
@@ -44,8 +48,8 @@ class PackageManager(private var context: Context) {
      * @return The list of package (All packages or Installed packages)
      */
     fun getPackages(): List<PackageApp> {
-        val doKeepSystemApps = PreferencesHelper.isSystemAppsEnabled(context)
-        val showOnlyLaunchApps = PreferencesHelper.isOnlyLauncherApp(context)
+        val doKeepSystemApps = preferencesHelper.isSystemAppsEnabled()
+        val showOnlyLaunchApps = preferencesHelper.isOnlyLauncherApp()
         return getAllPackages()
                 .filter { doKeepSystemApps || it.isSystemApp() }
                 .filter { !showOnlyLaunchApps || it.isLaunchableApp(context) }

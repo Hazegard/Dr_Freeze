@@ -2,8 +2,8 @@ package fr.hazegard.drfreeze.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import fr.hazegard.drfreeze.PreferencesHelper
 import fr.hazegard.drfreeze.R
 import kotlinx.android.synthetic.main.activity_not_root.*
@@ -19,7 +19,7 @@ class NotRootActivity : AppCompatActivity() {
             System.exit(0)
         }
         button_continue.setOnClickListener {
-            PreferencesHelper.setBypassRootNeeded(this)
+            PreferencesHelper(this).setBypassRootNeeded()
             finish()
         }
     }

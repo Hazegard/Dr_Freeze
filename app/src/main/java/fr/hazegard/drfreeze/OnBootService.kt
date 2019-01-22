@@ -13,7 +13,7 @@ import android.content.Intent
 class OnBootService : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         if (Intent.ACTION_BOOT_COMPLETED == intent?.action
-                && !PreferencesHelper.isBootNotificationDisabled(context)) {
+                && !PreferencesHelper(context).isBootNotificationDisabled()) {
             val enabledAndTrackedApps = PackageManager(context).getEnabledAndTracked()
             NotificationUtils.sendNotification(context, enabledAndTrackedApps)
         }

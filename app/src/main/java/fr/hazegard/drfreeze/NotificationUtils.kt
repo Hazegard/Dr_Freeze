@@ -26,7 +26,7 @@ class NotificationUtils {
          * @param packages THe packages targeted by the notifications
          */
         fun sendNotification(context: Context, packages: List<PackageApp>) {
-            val isPersistent = PreferencesHelper.isNotificationPersistent(context)
+            val isPersistent = PreferencesHelper(context).isNotificationPersistent()
             packages.forEach {
                 sendNotification(context, it, isPersistent)
             }
@@ -39,7 +39,7 @@ class NotificationUtils {
          * @param pkg THe package targeted by the notification
          */
         fun sendNotification(context: Context, pkg: PackageApp) {
-            val isPersistent = PreferencesHelper.isNotificationPersistent(context)
+            val isPersistent = PreferencesHelper(context).isNotificationPersistent()
             sendNotification(context, pkg, isPersistent)
         }
 
@@ -51,7 +51,7 @@ class NotificationUtils {
          * @param isPersistent Whether the notification should be persistent
          */
         private fun sendNotification(context: Context, packageApp: PackageApp, isPersistent: Boolean) {
-            if (PreferencesHelper.isNotificationDisabled(context)) {
+            if (PreferencesHelper(context).isNotificationDisabled()) {
                 return
             }
 
