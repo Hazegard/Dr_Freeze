@@ -7,28 +7,34 @@ import fr.hazegard.drfreeze.extensions.isLaunchableApp
 import fr.hazegard.drfreeze.extensions.isSystemApp
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
+import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by Hazegard on 01/03/18.
  */
-class PackageManager(private var context: Context) {
-    private val commands: Commands by lazy {
-        Commands()
-    }
+class PackageManager @Inject constructor(
+        private val preferencesHelper: PreferencesHelper,
+        val commands: Commands,
+        val pm: PackageManager,
+        val saveHelper: SaveHelper/*private var context: Context*/) {
+//    private val commands: Commands by lazy {
+//        Commands()
+//    }
 
-    private val preferencesHelper: PreferencesHelper by lazy {
-        PreferencesHelper(context)
-    }
+//    private val preferencesHelper: PreferencesHelper by lazy {
+//        PreferencesHelper(context)
+//    }
 
-    private val saveHelper: SaveHelper by lazy { SaveHelper(context) }
+//    @Inject
+//    lateinit var saveHelper: SaveHelper
 
     /**
      * Get a list of all packages (including system packages)
      * @return a list of all packages
      */
     private fun getAllPackages(): List<ApplicationInfo> {
-        return context.packageManager
-                .getInstalledApplications(PackageManager.GET_META_DATA)
+        return pm.getInstalledApplications(PackageManager.GET_META_DATA)
                 .distinctBy { it.processName }
     }
 
@@ -52,10 +58,10 @@ class PackageManager(private var context: Context) {
         val showOnlyLaunchApps = preferencesHelper.isOnlyLauncherApp()
         return getAllPackages()
                 .filter { doKeepSystemApps || it.isSystemApp() }
-                .filter { !showOnlyLaunchApps || it.isLaunchableApp(context) }
+                .filter { !showOnlyLaunchApps || it.isLaunchableApp(pm) }
                 .map {
                     val pkg = Pkg(it.packageName)
-                    return@map PackageApp(pkg, getAppName(context, pkg))
+                    return@map PackageApp(pkg, getAppName(pkg))
                 }
                 .sortedBy { it.appName }
     }
@@ -84,7 +90,7 @@ class PackageManager(private var context: Context) {
         val trackedApplications: List<Pkg> = getTrackedPackagesAsList()
         val disabledApps: List<Pkg> = getDisabledPackages()
         return trackedApplications.minus(disabledApps).toList().map {
-            PackageApp(it, getAppName(context, it))
+            PackageApp(it, getAppName(it))
         }
     }
 
@@ -105,7 +111,7 @@ class PackageManager(private var context: Context) {
     fun getTrackedPackages(): List<PackageApp> {
         return saveHelper.getTrackedPackages()
                 .toList().map {
-                    PackageApp(it, getAppName(context, it))
+                    PackageApp(it, getAppName(it))
                 }
                 .sortedBy { it.appName }
     }
@@ -132,7 +138,7 @@ class PackageManager(private var context: Context) {
      */
     fun removeTrackedPackage(pkg: PackageApp) {
         saveHelper.removeTrackedPackage(pkg.pkg)
-        pkg.enable()
+        enablePackage(pkg.pkg)
     }
 
     /**
@@ -149,6 +155,26 @@ class PackageManager(private var context: Context) {
      */
     fun disablePackage(pkg: Pkg): String {
         return commands.disablePackage(pkg).trim()
+    }
+
+    /**
+     * Enable the package
+     * @param pkg The package to enable
+     */
+    fun enablePackage(pkg: Pkg): String {
+        return commands.enablePackage(pkg).trim()
+    }
+
+    /**
+     * Get the application of a package
+     * @param context The current context
+     * @param pkg The package of the application name to fetch
+     * @return The application name
+     */
+    fun getAppName(pkg: Pkg): String {
+        val appInfo = pm.getApplicationInfo(pkg.s,
+                PackageManager.GET_META_DATA)
+        return pm.getApplicationLabel(appInfo).toString()
     }
 
     companion object {

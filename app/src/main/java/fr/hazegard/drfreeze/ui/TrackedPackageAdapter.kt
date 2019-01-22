@@ -1,29 +1,33 @@
 package fr.hazegard.drfreeze.ui
 
 import android.content.Context
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import fr.hazegard.drfreeze.PackageManager
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * The adapter used to display tracked packages
  */
 class TrackedPackageAdapter(private val c: Context,
+                            private val appsManager: PackageManager,
                             private var managedPackage: List<PackageApp>,
                             private val callback: () -> Unit,
                             private val requestUpdate: () -> Unit)
     : androidx.recyclerview.widget.RecyclerView.Adapter<TrackedPackageAdapter.ManagedAppHolder>() {
 
-    private val appsManager = PackageManager(c)
+    //TODO Inject appsManager via provider?
+//    @Inject
+//    lateinit var appsManager: PackageManager
+    //    private val appsManager = PackageManager(c)
     private var listDisabledPackages = appsManager.getDisabledPackages()
 
     override fun onBindViewHolder(holder: ManagedAppHolder, position: Int) {
@@ -52,7 +56,9 @@ class TrackedPackageAdapter(private val c: Context,
     }
 
     inner class ManagedAppHolder(private val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
-        private val appsManager by lazy { PackageManager(c) }
+        //TODO Inject
+        lateinit var appsManager: PackageManager
+//        private val appsManager by lazy { PackageManager(c) }
 
         /**
          * Set the content of a item
@@ -84,7 +90,8 @@ class TrackedPackageAdapter(private val c: Context,
                 with(manage_freeze_app) {
                     setOnClickListener {
                         GlobalScope.launch {
-                            packageApp.disable()
+                            appsManager.disablePackage(packageApp.pkg)
+//                            packageApp.disable()
                             packageApp.removeNotification(context)
                             requestUpdate()
                         }

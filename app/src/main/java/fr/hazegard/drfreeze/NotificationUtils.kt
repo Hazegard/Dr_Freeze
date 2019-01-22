@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
+import javax.inject.Inject
 
 
 /**
@@ -105,12 +106,16 @@ class NotificationUtils {
          *  - ACTION_DISABLE: Disable the package given as extra
          */
         class NotificationActionService : IntentService("NotificationActionService") {
-            private val appsManager by lazy { PackageManager(this@NotificationActionService) }
+            @Inject
+            lateinit var packageManager: PackageManager
+
+            //TODO
+//            private val appsManager by lazy { PackageManager(this@NotificationActionService) }
             override fun onHandleIntent(intent: Intent?) {
                 val action = intent?.action
                 if (action.equals(ACTION_DISABLE)) {
                     intent?.extras?.getString(KEY_PACKAGE, null)?.let {
-                        appsManager.disablePackage(Pkg(it))
+                        packageManager.disablePackage(Pkg(it))
                     }
                 }
             }

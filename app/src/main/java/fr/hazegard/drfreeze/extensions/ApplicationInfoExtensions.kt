@@ -1,8 +1,8 @@
 package fr.hazegard.drfreeze.extensions
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 
 /**
  * Return whether the application is a system app or not
@@ -16,7 +16,8 @@ fun ApplicationInfo.isSystemApp(): Boolean {
  * Return whether can be launch via a launcher
  * @return Is the app can be launcher
  */
-fun ApplicationInfo.isLaunchableApp(context: Context): Boolean {
-    return context.packageManager.getLaunchIntentForPackage(this.packageName)
+// TODO Move to packageManager extension
+fun ApplicationInfo.isLaunchableApp(pm: PackageManager): Boolean {
+    return pm.getLaunchIntentForPackage(this.packageName)
             ?.categories?.contains(Intent.CATEGORY_LAUNCHER) ?: false
 }

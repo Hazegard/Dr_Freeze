@@ -15,7 +15,7 @@ import java.io.IOException
  * The class manage a root process
  * This class is a singleton in order to prevent the app from requesting several root processes
  */
-class Su private constructor() {
+class Su constructor() {
     private val su: Process = getSuProcess()
     private val os = DataOutputStream(su.outputStream)
     private val osRes = DataInputStream(su.inputStream)

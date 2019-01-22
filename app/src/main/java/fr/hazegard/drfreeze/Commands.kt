@@ -3,8 +3,9 @@ package fr.hazegard.drfreeze
 import fr.hazegard.drfreeze.exception.NotRootException
 import fr.hazegard.drfreeze.model.Pkg
 import java.util.*
+import javax.inject.Inject
 
-class Commands {
+class Commands @Inject constructor(val su: Su) {
 
     /**
      * Enable the package
@@ -12,7 +13,7 @@ class Commands {
      */
     fun enablePackage(pkg: Pkg): String {
         return try {
-            Su.instance.exec("pm enable ${pkg.s}")
+            su.exec("pm enable ${pkg.s}")
         } catch (e: NotRootException) {
             ""
         }
@@ -24,7 +25,7 @@ class Commands {
      */
     fun disablePackage(pkg: Pkg): String {
         return try {
-            Su.instance.exec("pm disable ${pkg.s}")
+            su.exec("pm disable ${pkg.s}")
         } catch (e: NotRootException) {
             ""
         }
@@ -36,7 +37,7 @@ class Commands {
      */
     fun listDisabledPackages(): List<Pkg> {
         return try {
-            Su.instance.exec("pm list packages -d | cut -d ':' -f 2")
+            su.exec("pm list packages -d | cut -d ':' -f 2")
                     .split("\n")
                     .map {
                         Pkg(it)

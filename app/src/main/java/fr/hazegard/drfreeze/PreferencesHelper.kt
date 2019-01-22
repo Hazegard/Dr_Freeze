@@ -7,7 +7,7 @@ import android.preference.PreferenceManager
 /**
  * This class manage get the preferences set by the user
  */
-class PreferencesHelper(private val context: Context) {
+class PreferencesHelper(val context: Context) {
 //    companion object {
     /**
      * Get the preference on system apps listing

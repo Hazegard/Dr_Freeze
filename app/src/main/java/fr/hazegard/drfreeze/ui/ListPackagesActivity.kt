@@ -41,9 +41,11 @@ class ListPackagesActivity : AppCompatActivity() {
         }
     }
 
-    private val packageManager by lazy {
-        PackageManager(this@ListPackagesActivity)
-    }
+    lateinit var packageManager: PackageManager
+    //TODO Inject
+//    private val packageManager by lazy {
+//        PackageManager(this@ListPackagesActivity)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,8 +129,8 @@ class ListPackagesActivity : AppCompatActivity() {
         GlobalScope.launch {
             listPackage = getPackages().await()
             val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
-            val layout: androidx.recyclerview.widget.RecyclerView.LayoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-                    this@ListPackagesActivity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            val layout: RecyclerView.LayoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+                    this@ListPackagesActivity, RecyclerView.VERTICAL, false)
             packageAdapter = PackageAdapter(listPackage, trackedPackages) {
                 sendDoUpdate = true
             }

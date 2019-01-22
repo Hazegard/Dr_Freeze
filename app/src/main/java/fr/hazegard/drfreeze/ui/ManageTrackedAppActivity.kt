@@ -5,11 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import fr.hazegard.drfreeze.FreezeApplication
 import fr.hazegard.drfreeze.PackageManager
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
@@ -20,6 +19,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 class ManageTrackedAppActivity : AppCompatActivity() {
@@ -38,13 +38,16 @@ class ManageTrackedAppActivity : AppCompatActivity() {
         }
     }
 
-    private val appsManager by lazy {
-        PackageManager(this)
-    }
+    @Inject
+    lateinit var appsManager: PackageManager
+//    private val appsManager by lazy {
+//        PackageManager(this)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_tracked_app)
+        FreezeApplication.appComponent.inject(this)
         with(animation_android.drawable) {
             (this as Animatable).start()
             onAnimationEnd {
@@ -70,7 +73,9 @@ class ManageTrackedAppActivity : AppCompatActivity() {
         GlobalScope.launch {
             listTrackedApp = getTrackedPackages().await()
             val layout: androidx.recyclerview.widget.RecyclerView.LayoutManager = androidx.recyclerview.widget.GridLayoutManager(this@ManageTrackedAppActivity, 2)
-            trackedPackageAdapter = TrackedPackageAdapter(this@ManageTrackedAppActivity, listTrackedApp,
+            trackedPackageAdapter = TrackedPackageAdapter(this@ManageTrackedAppActivity,
+                    appsManager,
+                    listTrackedApp,
                     {
                         finishAffinity()
                         System.exit(0)

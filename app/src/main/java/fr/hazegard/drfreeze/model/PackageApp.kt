@@ -10,31 +10,30 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Build
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.pm.ShortcutManagerCompat
-import android.util.Log
-import fr.hazegard.drfreeze.Commands
 import fr.hazegard.drfreeze.NotificationUtils
 import fr.hazegard.drfreeze.extensions.toBitmap
 import fr.hazegard.drfreeze.ui.ShortcutDispatcherActivity
 
 data class PackageApp(val pkg: Pkg, val appName: String) {
 
-    private val commands by lazy { Commands() }
+//    private val commands by lazy { Commands() }
 
-    /**
-     * Disable the package
-     */
-    fun disable() {
-        commands.disablePackage(pkg)
-    }
-
-    /**
-     * Enable the package
-     */
-    fun enable() {
-        commands.enablePackage(pkg)
-    }
+//    /**
+//     * Disable the package
+//     */
+//    fun disable() {
+//        commands.disablePackage(pkg)
+//    }
+//
+//    /**
+//     * Enable the package
+//     */
+//    fun enable() {
+//        commands.enablePackage(pkg)
+//    }
 
     fun isEnable(context: Context): Boolean {
         return context.packageManager.getApplicationInfo(pkg.s, 0).enabled
@@ -81,7 +80,8 @@ data class PackageApp(val pkg: Pkg, val appName: String) {
      * @param context The current context
      */
     fun start(context: Context) {
-        enable()
+//        TODO
+//        enable()
         val launchIntent = context.packageManager.getLaunchIntentForPackage(pkg.s)
         if (launchIntent != null) {
             ContextCompat.startActivity(context, launchIntent, null)
