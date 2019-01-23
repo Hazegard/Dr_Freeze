@@ -3,11 +3,13 @@ package fr.hazegard.drfreeze.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import fr.hazegard.drfreeze.FreezeApplication
 import fr.hazegard.drfreeze.PackageManager
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
+import javax.inject.Inject
 
 /**
  * This activity is used to dispatch the intent coming from the shortcut
@@ -16,8 +18,11 @@ import fr.hazegard.drfreeze.model.Pkg
  */
 class ShortcutDispatcherActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    @Inject
+    lateinit var packageManager: PackageManager
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        FreezeApplication.appComponent.inject(this)
         super.onCreate(savedInstanceState)
         val packageName: String = intent?.extras?.getString(BUNDLE_PACKAGE_NAME) ?: ""
         if ("" == packageName) {
@@ -26,7 +31,10 @@ class ShortcutDispatcherActivity : AppCompatActivity() {
         } else {
             val pkg = Pkg(packageName)
             val targetPackage = PackageApp(pkg, PackageManager.getAppName(this, pkg))
-            targetPackage.start(this)
+            packageManager.start(targetPackage, this)
+            // TODO
+
+//            targetPackage.start(this)
         }
         finish()
     }

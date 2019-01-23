@@ -5,7 +5,7 @@ import fr.hazegard.drfreeze.model.Pkg
 import java.util.*
 import javax.inject.Inject
 
-class Commands @Inject constructor(val su: Su) {
+class Commands @Inject constructor(private val su: Su) {
 
     /**
      * Enable the package

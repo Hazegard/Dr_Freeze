@@ -5,12 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import fr.hazegard.drfreeze.FreezeApplication
 import fr.hazegard.drfreeze.PackageManager
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
@@ -22,6 +23,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 
@@ -41,6 +43,7 @@ class ListPackagesActivity : AppCompatActivity() {
         }
     }
 
+    @Inject
     lateinit var packageManager: PackageManager
     //TODO Inject
 //    private val packageManager by lazy {
@@ -48,6 +51,7 @@ class ListPackagesActivity : AppCompatActivity() {
 //    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        FreezeApplication.appComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_packages)
         with(animation_android.drawable) {
@@ -129,7 +133,7 @@ class ListPackagesActivity : AppCompatActivity() {
         GlobalScope.launch {
             listPackage = getPackages().await()
             val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
-            val layout: RecyclerView.LayoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            val layout: RecyclerView.LayoutManager = LinearLayoutManager(
                     this@ListPackagesActivity, RecyclerView.VERTICAL, false)
             packageAdapter = PackageAdapter(listPackage, trackedPackages) {
                 sendDoUpdate = true

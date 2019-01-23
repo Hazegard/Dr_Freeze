@@ -19,7 +19,8 @@ class NotRootActivity : AppCompatActivity() {
             System.exit(0)
         }
         button_continue.setOnClickListener {
-            PreferencesHelper(this).setBypassRootNeeded()
+            // TODO
+//            PreferencesHelper(this).setBypassRootNeeded()
             finish()
         }
     }

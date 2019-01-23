@@ -95,6 +95,7 @@ class Su constructor() {
 
     companion object {
         private const val MATCH_ROOT = "uid=0"
+        //TODO Remove instance
         val instance by lazy { Su() }
         private const val EOF = "EOF"
         val isRootAvailable = testRootAvailability()

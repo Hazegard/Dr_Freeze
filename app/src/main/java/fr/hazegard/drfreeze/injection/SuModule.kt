@@ -7,14 +7,13 @@ import android.content.pm.PackageManager
 import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
-import fr.hazegard.drfreeze.PreferencesHelper
 import fr.hazegard.drfreeze.Su
 import javax.inject.Named
 import javax.inject.Singleton
 
 
 @Module
-class SuModule {
+class SuModule(private val context: Context) {
     @Provides
     @Singleton
     fun providesSu(): Su = Su()
@@ -25,6 +24,10 @@ class SuModule {
     fun providesSharedPreferences(app: Application): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(app)
     }
+
+    @Provides
+    @Singleton
+    fun providesContext() = context
 
     @Provides
     @Singleton
@@ -41,8 +44,8 @@ class SuModule {
     @Singleton
     fun providesSystemPackageManager(app: Application): PackageManager = app.packageManager
 
-    @Provides
-    fun providesPreferencesHelper(app: Application): PreferencesHelper = PreferencesHelper(app)
+//    @Provides
+//    fun providesPreferencesHelper(app: Application): PreferencesHelper = PreferencesHelper(app)
 //    @Provides
 //    @Singleton
 //    fun providePackageManager(app: Application): fr.hazegard.drfreeze.PackageManager = fr.hazegard.drfreeze.PackageManager(app)

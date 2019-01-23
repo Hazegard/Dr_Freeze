@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import fr.hazegard.drfreeze.FreezeApplication
 import fr.hazegard.drfreeze.PackageManager
 import fr.hazegard.drfreeze.R
@@ -72,7 +74,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     private fun initListView() {
         GlobalScope.launch {
             listTrackedApp = getTrackedPackages().await()
-            val layout: androidx.recyclerview.widget.RecyclerView.LayoutManager = androidx.recyclerview.widget.GridLayoutManager(this@ManageTrackedAppActivity, 2)
+            val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, 2)
             trackedPackageAdapter = TrackedPackageAdapter(this@ManageTrackedAppActivity,
                     appsManager,
                     listTrackedApp,
