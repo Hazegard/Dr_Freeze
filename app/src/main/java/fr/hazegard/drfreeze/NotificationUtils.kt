@@ -117,7 +117,6 @@ class NotificationUtils @Inject constructor(private val context: Context, privat
             lateinit var packageManager: PackageManager
 
             override fun onHandleIntent(intent: Intent?) {
-                Log.d("Nofit", "CLICKED")
                 AndroidInjection.inject(this)
                 val action = intent?.action
                 if (action.equals(ACTION_DISABLE)) {
