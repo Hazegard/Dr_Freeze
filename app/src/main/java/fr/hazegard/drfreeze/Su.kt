@@ -6,6 +6,7 @@ import java.io.BufferedReader
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import javax.inject.Singleton
 
 /**
  * Created by Hazegard on 01/03/18.
@@ -15,11 +16,13 @@ import java.io.IOException
  * The class manage a root process
  * This class is a singleton in order to prevent the app from requesting several root processes
  */
-class Su constructor() {
+@Singleton
+class Su {
     private val su: Process = getSuProcess()
     private val os = DataOutputStream(su.outputStream)
     private val osRes = DataInputStream(su.inputStream)
     private val osErr = DataInputStream(su.errorStream)
+    var isRoot: Boolean = false
 
     /**
      * Execute the command given in a root process
@@ -27,8 +30,12 @@ class Su constructor() {
      * @return Output of the command
      */
     fun exec(command: String): String {
+        if (!isRoot) {
+            return ""
+        }
         writeInput(command)
         return readOutput()
+
     }
 
     /**
@@ -45,14 +52,19 @@ class Su constructor() {
             os.writeBytes("id\n")
             os.flush()
             val currUid: String? = BufferedReader(osRes.bufferedReader()).readLine()
-            if (currUid?.contains(MATCH_ROOT) != true) {
-                throw NotRootException("No Su process")
+            return if (currUid?.contains(MATCH_ROOT) != true) {
+                isRoot = false
+                Runtime.getRuntime().exec("sh")
+                //                throw NotRootException("No Su process")
             } else {
+                isRoot = true
                 Log.d("Process", "su process granted")
-                return su
+                su
             }
         } catch (e: IOException) {
-            throw NotRootException("No Su process")
+            isRoot = false
+            return Runtime.getRuntime().exec("sh")
+//            throw NotRootException("No Su process")
         }
     }
 
@@ -95,17 +107,7 @@ class Su constructor() {
 
     companion object {
         private const val MATCH_ROOT = "uid=0"
-        //TODO Remove instance
         val instance by lazy { Su() }
         private const val EOF = "EOF"
-        val isRootAvailable = testRootAvailability()
-        private fun testRootAvailability(): Boolean {
-            return try {
-                instance
-                true
-            } catch (e: NotRootException) {
-                false
-            }
-        }
     }
 }

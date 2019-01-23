@@ -3,7 +3,6 @@ package fr.hazegard.drfreeze
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
@@ -14,7 +13,6 @@ import javax.inject.Inject
  * Boot receiver
  */
 class OnBootService : BroadcastReceiver() {
-    //TODO Inject
     @Inject
     lateinit var packageManager: PackageManager
 
@@ -25,12 +23,13 @@ class OnBootService : BroadcastReceiver() {
     lateinit var notificationUtils: NotificationUtils
 
     override fun onReceive(context: Context, intent: Intent?) {
-
         AndroidInjection.inject(this, context)
         if (Intent.ACTION_BOOT_COMPLETED == intent?.action
-                && preferencesHelper.isBootNotificationDisabled()) {
+                && !preferencesHelper.isBootNotificationDisabled()) {
             val enabledAndTrackedApps = packageManager.getEnabledAndTracked()
-            notificationUtils.sendNotification(enabledAndTrackedApps)
+            if (enabledAndTrackedApps.isNotEmpty()) {
+                notificationUtils.sendNotification(enabledAndTrackedApps)
+            }
         }
     }
 

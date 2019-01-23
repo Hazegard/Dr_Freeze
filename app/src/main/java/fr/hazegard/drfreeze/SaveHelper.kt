@@ -15,9 +15,6 @@ import javax.inject.Named
  */
 class SaveHelper @Inject constructor(
         @Named("Tracked_Apps_preferences") val trackedAppsPreferences: SharedPreferences) {
-//    @Inject
-//    @Named("Tracked_Apps_preferences")
-//    lateinit var trackedAppsPreferences: SharedPreferences
 
     /**
      * Save the list of tracked pkg
@@ -25,7 +22,6 @@ class SaveHelper @Inject constructor(
      */
     fun saveTrackedPackages(pkg: List<Pkg>) {
         val set = pkg.map { it.s }.toSet()
-//        context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
         trackedAppsPreferences
                 .edit().apply {
                     clear()
@@ -39,7 +35,6 @@ class SaveHelper @Inject constructor(
      * @param pkg The package to remove
      */
     fun removeTrackedPackage(pkg: Pkg) {
-//        context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
         trackedAppsPreferences
                 .apply {
                     val packages = getStringSet(LIST, emptySet()) ?: emptySet()
@@ -57,7 +52,6 @@ class SaveHelper @Inject constructor(
      * @param pkg The package to remove
      */
     fun saveTrackedPackage(pkg: Pkg) {
-//        context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
         trackedAppsPreferences
                 .apply {
                     val packages = getStringSet(LIST, emptySet()) ?: emptySet()
@@ -75,7 +69,6 @@ class SaveHelper @Inject constructor(
      * @param packages Set<String> The set of packages to save
      */
     fun saveTrackedPackages(packages: Set<Pkg>) {
-//        context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
         trackedAppsPreferences
                 .edit().apply {
                     clear()
@@ -89,7 +82,6 @@ class SaveHelper @Inject constructor(
      * @return Set<String> The set of saved tracked packages
      */
     fun getTrackedPackages(): MutableSet<Pkg> {
-//        return context.getSharedPreferences(TRACKED_APPLICATION, Context.MODE_PRIVATE)
         return trackedAppsPreferences
                 .getStringSet(LIST, emptySet())?.map { Pkg(it) }?.toMutableSet()
                 ?: Collections.emptySet()

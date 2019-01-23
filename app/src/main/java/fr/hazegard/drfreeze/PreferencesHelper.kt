@@ -4,20 +4,21 @@ import android.content.Context
 import android.content.SharedPreferences
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
 
 /**
  * This class manage get the preferences set by the user
  */
+@Singleton
 class PreferencesHelper @Inject constructor(
         @Named("Shared_preferences") val defaultSharedPreferences: SharedPreferences,
         private val context: Context) {
-//    companion object {
     /**
      * Get the preference on system apps listing
      * @return whether the User choose to manage system apps
      */
-    fun isSystemAppsEnabled(/*context: Context*/): Boolean {
+    fun isSystemAppsEnabled(): Boolean {
         return defaultSharedPreferences
                 .getBoolean(context.getString(R.string.preferences_show_system_apps), false)
     }
@@ -77,5 +78,4 @@ class PreferencesHelper @Inject constructor(
         return defaultSharedPreferences
                 .getBoolean(context.getString(R.string.preferences_bypass_root_needed), false)
     }
-//    }
 }

@@ -30,6 +30,9 @@ class FreezeApplication : Application(),
     @Inject
     lateinit var broadcastReceiverInjector: DispatchingAndroidInjector<BroadcastReceiver>
 
+    @Inject
+    lateinit var su: Su
+
     override fun broadcastReceiverInjector(): AndroidInjector<BroadcastReceiver> {
         return broadcastReceiverInjector
     }
@@ -42,7 +45,7 @@ class FreezeApplication : Application(),
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         initDagger()
         appComponent.inject(this)
-        if (!Su.isRootAvailable) {
+        if (!su.isRoot) {
             if (preferencesHelper.doBypassRootNeeded()) {
                 Toast.makeText(this, getString(R.string.no_root_warning), Toast.LENGTH_LONG).show()
             } else {

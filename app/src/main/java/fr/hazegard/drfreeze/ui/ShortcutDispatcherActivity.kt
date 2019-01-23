@@ -30,7 +30,7 @@ class ShortcutDispatcherActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT).show()
         } else {
             val pkg = Pkg(packageName)
-            val targetPackage = PackageApp(pkg, PackageManager.getAppName(this, pkg))
+            val targetPackage = PackageApp(pkg, packageManager.getAppName(pkg))
             packageManager.start(targetPackage, this)
         }
         finish()

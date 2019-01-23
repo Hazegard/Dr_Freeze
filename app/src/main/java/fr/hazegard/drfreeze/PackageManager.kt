@@ -18,26 +18,18 @@ import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
 import fr.hazegard.drfreeze.ui.ShortcutDispatcherActivity
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by Hazegard on 01/03/18.
  */
+@Singleton
 class PackageManager @Inject constructor(
         private val preferencesHelper: PreferencesHelper,
         private val commands: Commands,
         private val pm: PackageManager,
         private val saveHelper: SaveHelper,
-        private val notificationUtils: NotificationUtils/*private var context: Context*/) {
-//    private val commands: Commands by lazy {
-//        Commands()
-//    }
-
-//    private val preferencesHelper: PreferencesHelper by lazy {
-//        PreferencesHelper(context)
-//    }
-
-//    @Inject
-//    lateinit var saveHelper: SaveHelper
+        private val notificationUtils: NotificationUtils) {
 
     /**
      * Get a list of all packages (including system packages)
@@ -68,7 +60,7 @@ class PackageManager @Inject constructor(
         val showOnlyLaunchApps = preferencesHelper.isOnlyLauncherApp()
         return getAllPackages()
                 .filter { doKeepSystemApps || it.isSystemApp() }
-                .filter { !showOnlyLaunchApps || it.isLaunchableApp(pm) }
+                .filter { !showOnlyLaunchApps || pm.isLaunchableApp(Pkg(it.packageName)) }
                 .map {
                     val pkg = Pkg(it.packageName)
                     return@map PackageApp(pkg, getAppName(pkg))
@@ -231,20 +223,6 @@ class PackageManager @Inject constructor(
                 putExtra("duplicate", false)
             }
             context.sendBroadcast(addIntent)
-        }
-    }
-
-    companion object {
-        /**
-         * Get the application of a package
-         * @param context The current context
-         * @param pkg The package of the application name to fetch
-         * @return The application name
-         */
-        fun getAppName(context: Context, pkg: Pkg): String {
-            val appInfo = context.packageManager.getApplicationInfo(pkg.s,
-                    PackageManager.GET_META_DATA)
-            return context.packageManager.getApplicationLabel(appInfo).toString()
         }
     }
 }

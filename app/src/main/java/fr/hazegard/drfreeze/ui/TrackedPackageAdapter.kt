@@ -89,10 +89,6 @@ class TrackedPackageAdapter(private val c: Context,
                     setOnClickListener {
                         GlobalScope.launch {
                             packageManager.disablePackage(packageApp.pkg)
-//                            packageApp.disable()
-                            //TODO
-//                            NotificationUtils.removeNotification(c, packageApp)
-//                            packageApp.removeNotification(context)
                             notificationUtils.removeNotification(packageApp)
                             requestUpdate()
                         }
@@ -119,7 +115,6 @@ class TrackedPackageAdapter(private val c: Context,
                 with(manage_card_view) {
                     setOnClickListener {
                         packageManager.start(packageApp, c)
-//                        packageApp.start(c)
                         callback()
                     }
                     setOnLongClickListener {

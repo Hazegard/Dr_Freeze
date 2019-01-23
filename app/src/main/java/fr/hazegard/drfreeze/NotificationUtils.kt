@@ -21,7 +21,6 @@ import javax.inject.Inject
  */
 
 class NotificationUtils @Inject constructor(private val context: Context, private val preferencesHelper: PreferencesHelper) {
-//    companion object {
 
     /**
      * Send multiple notifications displaying that the packages are currently running
