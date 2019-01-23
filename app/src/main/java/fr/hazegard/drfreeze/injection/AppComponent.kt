@@ -5,6 +5,7 @@ import dagger.android.AndroidInjectionModule
 import fr.hazegard.drfreeze.FreezeApplication
 import fr.hazegard.drfreeze.ui.ListPackagesActivity
 import fr.hazegard.drfreeze.ui.ManageTrackedAppActivity
+import fr.hazegard.drfreeze.ui.NotRootActivity
 import fr.hazegard.drfreeze.ui.ShortcutDispatcherActivity
 import javax.inject.Singleton
 
@@ -21,4 +22,5 @@ interface AppComponent {
     fun inject(freezeApplication: FreezeApplication)
     fun inject(shortcutDispatcherActivity: ShortcutDispatcherActivity)
     fun inject(listPackagesActivity: ListPackagesActivity)
+    fun inject(notRootActivity: NotRootActivity)
 }

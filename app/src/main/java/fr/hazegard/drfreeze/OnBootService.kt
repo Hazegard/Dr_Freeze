@@ -30,7 +30,7 @@ class OnBootService : BroadcastReceiver() {
         if (Intent.ACTION_BOOT_COMPLETED == intent?.action
                 && preferencesHelper.isBootNotificationDisabled()) {
             val enabledAndTrackedApps = packageManager.getEnabledAndTracked()
-            notificationUtils.sendNotification(context, enabledAndTrackedApps)
+            notificationUtils.sendNotification(enabledAndTrackedApps)
         }
     }
 

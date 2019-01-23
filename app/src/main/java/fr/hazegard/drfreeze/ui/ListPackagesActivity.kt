@@ -45,10 +45,6 @@ class ListPackagesActivity : AppCompatActivity() {
 
     @Inject
     lateinit var packageManager: PackageManager
-    //TODO Inject
-//    private val packageManager by lazy {
-//        PackageManager(this@ListPackagesActivity)
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         FreezeApplication.appComponent.inject(this)

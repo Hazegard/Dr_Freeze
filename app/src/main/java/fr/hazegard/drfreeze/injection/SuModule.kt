@@ -36,17 +36,7 @@ class SuModule(private val context: Context) {
         return app.getSharedPreferences("TRACKED_APPLICATION", Context.MODE_PRIVATE)
     }
 
-//    @Provides
-//    @Singleton
-//    fun providesSaveHelper(): SaveHelper = SaveHelper()
-
     @Provides
     @Singleton
     fun providesSystemPackageManager(app: Application): PackageManager = app.packageManager
-
-//    @Provides
-//    fun providesPreferencesHelper(app: Application): PreferencesHelper = PreferencesHelper(app)
-//    @Provides
-//    @Singleton
-//    fun providePackageManager(app: Application): fr.hazegard.drfreeze.PackageManager = fr.hazegard.drfreeze.PackageManager(app)
 }

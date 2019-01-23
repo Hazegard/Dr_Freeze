@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import fr.hazegard.drfreeze.FreezeApplication
+import fr.hazegard.drfreeze.NotificationUtils
 import fr.hazegard.drfreeze.PackageManager
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
@@ -42,9 +43,9 @@ class ManageTrackedAppActivity : AppCompatActivity() {
 
     @Inject
     lateinit var appsManager: PackageManager
-//    private val appsManager by lazy {
-//        PackageManager(this)
-//    }
+
+    @Inject
+    lateinit var notificationUtils: NotificationUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +78,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
             val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, 2)
             trackedPackageAdapter = TrackedPackageAdapter(this@ManageTrackedAppActivity,
                     appsManager,
+                    notificationUtils,
                     listTrackedApp,
                     {
                         finishAffinity()
@@ -88,6 +90,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
                             trackedPackageAdapter.updateList(listTrackedApp)
                         }
                     })
+
             runOnUiThread {
                 with(managed_app_list)
                 {

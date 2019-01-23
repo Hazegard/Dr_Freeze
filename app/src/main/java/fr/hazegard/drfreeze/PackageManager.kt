@@ -196,7 +196,7 @@ class PackageManager @Inject constructor(
         val launchIntent = context.packageManager.getLaunchIntentForPackage(pkg.pkg.s)
         if (launchIntent != null) {
             ContextCompat.startActivity(context, launchIntent, null)
-            notificationUtils.sendNotification(context, pkg)
+            notificationUtils.sendNotification(pkg)
         } else {
             Log.d("PackageApp", "Unable to start ${pkg.appName} (Launch intent fo package: ${pkg.pkg.s} is null)")
         }

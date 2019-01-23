@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import fr.hazegard.drfreeze.NotificationUtils
 import fr.hazegard.drfreeze.PackageManager
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.model.PackageApp
@@ -19,15 +20,12 @@ import kotlinx.coroutines.launch
  */
 class TrackedPackageAdapter(private val c: Context,
                             private val packageManager: PackageManager,
+                            private val notificationUtils: NotificationUtils,
                             private var managedPackage: List<PackageApp>,
                             private val callback: () -> Unit,
                             private val requestUpdate: () -> Unit)
     : RecyclerView.Adapter<TrackedPackageAdapter.ManagedAppHolder>() {
 
-    //TODO Inject appsManager via provider?
-//    @Inject
-//    lateinit var appsManager: PackageManager
-    //    private val appsManager = PackageManager(c)
     private var listDisabledPackages = packageManager.getDisabledPackages()
 
     override fun onBindViewHolder(holder: ManagedAppHolder, position: Int) {
@@ -38,7 +36,7 @@ class TrackedPackageAdapter(private val c: Context,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ManagedAppHolder {
         val itemView: View = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_manage_apps, parent, false)
-        return ManagedAppHolder(itemView, packageManager)
+        return ManagedAppHolder(itemView, packageManager, notificationUtils)
     }
 
     override fun getItemCount(): Int {
@@ -56,7 +54,8 @@ class TrackedPackageAdapter(private val c: Context,
     }
 
     inner class ManagedAppHolder(private val view: View,
-                                 private val packageManager: PackageManager)
+                                 private val packageManager: PackageManager,
+                                 private val notificationUtils: NotificationUtils)
         : RecyclerView.ViewHolder(view) {
 
         /**
@@ -79,7 +78,6 @@ class TrackedPackageAdapter(private val c: Context,
                 with(manage_add_shortcut) {
                     setOnClickListener {
                         packageManager.addShortcut(c, packageApp)
-//                        packageApp.addShortcut(c)
                     }
                     setOnLongClickListener {
                         Toast.makeText(context, "Add Shortcut for ${packageApp.appName}", Toast.LENGTH_SHORT).show()
@@ -95,6 +93,7 @@ class TrackedPackageAdapter(private val c: Context,
                             //TODO
 //                            NotificationUtils.removeNotification(c, packageApp)
 //                            packageApp.removeNotification(context)
+                            notificationUtils.removeNotification(packageApp)
                             requestUpdate()
                         }
                     }

@@ -19,6 +19,7 @@ class PackageAdapter(private var packages: List<PackageApp>,
                      var trackedPackages: MutableSet<Pkg>,
                      private val onUpdateList: () -> Unit)
     : RecyclerView.Adapter<PackageAdapter.PackageHolder>() {
+
     override fun onBindViewHolder(holder: PackageHolder, position: Int) {
         val pkg: PackageApp = packages[position]
         holder.setContent(pkg)

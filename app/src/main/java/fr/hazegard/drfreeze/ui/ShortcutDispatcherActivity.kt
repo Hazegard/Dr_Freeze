@@ -32,9 +32,6 @@ class ShortcutDispatcherActivity : AppCompatActivity() {
             val pkg = Pkg(packageName)
             val targetPackage = PackageApp(pkg, PackageManager.getAppName(this, pkg))
             packageManager.start(targetPackage, this)
-            // TODO
-
-//            targetPackage.start(this)
         }
         finish()
     }

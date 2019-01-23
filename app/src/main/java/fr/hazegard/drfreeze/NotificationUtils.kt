@@ -29,10 +29,10 @@ class NotificationUtils @Inject constructor(private val context: Context, privat
      * @param context The current context
      * @param packages THe packages targeted by the notifications
      */
-    fun sendNotification(c: Context, packages: List<PackageApp>) {
+    fun sendNotification(packages: List<PackageApp>) {
         val isPersistent = preferencesHelper.isNotificationPersistent()
         packages.forEach {
-            sendNotification(context, it, isPersistent)
+            sendNotification(it, isPersistent)
         }
     }
 
@@ -42,9 +42,9 @@ class NotificationUtils @Inject constructor(private val context: Context, privat
      * @param context The current context
      * @param pkg THe package targeted by the notification
      */
-    fun sendNotification(context: Context, pkg: PackageApp) {
+    fun sendNotification(pkg: PackageApp) {
         val isPersistent = preferencesHelper.isNotificationPersistent()
-        sendNotification(context, pkg, isPersistent)
+        sendNotification(pkg, isPersistent)
     }
 
     /**
@@ -54,7 +54,7 @@ class NotificationUtils @Inject constructor(private val context: Context, privat
      * @param packageApp THe package targeted by the notification
      * @param isPersistent Whether the notification should be persistent
      */
-    private fun sendNotification(context: Context, packageApp: PackageApp, isPersistent: Boolean) {
+    private fun sendNotification(packageApp: PackageApp, isPersistent: Boolean) {
         if (preferencesHelper.isNotificationDisabled()) {
             return
         }
@@ -98,11 +98,11 @@ class NotificationUtils @Inject constructor(private val context: Context, privat
      * @param context The current context
      * @param pkg THe package targeted by the notification that should be removed
      */
-    fun removeNotification(context: Context, packageApp: PackageApp) {
-        removeNotification(context, packageApp.pkg)
+    fun removeNotification(packageApp: PackageApp) {
+        removeNotification(packageApp.pkg)
     }
 
-    fun removeNotification(context: Context, pkg: Pkg) {
+    fun removeNotification(pkg: Pkg) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(pkg.s.hashCode())
     }
