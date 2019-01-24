@@ -1,6 +1,6 @@
 package fr.hazegard.drfreeze.model
 
-import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,8 +9,8 @@ import fr.hazegard.drfreeze.extensions.toBitmap
 
 data class PackageApp(val pkg: Pkg, val appName: String) {
 
-    fun isEnable(context: Context): Boolean {
-        return context.packageManager.getApplicationInfo(pkg.s, 0).enabled
+    fun isEnable(pm: PackageManager): Boolean {
+        return pm.getApplicationInfo(pkg.s, 0).enabled
     }
 
     /**
@@ -18,9 +18,8 @@ data class PackageApp(val pkg: Pkg, val appName: String) {
      * @param context The current context
      * @return The icon of the package as drawable
      */
-    fun getIconDrawable(context: Context): Drawable {
-        return context.packageManager.getApplicationIcon(pkg.s)
-                ?: ColorDrawable(Color.TRANSPARENT)
+    fun getIconDrawable(pm: PackageManager): Drawable {
+        return pm.getApplicationIcon(pkg.s) ?: ColorDrawable(Color.TRANSPARENT)
     }
 
     /**
@@ -28,7 +27,7 @@ data class PackageApp(val pkg: Pkg, val appName: String) {
      * @param context The current context
      * @return The icon of the package as bitmap
      */
-    fun getIconBitmap(context: Context): Bitmap {
-        return getIconDrawable(context).toBitmap()
+    fun getIconBitmap(pm: PackageManager): Bitmap {
+        return getIconDrawable(pm).toBitmap()
     }
 }

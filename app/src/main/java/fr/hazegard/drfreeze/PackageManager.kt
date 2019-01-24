@@ -185,7 +185,7 @@ class PackageManager @Inject constructor(
      */
     fun start(pkg: PackageApp, context: Context) {
         enablePackage(pkg.pkg)
-        val launchIntent = context.packageManager.getLaunchIntentForPackage(pkg.pkg.s)
+        val launchIntent = pm.getLaunchIntentForPackage(pkg.pkg.s)
         if (launchIntent != null) {
             ContextCompat.startActivity(context, launchIntent, null)
             notificationUtils.sendNotification(pkg)
@@ -205,7 +205,7 @@ class PackageManager @Inject constructor(
                 val intent = ShortcutDispatcherActivity.newIntent(context, packageApp.pkg)
                 val shortcutManager = context.getSystemService(ShortcutManager::class.java)
                 val pinShortcutInfo = ShortcutInfo.Builder(context, packageApp.pkg.s)
-                        .setIcon(Icon.createWithBitmap(packageApp.getIconBitmap(context)))
+                        .setIcon(Icon.createWithBitmap(packageApp.getIconBitmap(pm)))
                         .setShortLabel(packageApp.appName)
                         .setIntent(intent)
                         .build()
@@ -214,7 +214,7 @@ class PackageManager @Inject constructor(
         } else {
             val shortcutIntent = ShortcutDispatcherActivity.newIntent(context, packageApp.pkg)
             shortcutIntent.action = Intent.ACTION_MAIN
-            val icon = Bitmap.createScaledBitmap(packageApp.getIconBitmap(context), 128, 128, true)
+            val icon = Bitmap.createScaledBitmap(packageApp.getIconBitmap(pm), 128, 128, true)
             @Suppress("DEPRECATION") val addIntent = Intent().apply {
                 putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
                 putExtra(Intent.EXTRA_SHORTCUT_NAME, packageApp.appName)

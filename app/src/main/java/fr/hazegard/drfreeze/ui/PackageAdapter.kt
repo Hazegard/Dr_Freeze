@@ -71,7 +71,7 @@ class PackageAdapter(private var packages: List<PackageApp>,
                 }
                 packageNameTv.text = packageApp.pkg.s
                 packageAppNameTv.text = packageApp.appName
-                package_image.setImageDrawable(packageApp.getIconDrawable(c))
+                package_image.setImageDrawable(packageApp.getIconDrawable(c.packageManager))
             }
         }
     }

@@ -63,7 +63,7 @@ class TrackedPackageAdapter(private val c: Context,
          * @param packageApp The package to be displayed
          */
         fun setContent(packageApp: PackageApp) {
-            val isPkgEnabled = packageApp.isEnable(c)
+            val isPkgEnabled = packageApp.isEnable(c.packageManager)
             with(view) {
                 manage_app_name.text = packageApp.appName
 
@@ -111,7 +111,7 @@ class TrackedPackageAdapter(private val c: Context,
                     }
                 }
 
-                manage_app_icon.setImageDrawable(packageApp.getIconDrawable(c))
+                manage_app_icon.setImageDrawable(packageApp.getIconDrawable(c.packageManager))
                 with(manage_card_view) {
                     setOnClickListener {
                         packageManager.start(packageApp, c)

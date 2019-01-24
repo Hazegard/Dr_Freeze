@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import dagger.android.AndroidInjection
@@ -20,7 +19,9 @@ import javax.inject.Inject
  * Created by Hazegard on 04/03/18.
  */
 
-class NotificationUtils @Inject constructor(private val context: Context, private val preferencesHelper: PreferencesHelper) {
+class NotificationUtils @Inject constructor(private val context: Context,
+                                            private val preferencesHelper: PreferencesHelper,
+                                            private val pm: android.content.pm.PackageManager) {
 
     /**
      * Send multiple notifications displaying that the packages are currently running
@@ -79,7 +80,7 @@ class NotificationUtils @Inject constructor(private val context: Context, privat
                 .setContentIntent(pendingIntent)
                 .setContentTitle(packageApp.appName)
                 .setContentText("Click to disable ${packageApp.appName}")
-                .setLargeIcon(packageApp.getIconBitmap(context))
+                .setLargeIcon(packageApp.getIconBitmap(pm))
                 .setSmallIcon(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     R.drawable.snowflake
                 } else {
