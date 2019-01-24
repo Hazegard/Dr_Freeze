@@ -55,7 +55,6 @@ class Su {
             return if (currUid?.contains(MATCH_ROOT) != true) {
                 isRoot = false
                 Runtime.getRuntime().exec("sh")
-                //                throw NotRootException("No Su process")
             } else {
                 isRoot = true
                 Log.d("Process", "su process granted")
@@ -64,7 +63,6 @@ class Su {
         } catch (e: IOException) {
             isRoot = false
             return Runtime.getRuntime().exec("sh")
-//            throw NotRootException("No Su process")
         }
     }
 

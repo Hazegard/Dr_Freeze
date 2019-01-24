@@ -15,7 +15,6 @@ data class PackageApp(val pkg: Pkg, val appName: String) {
 
     /**
      * Get the icon of package as drawable
-     * @param context The current context
      * @return The icon of the package as drawable
      */
     fun getIconDrawable(pm: PackageManager): Drawable {
@@ -24,7 +23,6 @@ data class PackageApp(val pkg: Pkg, val appName: String) {
 
     /**
      * Get the icon a a package as bitmap
-     * @param context The current context
      * @return The icon of the package as bitmap
      */
     fun getIconBitmap(pm: PackageManager): Bitmap {

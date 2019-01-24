@@ -169,7 +169,6 @@ class PackageManager @Inject constructor(
 
     /**
      * Get the application of a package
-     * @param context The current context
      * @param pkg The package of the application name to fetch
      * @return The application name
      */

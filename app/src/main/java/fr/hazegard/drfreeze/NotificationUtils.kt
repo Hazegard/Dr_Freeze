@@ -26,7 +26,6 @@ class NotificationUtils @Inject constructor(private val context: Context,
     /**
      * Send multiple notifications displaying that the packages are currently running
      * Allowing the user to disable the packages by clicking on the notification
-     * @param context The current context
      * @param packages THe packages targeted by the notifications
      */
     fun sendNotification(packages: List<PackageApp>) {
@@ -39,7 +38,6 @@ class NotificationUtils @Inject constructor(private val context: Context,
     /**
      * Send a notification displaying that the package is currently running
      * Allowing the user to disable the package by clicking on the notification
-     * @param context The current context
      * @param pkg THe package targeted by the notification
      */
     fun sendNotification(pkg: PackageApp) {
@@ -50,7 +48,6 @@ class NotificationUtils @Inject constructor(private val context: Context,
     /**
      * Send a notification displaying that the package is currently running
      * Allowing the user to disable the package by clicking on the notification
-     * @param context The current context
      * @param packageApp THe package targeted by the notification
      * @param isPersistent Whether the notification should be persistent
      */
@@ -95,8 +92,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
 
     /**
      * Remove a notification
-     * @param context The current context
-     * @param pkg THe package targeted by the notification that should be removed
+     * @param packageApp THe package targeted by the notification that should be removed
      */
     fun removeNotification(packageApp: PackageApp) {
         removeNotification(packageApp.pkg)
@@ -133,7 +129,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
                 /**
                  * Create a new Intent that disable the package
                  * @param context The current context
-                 * @param packageName The package that should be disabled
+                 * @param pkg The package that should be disabled
                  */
                 fun newDisablePackageIntent(context: Context, pkg: Pkg): Intent {
                     return Intent(context, NotificationActionService::class.java).apply {
