@@ -28,7 +28,6 @@ import kotlin.properties.Delegates
 
 
 class ListPackagesActivity : AppCompatActivity() {
-    private val TAG: String = "ListPackagesActivity"
     private lateinit var packageAdapter: PackageAdapter
     private lateinit var menu: Menu
     private var sendDoUpdate = false
@@ -159,6 +158,7 @@ class ListPackagesActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val TAG: String = "ListPackagesActivity"
         const val UPDATE_TRACKED_APPS_CODE = 64
         const val RESULT = "UPDATE_TRACKED_APPS"
         fun newIntent(context: Context): Intent {

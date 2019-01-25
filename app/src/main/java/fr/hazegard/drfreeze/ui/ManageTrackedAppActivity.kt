@@ -149,8 +149,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent {
-            val intent = Intent(context, ManageTrackedAppActivity::class.java)
-            return intent
+            return Intent(context, ManageTrackedAppActivity::class.java)
         }
     }
 }

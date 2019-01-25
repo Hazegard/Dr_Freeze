@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="false"
+        android:foreground="?android:attr/selectableItemBackground"
         android:padding="4dp">
 
         <ImageView
@@ -31,7 +32,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             app:layout_constraintBottom_toTopOf="@+id/packageNameTv"
             app:layout_constraintEnd_toStartOf="@id/package_checkbox"
             app:layout_constraintStart_toEndOf="@id/package_image"
@@ -43,7 +43,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/package_checkbox"
             app:layout_constraintStart_toEndOf="@id/package_image"

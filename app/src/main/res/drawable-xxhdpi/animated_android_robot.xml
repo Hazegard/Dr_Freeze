@@ -1,15 +1,17 @@
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/android_robot_full">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:drawable="@drawable/android_robot"
+    tools:targetApi="lollipop">
     <target
         android:name="left_arm"
-        android:animation="@anim/left_arm" />
+        android:animation="@animator/left_arm" />
     <target
         android:name="right_arm"
-        android:animation="@anim/right_arm" />
+        android:animation="@animator/right_arm" />
     <target
         android:name="snowflake_left"
-        android:animation="@anim/snowflake_left" />
+        android:animation="@animator/snowflake_left" />
     <target
         android:name="snowflake_right"
-        android:animation="@anim/snowflake_right" />
+        android:animation="@animator/snowflake_right" />
 </animated-vector>

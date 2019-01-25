@@ -1,8 +1,8 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="872"
-    android:viewportHeight="1024">
+    android:viewportWidth="327"
+    android:viewportHeight="384">
     <group
         android:translateX="16"
         android:translateY="20">
@@ -66,6 +66,7 @@
             android:rotation="-85">
 
             <group
+                android:name="snowflake_left"
                 android:scaleX="0.1"
                 android:scaleY="0.1"
                 android:translateX="80"
@@ -85,13 +86,17 @@
                     android:strokeColor="#FFF" />
             </group>
         </group>
+
+
         <group
             android:name="right_arm"
             android:pivotX="40"
             android:pivotY="150"
             android:rotation="80"
             android:translateX="215">
+
             <group
+                android:name="snowflake_right"
                 android:scaleX="0.1"
                 android:scaleY="0.1"
                 android:translateX="45"
