@@ -63,13 +63,14 @@ class NotificationUtils @Inject constructor(private val context: Context,
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "1664"
         val name = context.getString(R.string.channel_name)
-        val description = context.getString(R.string.channel_description)
+        val descr = context.getString(R.string.channel_description)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_LOW
-            val channel = NotificationChannel(channelId, name, importance)
-            channel.description = description
-            channel.enableLights(false)
-            channel.enableVibration(false)
+            val channel = NotificationChannel(channelId, name, importance).apply {
+                description = descr
+                enableLights(false)
+                enableVibration(false)
+            }
             notificationManager.createNotificationChannel(channel)
         }
 
