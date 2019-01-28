@@ -9,10 +9,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasBroadcastReceiverInjector
 import dagger.android.HasServiceInjector
-import fr.hazegard.drfreeze.injection.AppComponent
-import fr.hazegard.drfreeze.injection.AppModule
-import fr.hazegard.drfreeze.injection.DaggerAppComponent
-import fr.hazegard.drfreeze.injection.SuModule
+import fr.hazegard.drfreeze.injection.*
 import fr.hazegard.drfreeze.ui.NotRootActivity
 import javax.inject.Inject
 
@@ -57,7 +54,8 @@ class FreezeApplication : Application(),
     private fun initDagger() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
-                .suModule(SuModule(this))
+                .systemModule(SystemModule(this))
+                .suModule(SuModule())
                 .build()
     }
 
