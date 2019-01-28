@@ -74,7 +74,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
      */
     private fun initListView() {
         GlobalScope.launch {
-            listTrackedApp = getTrackedPackages().await()
+            listTrackedApp = getTrackedPackagesAsync().await()
             val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, 2)
             trackedPackageAdapter = TrackedPackageAdapter(this@ManageTrackedAppActivity,
                     appsManager,
@@ -132,7 +132,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ListPackagesActivity.UPDATE_TRACKED_APPS_CODE && resultCode == Activity.RESULT_OK) {
             GlobalScope.launch {
-                listTrackedApp = getTrackedPackages().await()
+                listTrackedApp = getTrackedPackagesAsync().await()
                 runOnUiThread { trackedPackageAdapter.updateList(listTrackedApp) }
             }
         }
@@ -143,7 +143,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
      * Get a list of tracked packages, sorted by application name
      * @return THe list of tracked packages
      */
-    private fun getTrackedPackages(): Deferred<List<PackageApp>> {
+    private fun getTrackedPackagesAsync(): Deferred<List<PackageApp>> {
         return GlobalScope.async { appsManager.getTrackedPackages() }
     }
 
