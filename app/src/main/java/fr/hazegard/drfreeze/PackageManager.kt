@@ -61,9 +61,9 @@ class PackageManager @Inject constructor(
         return getAllPackages()
                 .filter { doKeepSystemApps || it.isSystemApp() }
                 .filter { !showOnlyLaunchApps || pm.isLaunchableApp(Pkg(it.packageName)) }
-                .map {
+                .mapNotNull {
                     val pkg = Pkg(it.packageName)
-                    return@map PackageApp(pkg, getAppName(pkg))
+                    return@mapNotNull safeCreatePackageApp1(pkg)
                 }
                 .sortedBy { it.appName }
     }
@@ -91,8 +91,8 @@ class PackageManager @Inject constructor(
     fun getEnabledAndTracked(): List<PackageApp> {
         val trackedApplications: List<Pkg> = getTrackedPackagesAsList()
         val disabledApps: List<Pkg> = getDisabledPackages()
-        return trackedApplications.minus(disabledApps).toList().map {
-            PackageApp(it, getAppName(it))
+        return trackedApplications.minus(disabledApps).toList().mapNotNull {
+            safeCreatePackageApp1(it)
         }
     }
 
@@ -112,8 +112,8 @@ class PackageManager @Inject constructor(
      */
     fun getTrackedPackages(): List<PackageApp> {
         return saveHelper.getTrackedPackages()
-                .toList().map {
-                    PackageApp(it, getAppName(it))
+                .toList().mapNotNull {
+                    safeCreatePackageApp1(it)
                 }
                 .sortedBy { it.appName }
     }
@@ -176,6 +176,14 @@ class PackageManager @Inject constructor(
         val appInfo = pm.getApplicationInfo(pkg.s,
                 PackageManager.GET_META_DATA)
         return pm.getApplicationLabel(appInfo).toString()
+    }
+
+    private fun safeCreatePackageApp1(pkg: Pkg): PackageApp? {
+        return try {
+            PackageApp(pkg, getAppName(pkg))
+        } catch (e: PackageManager.NameNotFoundException) {
+            null
+        }
     }
 
     /**

@@ -29,9 +29,14 @@ class ShortcutDispatcherActivity : AppCompatActivity() {
             Toast.makeText(this, "Application not found, it may have been uninstalled",
                     Toast.LENGTH_SHORT).show()
         } else {
-            val pkg = Pkg(packageName)
-            val targetPackage = PackageApp(pkg, packageManager.getAppName(pkg))
-            packageManager.start(targetPackage, this)
+            try {
+                val pkg = Pkg(packageName)
+                val targetPackage = PackageApp(pkg, packageManager.getAppName(pkg))
+                packageManager.start(targetPackage, this)
+            } catch (e: android.content.pm.PackageManager.NameNotFoundException) {
+                Toast.makeText(this, "Application not found, it may have been uninstalled",
+                        Toast.LENGTH_SHORT).show()
+            }
         }
         finish()
     }
