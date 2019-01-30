@@ -1,0 +1,23 @@
+import kotlin.collections.List;
+
+CREATE TABLE packageAppTable (
+    package_name TEXT NOT NULL,
+    application_name TEXT NOT NULL,
+    is_disabled INTEGER AS Boolean DEFAULT 0,
+    is_uninstalled INTEGER AS Boolean DEFAULT 0
+);
+
+CREATE INDEX packageApp_pkgName ON packageAppTable(package_name);
+
+selectAll:
+SELECT * FROM packageAppTable ;
+
+insertOne:
+INSERT INTO packageAppTable(package_name,application_name,is_disabled,is_uninstalled)
+VALUES (?,?,?,?);
+
+selectOne:
+SELECT * FROM packageAppTable WHERE package_name = ?;
+
+deleteOne:
+DELETE FROM packageAppTable WHERE package_name = 1;
