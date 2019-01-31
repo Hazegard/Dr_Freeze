@@ -1,7 +1,7 @@
 import kotlin.collections.List;
 
 CREATE TABLE packageAppTable (
-    package_name TEXT NOT NULL,
+    package_name TEXT NOT NULL PRIMARY KEY,
     application_name TEXT NOT NULL,
     is_disabled INTEGER AS Boolean DEFAULT 0,
     is_uninstalled INTEGER AS Boolean DEFAULT 0
@@ -13,7 +13,7 @@ selectAll:
 SELECT * FROM packageAppTable ;
 
 insertOne:
-INSERT INTO packageAppTable(package_name,application_name,is_disabled,is_uninstalled)
+INSERT OR REPLACE INTO packageAppTable(package_name,application_name,is_disabled,is_uninstalled)
 VALUES (?,?,?,?);
 
 selectOne:
@@ -21,3 +21,15 @@ SELECT * FROM packageAppTable WHERE package_name = ?;
 
 deleteOne:
 DELETE FROM packageAppTable WHERE package_name = 1;
+
+selectAllEnabledPackages:
+SELECT * FROM packageAppTable WHERE is_disabled = 0;
+
+selectAllDisabledPackages:
+SELECT * FROM packageAppTable WHERE is_disabled = 1;
+
+selectTrackedPackages:
+SELECT * FROM packageAppTable WHERE is_uninstalled = 0;
+
+selectTrackedAndEnabledPackages:
+SELECT * FROM packageAppTable WHERE is_uninstalled = 0 AND is_disabled = 0;

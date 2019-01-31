@@ -7,7 +7,12 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import fr.hazegard.drfreeze.extensions.toBitmap
 
-data class PackageApp(val pkg: Pkg, val appName: String) {
+data class PackageApp(
+        val pkg: Pkg,
+        val appName: String,
+        var isDisabled: Boolean,
+        var isUninstalled: Boolean) {
+    constructor(pkg: Pkg, appName: String) : this(pkg, appName, false, false)
 
     fun isEnable(pm: PackageManager): Boolean {
         return pm.getApplicationInfo(pkg.s, 0).enabled
