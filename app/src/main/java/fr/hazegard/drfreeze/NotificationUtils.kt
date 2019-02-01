@@ -10,6 +10,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import dagger.android.AndroidInjection
+import fr.hazegard.drfreeze.extensions.toBitmap
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
 import javax.inject.Inject
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 class NotificationUtils @Inject constructor(private val context: Context,
                                             private val preferencesHelper: PreferencesHelper,
-                                            private val pm: android.content.pm.PackageManager) {
+                                            private val imageManager: ImageManager) {
 
     /**
      * Send multiple notifications displaying that the packages are currently running
@@ -78,7 +79,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
                 .setContentIntent(pendingIntent)
                 .setContentTitle(packageApp.appName)
                 .setContentText("Click to disable ${packageApp.appName}")
-                .setLargeIcon(packageApp.getIconBitmap(pm))
+                .setLargeIcon(imageManager.getCachedImage(packageApp).toBitmap())
                 .setSmallIcon(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     R.drawable.snowflake
                 } else {
@@ -112,14 +113,14 @@ class NotificationUtils @Inject constructor(private val context: Context,
          */
         class NotificationActionService : IntentService("NotificationActionService") {
             @Inject
-            lateinit var packageManager: PackageManager
+            lateinit var packageUtils: PackageUtils
 
             override fun onHandleIntent(intent: Intent?) {
                 AndroidInjection.inject(this)
                 val action = intent?.action
                 if (action.equals(ACTION_DISABLE)) {
                     intent?.extras?.getString(KEY_PACKAGE, null)?.let {
-                        packageManager.disablePackage(Pkg(it))
+                        packageUtils.disablePackage(Pkg(it))
                     }
                 }
             }

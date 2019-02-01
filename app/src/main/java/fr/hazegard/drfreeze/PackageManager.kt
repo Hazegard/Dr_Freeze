@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import fr.hazegard.drfreeze.extensions.isLaunchableApp
 import fr.hazegard.drfreeze.extensions.isSystemApp
+import fr.hazegard.drfreeze.extensions.toBitmap
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
 import fr.hazegard.drfreeze.ui.ShortcutDispatcherActivity
@@ -29,6 +30,7 @@ class PackageManager @Inject constructor(
         private val commands: Commands,
         private val pm: PackageManager,
         private val saveHelper: SaveHelper,
+        private val imageManager: ImageManager,
         private val notificationUtils: NotificationUtils) {
 
     /**
@@ -140,6 +142,7 @@ class PackageManager @Inject constructor(
      */
     fun removeTrackedPackage(pkg: PackageApp) {
         saveHelper.removeTrackedPackage(pkg.pkg)
+        imageManager.deleteImage(pkg)
         enablePackage(pkg.pkg)
     }
 
@@ -212,7 +215,7 @@ class PackageManager @Inject constructor(
                 val intent = ShortcutDispatcherActivity.newIntent(context, packageApp.pkg)
                 val shortcutManager = context.getSystemService(ShortcutManager::class.java)
                 val pinShortcutInfo = ShortcutInfo.Builder(context, packageApp.pkg.s)
-                        .setIcon(Icon.createWithBitmap(packageApp.getIconBitmap(pm)))
+                        .setIcon(Icon.createWithBitmap(imageManager.getCachedImage(packageApp).toBitmap()))
                         .setShortLabel(packageApp.appName)
                         .setIntent(intent)
                         .build()
@@ -221,7 +224,7 @@ class PackageManager @Inject constructor(
         } else {
             val shortcutIntent = ShortcutDispatcherActivity.newIntent(context, packageApp.pkg)
             shortcutIntent.action = Intent.ACTION_MAIN
-            val icon = Bitmap.createScaledBitmap(packageApp.getIconBitmap(pm), 128, 128, true)
+            val icon = Bitmap.createScaledBitmap(imageManager.getCachedImage(packageApp).toBitmap(), 128, 128, true)
             @Suppress("DEPRECATION") val addIntent = Intent().apply {
                 putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
                 putExtra(Intent.EXTRA_SHORTCUT_NAME, packageApp.appName)

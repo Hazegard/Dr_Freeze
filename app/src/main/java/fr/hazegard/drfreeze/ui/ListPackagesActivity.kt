@@ -28,7 +28,9 @@ import kotlin.properties.Delegates
 
 
 class ListPackagesActivity : AppCompatActivity() {
-    private lateinit var packageAdapter: PackageAdapter
+    @Inject
+    lateinit var packageAdapterFactory: PackageAdapter.Companion.Factory
+    lateinit var packageAdapter: PackageAdapter
     private lateinit var menu: Menu
     private var sendDoUpdate = false
     private var listPackage: List<PackageApp> by Delegates.observable(
@@ -130,7 +132,7 @@ class ListPackagesActivity : AppCompatActivity() {
             val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
             val layout: RecyclerView.LayoutManager = LinearLayoutManager(
                     this@ListPackagesActivity, RecyclerView.VERTICAL, false)
-            packageAdapter = PackageAdapter(listPackage, trackedPackages) {
+            packageAdapter = packageAdapterFactory.get(listPackage, trackedPackages) {
                 sendDoUpdate = true
             }
             runOnUiThread {

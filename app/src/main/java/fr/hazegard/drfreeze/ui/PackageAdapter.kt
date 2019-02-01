@@ -5,19 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import fr.hazegard.drfreeze.ImageManager
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
 import kotlinx.android.synthetic.main.row_package.view.*
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 /**
  * Created by Hazegard on 26/02/18.
  */
 
-class PackageAdapter(private var packages: List<PackageApp>,
-                     var trackedPackages: MutableSet<Pkg>,
-                     private val onUpdateList: () -> Unit)
+class PackageAdapter private constructor(
+        private val imageManager: ImageManager,
+        private var packages: List<PackageApp>,
+        var trackedPackages: MutableSet<Pkg>,
+        private val onUpdateList: () -> Unit)
     : RecyclerView.Adapter<PackageAdapter.PackageHolder>() {
 
     override fun onBindViewHolder(holder: PackageHolder, position: Int) {
@@ -57,7 +61,7 @@ class PackageAdapter(private var packages: List<PackageApp>,
                             remove(packageApp.pkg)
                         }
                     }
-                    onUpdateList()
+                    onUpdateList.invoke()
                 }
 
                 row_package.setOnClickListener {
@@ -71,7 +75,24 @@ class PackageAdapter(private var packages: List<PackageApp>,
                 }
                 packageNameTv.text = packageApp.pkg.s
                 packageAppNameTv.text = packageApp.appName
-                package_image.setImageDrawable(packageApp.getIconDrawable(c.packageManager))
+                package_image.setImageDrawable(imageManager.getImage(packageApp))
+            }
+        }
+    }
+
+    companion object {
+        class Factory @Inject constructor(
+                private val imageManager: ImageManager) {
+            fun get(packages: List<PackageApp>,
+                    trackedPackages: MutableSet<Pkg>,
+                    onUpdateList: () -> Unit
+            ): PackageAdapter {
+                return PackageAdapter(
+                        imageManager,
+                        packages,
+                        trackedPackages,
+                        onUpdateList
+                )
             }
         }
     }
