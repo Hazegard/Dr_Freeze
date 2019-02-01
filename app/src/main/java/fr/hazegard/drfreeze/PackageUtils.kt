@@ -23,8 +23,7 @@ class PackageUtils @Inject constructor(
         private val commands: Commands,
         private val pm: PackageManager,
         private val imageManager: ImageManager,
-        private val notificationUtils: NotificationUtils,
-        private val context: Context) {
+        private val notificationUtils: NotificationUtils) {
     /**
      * Disable the package
      * @param pkg The package to disable

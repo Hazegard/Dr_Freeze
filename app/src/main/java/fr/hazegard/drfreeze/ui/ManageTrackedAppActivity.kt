@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import fr.hazegard.drfreeze.FreezeApplication
-import fr.hazegard.drfreeze.NotificationUtils
 import fr.hazegard.drfreeze.PackageManager
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
@@ -46,9 +45,6 @@ class ManageTrackedAppActivity : AppCompatActivity() {
 
     @Inject
     lateinit var appsManager: PackageManager
-
-    @Inject
-    lateinit var notificationUtils: NotificationUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

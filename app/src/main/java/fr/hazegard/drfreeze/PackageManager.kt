@@ -1,23 +1,11 @@
 package fr.hazegard.drfreeze
 
-import android.content.Context
-import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.content.pm.ShortcutInfo
-import android.content.pm.ShortcutManager
-import android.graphics.Bitmap
-import android.graphics.drawable.Icon
-import android.os.Build
-import android.util.Log
-import androidx.core.content.ContextCompat
-import androidx.core.content.pm.ShortcutManagerCompat
 import fr.hazegard.drfreeze.extensions.isLaunchableApp
 import fr.hazegard.drfreeze.extensions.isSystemApp
-import fr.hazegard.drfreeze.extensions.toBitmap
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
-import fr.hazegard.drfreeze.ui.ShortcutDispatcherActivity
 import javax.inject.Inject
 import javax.inject.Singleton
 
