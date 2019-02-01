@@ -3,15 +3,12 @@ package fr.hazegard.drfreeze
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import fr.hazegard.drfreeze.extensions.toBitmap
 import fr.hazegard.drfreeze.model.PackageApp
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,6 +18,11 @@ class ImageManager @Inject constructor(
         private val context: Context,
         private val pm: PackageManager) {
 
+    /**
+     * Save the icon of package into internal storage
+     * @param packageApp THe package to save
+     * @param image The icon of the package to save
+     */
     fun saveImage(packageApp: PackageApp, image: Drawable) {
         val imagePath = getFilePath(packageApp)
         val fos = FileOutputStream(imagePath)
@@ -32,6 +34,14 @@ class ImageManager @Inject constructor(
         }
     }
 
+
+    /**
+     * Get the image cached in the internal storage.
+     * If the image is not found, the image is load from the system and saved to the internal storage
+     * If nothing is found, a default icon is provided
+     * @param packageApp The package of the icon
+     * @return The icon of the package
+     */
     fun getCachedImage(packageApp: PackageApp): Drawable {
         val image = getImageFromPacMan(packageApp)
         if (image != null) {
@@ -45,26 +55,31 @@ class ImageManager @Inject constructor(
         return defaultIcon()
     }
 
+    /**
+     * Get the icon of an application from the system
+     * @param packageApp The package
+     * @return The icon of the application
+     */
     private fun getImageFromPacMan(packageApp: PackageApp): Drawable? {
         return pm.getApplicationIcon(packageApp.pkg.s)
     }
 
+    /**
+     * Get the icon from the system, and provide a default icon if not found
+     */
     fun getImage(packageApp: PackageApp): Drawable {
         return getImageFromPacMan(packageApp) ?: defaultIcon()
     }
 
+    /**
+     * Generate a default icon
+     */
     private fun defaultIcon(): Drawable = ColorDrawable(Color.TRANSPARENT)
 
-    fun getCachedImage0(packageApp: PackageApp): Bitmap? {
-        return try {
-            val imagePath = getFilePath(packageApp)
-            val inputStream = FileInputStream(imagePath)
-            BitmapFactory.decodeStream(inputStream)
-        } catch (e: FileNotFoundException) {
-            null
-        }
-    }
-
+    /**
+     * Delete the icon from internal storage
+     * @param packageApp The package to delete
+     */
     fun deleteImage(packageApp: PackageApp) {
         try {
             val imagePath = getFilePath(packageApp)
@@ -75,6 +90,9 @@ class ImageManager @Inject constructor(
         }
     }
 
+    /**
+     * Get the path of the file in the internal storage
+     */
     private fun getFilePath(packageApp: PackageApp): File {
         val imageDir = context.getDir(IMAGE_FOLDER, Context.MODE_PRIVATE)
         return File(imageDir, packageApp.pkg.s)
