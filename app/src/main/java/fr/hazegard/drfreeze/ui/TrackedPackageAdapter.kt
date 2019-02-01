@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import fr.hazegard.drfreeze.ImageManager
-import fr.hazegard.drfreeze.NotificationUtils
-import fr.hazegard.drfreeze.PackageManager
-import fr.hazegard.drfreeze.R
+import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
 import kotlinx.coroutines.GlobalScope
@@ -23,6 +20,7 @@ import javax.inject.Singleton
  */
 class TrackedPackageAdapter private constructor(
         private val packageManager: PackageManager,
+        private val packageUtils: PackageUtils,
         private val notificationUtils: NotificationUtils,
         private val imageManager: ImageManager,
         private val c: Context,
@@ -82,7 +80,7 @@ class TrackedPackageAdapter private constructor(
 
                 with(manage_add_shortcut) {
                     setOnClickListener {
-                        packageManager.addShortcut(c, packageApp)
+                        packageUtils.addShortcut(c, packageApp)
                     }
                     setOnLongClickListener {
                         Toast.makeText(context, "Add Shortcut for ${packageApp.appName}", Toast.LENGTH_SHORT).show()
@@ -94,7 +92,7 @@ class TrackedPackageAdapter private constructor(
                 with(manage_freeze_app) {
                     setOnClickListener {
                         GlobalScope.launch {
-                            packageManager.disablePackage(packageApp.pkg)
+                            packageUtils.disablePackage(packageApp.pkg)
                             notificationUtils.removeNotification(packageApp)
                             onRequestUpdate.invoke()
                         }
@@ -120,7 +118,7 @@ class TrackedPackageAdapter private constructor(
                 manage_app_icon.setImageDrawable(imageManager.getCachedImage(packageApp))
                 with(manage_card_view) {
                     setOnClickListener {
-                        packageManager.start(packageApp, c)
+                        packageUtils.start(packageApp, c)
                         onApplicationStarted.invoke()
                     }
                     setOnLongClickListener {
@@ -136,6 +134,7 @@ class TrackedPackageAdapter private constructor(
         @Singleton
         class Factory @Inject constructor(
                 private val packageManager: PackageManager,
+                private val packageUtils: PackageUtils,
                 private val imageManager: ImageManager,
                 private val notificationUtils: NotificationUtils) {
 
@@ -147,6 +146,7 @@ class TrackedPackageAdapter private constructor(
             ): TrackedPackageAdapter {
                 return TrackedPackageAdapter(
                         packageManager,
+                        packageUtils,
                         notificationUtils,
                         imageManager,
                         context,

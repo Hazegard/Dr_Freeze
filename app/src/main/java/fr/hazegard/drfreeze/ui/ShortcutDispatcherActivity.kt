@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import fr.hazegard.drfreeze.FreezeApplication
-import fr.hazegard.drfreeze.PackageManager
+import fr.hazegard.drfreeze.PackageUtils
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
 import javax.inject.Inject
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class ShortcutDispatcherActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var packageManager: PackageManager
+    lateinit var packageUtils: PackageUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         FreezeApplication.appComponent.inject(this)
@@ -31,8 +31,8 @@ class ShortcutDispatcherActivity : AppCompatActivity() {
         } else {
             try {
                 val pkg = Pkg(packageName)
-                val targetPackage = PackageApp(pkg, packageManager.getAppName(pkg))
-                packageManager.start(targetPackage, this)
+                val targetPackage = PackageApp(pkg, packageUtils.getAppName(pkg))
+                packageUtils.start(targetPackage, this)
             } catch (e: android.content.pm.PackageManager.NameNotFoundException) {
                 Toast.makeText(this, "Application not found, it may have been uninstalled",
                         Toast.LENGTH_SHORT).show()
