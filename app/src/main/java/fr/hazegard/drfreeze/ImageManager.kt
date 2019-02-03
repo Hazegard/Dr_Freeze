@@ -34,7 +34,6 @@ class ImageManager @Inject constructor(
         }
     }
 
-
     /**
      * Get the image cached in the internal storage.
      * If the image is not found, the image is load from the system and saved to the internal storage

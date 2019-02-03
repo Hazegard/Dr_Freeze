@@ -102,10 +102,14 @@ class PackageUtils @Inject constructor(
                 putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
                 putExtra(Intent.EXTRA_SHORTCUT_NAME, packageApp.appName)
                 putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
-                action = "com.android.launcher.action.INSTALL_SHORTCUT"
+                action = INSTALL_ACTION
                 putExtra("duplicate", false)
             }
             context.sendBroadcast(addIntent)
         }
+    }
+
+    companion object {
+        private const val INSTALL_ACTION = "com.android.launcher.action.INSTALL_SHORTCUT"
     }
 }

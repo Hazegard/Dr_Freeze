@@ -62,7 +62,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
                 context, System.currentTimeMillis().toInt(), onClickIntent, PendingIntent.FLAG_ONE_SHOT)
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channelId = "1664"
+        val channelId = NOTIFICATION_CHANNEL_ID
         val name = context.getString(R.string.channel_name)
         val descriptionChannel = context.getString(R.string.channel_description)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -78,7 +78,7 @@ class NotificationUtils @Inject constructor(private val context: Context,
         val notification = NotificationCompat.Builder(context, channelId)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(packageApp.appName)
-                .setContentText("Click to disable ${packageApp.appName}")
+                .setContentText(context.getString(R.string.notification_click_action, packageApp.appName))
                 .setLargeIcon(imageManager.getCachedImage(packageApp).toBitmap())
                 .setSmallIcon(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     R.drawable.snowflake
@@ -106,6 +106,8 @@ class NotificationUtils @Inject constructor(private val context: Context,
     }
 
     companion object {
+        private const val NOTIFICATION_CHANNEL_ID = "1664"
+
         /**
          * The class that handle intent send by notifications
          * The intent actions are:

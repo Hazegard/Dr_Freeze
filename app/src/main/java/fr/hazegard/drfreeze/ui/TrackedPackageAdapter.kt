@@ -83,7 +83,7 @@ class TrackedPackageAdapter private constructor(
                         packageUtils.addShortcut(c, packageApp)
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, "Add Shortcut for ${packageApp.appName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, c.getString(R.string.button_add_shortcut, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
                 }
@@ -98,7 +98,7 @@ class TrackedPackageAdapter private constructor(
                         }
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, "Freeze ${packageApp.appName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.button_freeze_app, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
                     isEnabled = isPkgEnabled
@@ -110,7 +110,7 @@ class TrackedPackageAdapter private constructor(
                         onRequestUpdate.invoke()
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, "Stop tracking ${packageApp.appName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.button_stop_tracking, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
                 }
@@ -122,7 +122,7 @@ class TrackedPackageAdapter private constructor(
                         onApplicationStarted.invoke()
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, "Start ${packageApp.appName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.button_start_app, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
                 }
