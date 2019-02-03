@@ -106,7 +106,6 @@ class Su @Inject constructor() {
 
     companion object {
         private const val MATCH_ROOT = "uid=0"
-        val instance by lazy { Su() }
         private const val EOF = "EOF"
     }
 }
