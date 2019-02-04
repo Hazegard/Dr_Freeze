@@ -23,7 +23,7 @@ class PackageUtils @Inject constructor(
         private val commands: Commands,
         private val pm: PackageManager,
         private val imageManager: ImageManager,
-        private val notificationUtils: NotificationUtils) {
+        private val notificationManager: NotificationManager) {
     /**
      * Disable the package
      * @param pkg The package to disable
@@ -70,7 +70,7 @@ class PackageUtils @Inject constructor(
         val launchIntent = pm.getLaunchIntentForPackage(pkg.pkg.s)
         if (launchIntent != null) {
             ContextCompat.startActivity(context, launchIntent, null)
-            notificationUtils.sendNotification(pkg)
+            notificationManager.sendNotification(pkg)
         } else {
             Log.d("PackageApp", "Unable to start ${pkg.appName} (Launch intent fo package: ${pkg.pkg.s} is null)")
         }

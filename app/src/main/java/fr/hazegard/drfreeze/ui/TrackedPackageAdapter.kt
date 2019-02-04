@@ -21,7 +21,7 @@ import javax.inject.Singleton
 class TrackedPackageAdapter private constructor(
         private val packageManager: PackageManager,
         private val packageUtils: PackageUtils,
-        private val notificationUtils: NotificationUtils,
+        private val notificationManager: NotificationManager,
         private val imageManager: ImageManager,
         private val c: Context,
         private var managedPackage: List<PackageApp>,
@@ -39,7 +39,7 @@ class TrackedPackageAdapter private constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ManagedAppHolder {
         val itemView: View = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_manage_apps, parent, false)
-        return ManagedAppHolder(itemView, packageManager, notificationUtils)
+        return ManagedAppHolder(itemView, packageManager, notificationManager)
     }
 
     override fun getItemCount(): Int {
@@ -58,7 +58,7 @@ class TrackedPackageAdapter private constructor(
 
     inner class ManagedAppHolder(private val view: View,
                                  private val packageManager: PackageManager,
-                                 private val notificationUtils: NotificationUtils)
+                                 private val notificationManager: NotificationManager)
         : RecyclerView.ViewHolder(view) {
 
         /**
@@ -93,7 +93,7 @@ class TrackedPackageAdapter private constructor(
                     setOnClickListener {
                         GlobalScope.launch {
                             packageUtils.disablePackage(packageApp.pkg)
-                            notificationUtils.removeNotification(packageApp)
+                            notificationManager.removeNotification(packageApp)
                             onRequestUpdate.invoke()
                         }
                     }
@@ -136,7 +136,7 @@ class TrackedPackageAdapter private constructor(
                 private val packageManager: PackageManager,
                 private val packageUtils: PackageUtils,
                 private val imageManager: ImageManager,
-                private val notificationUtils: NotificationUtils) {
+                private val notificationManager: NotificationManager) {
 
             fun getTrackedPackageAdapter(
                     context: Context,
@@ -147,7 +147,7 @@ class TrackedPackageAdapter private constructor(
                 return TrackedPackageAdapter(
                         packageManager,
                         packageUtils,
-                        notificationUtils,
+                        notificationManager,
                         imageManager,
                         context,
                         managedPackage,

@@ -20,7 +20,7 @@ class OnBootService : BroadcastReceiver() {
     lateinit var preferencesHelper: PreferencesHelper
 
     @Inject
-    lateinit var notificationUtils: NotificationUtils
+    lateinit var notificationManager: NotificationManager
 
     override fun onReceive(context: Context, intent: Intent?) {
         AndroidInjection.inject(this, context)
@@ -28,7 +28,7 @@ class OnBootService : BroadcastReceiver() {
                 && !preferencesHelper.isBootNotificationDisabled()) {
             val enabledAndTrackedApps = packageManager.getEnabledAndTracked()
             if (enabledAndTrackedApps.isNotEmpty()) {
-                notificationUtils.sendNotification(enabledAndTrackedApps)
+                notificationManager.sendNotification(enabledAndTrackedApps)
             }
         }
     }
