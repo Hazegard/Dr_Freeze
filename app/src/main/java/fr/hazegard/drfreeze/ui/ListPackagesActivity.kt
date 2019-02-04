@@ -28,7 +28,9 @@ import kotlin.properties.Delegates
 
 
 class ListPackagesActivity : AppCompatActivity() {
-    private lateinit var packageAdapter: PackageAdapter
+    @Inject
+    lateinit var packageAdapterFactory: PackageAdapter.Companion.Factory
+    lateinit var packageAdapter: PackageAdapter
     private lateinit var menu: Menu
     private var sendDoUpdate = false
     private var listPackage: List<PackageApp> by Delegates.observable(
@@ -101,7 +103,7 @@ class ListPackagesActivity : AppCompatActivity() {
         if (requestCode == SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE && resultCode == Activity.RESULT_OK) {
             if (data?.getBooleanExtra(SettingsActivity.RESULT, false) == true) {
                 GlobalScope.launch {
-                    listPackage = getPackages().await()
+                    listPackage = getPackagesAsync().await()
                     runOnUiThread { packageAdapter.updateList(listPackage) }
                 }
             }
@@ -118,7 +120,7 @@ class ListPackagesActivity : AppCompatActivity() {
         packageManager.saveTrackedPackages(newTrackedPackages)
     }
 
-    private fun getPackages(): Deferred<List<PackageApp>> {
+    private fun getPackagesAsync(): Deferred<List<PackageApp>> {
         return GlobalScope.async {
             packageManager.getPackages()
         }
@@ -126,11 +128,11 @@ class ListPackagesActivity : AppCompatActivity() {
 
     private fun initListView() {
         GlobalScope.launch {
-            listPackage = getPackages().await()
+            listPackage = getPackagesAsync().await()
             val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
             val layout: RecyclerView.LayoutManager = LinearLayoutManager(
                     this@ListPackagesActivity, RecyclerView.VERTICAL, false)
-            packageAdapter = PackageAdapter(listPackage, trackedPackages) {
+            packageAdapter = packageAdapterFactory.get(listPackage, trackedPackages) {
                 sendDoUpdate = true
             }
             runOnUiThread {

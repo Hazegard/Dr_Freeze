@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import fr.hazegard.drfreeze.FreezeApplication
-import fr.hazegard.drfreeze.NotificationUtils
 import fr.hazegard.drfreeze.PackageManager
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
@@ -26,7 +25,6 @@ import javax.inject.Inject
 import kotlin.properties.Delegates
 
 class ManageTrackedAppActivity : AppCompatActivity() {
-    private lateinit var trackedPackageAdapter: TrackedPackageAdapter
     /**
      * Updating the list of tracked packages update also the view depending on the list size
      */
@@ -42,10 +40,11 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     }
 
     @Inject
-    lateinit var appsManager: PackageManager
+    lateinit var trackedPackageAdapterFactory: TrackedPackageAdapter.Companion.Factory
+    private lateinit var trackedPackageAdapter: TrackedPackageAdapter
 
     @Inject
-    lateinit var notificationUtils: NotificationUtils
+    lateinit var appsManager: PackageManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,15 +75,14 @@ class ManageTrackedAppActivity : AppCompatActivity() {
         GlobalScope.launch {
             listTrackedApp = getTrackedPackagesAsync().await()
             val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, 2)
-            trackedPackageAdapter = TrackedPackageAdapter(this@ManageTrackedAppActivity,
-                    appsManager,
-                    notificationUtils,
+            trackedPackageAdapter = trackedPackageAdapterFactory.getTrackedPackageAdapter(
+                    this@ManageTrackedAppActivity,
                     listTrackedApp,
-                    {
-                        finishAffinity()
+                    onApplicationStarted = {
+                        this@ManageTrackedAppActivity.finishAffinity()
                         System.exit(0)
                     },
-                    {
+                    onRequestUpdate = {
                         listTrackedApp = appsManager.getTrackedPackages()
                         runOnUiThread {
                             trackedPackageAdapter.updateList(listTrackedApp)

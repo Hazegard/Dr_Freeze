@@ -1,15 +1,13 @@
 package fr.hazegard.drfreeze
 
-import android.app.IntentService
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import dagger.android.AndroidInjection
+import fr.hazegard.drfreeze.extensions.toBitmap
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
 import javax.inject.Inject
@@ -19,9 +17,9 @@ import javax.inject.Inject
  * Created by Hazegard on 04/03/18.
  */
 
-class NotificationUtils @Inject constructor(private val context: Context,
-                                            private val preferencesHelper: PreferencesHelper,
-                                            private val pm: android.content.pm.PackageManager) {
+class NotificationManager @Inject constructor(private val context: Context,
+                                              private val preferencesHelper: PreferencesHelper,
+                                              private val imageManager: ImageManager) {
 
     /**
      * Send multiple notifications displaying that the packages are currently running
@@ -61,13 +59,13 @@ class NotificationUtils @Inject constructor(private val context: Context,
                 context, System.currentTimeMillis().toInt(), onClickIntent, PendingIntent.FLAG_ONE_SHOT)
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channelId = "1664"
+        val channelId = NOTIFICATION_CHANNEL_ID
         val name = context.getString(R.string.channel_name)
-        val descr = context.getString(R.string.channel_description)
+        val descriptionChannel = context.getString(R.string.channel_description)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel(channelId, name, importance).apply {
-                description = descr
+                description = descriptionChannel
                 enableLights(false)
                 enableVibration(false)
             }
@@ -77,8 +75,8 @@ class NotificationUtils @Inject constructor(private val context: Context,
         val notification = NotificationCompat.Builder(context, channelId)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(packageApp.appName)
-                .setContentText("Click to disable ${packageApp.appName}")
-                .setLargeIcon(packageApp.getIconBitmap(pm))
+                .setContentText(context.getString(R.string.notification_click_action, packageApp.appName))
+                .setLargeIcon(imageManager.getCachedImage(packageApp).toBitmap())
                 .setSmallIcon(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     R.drawable.snowflake
                 } else {
@@ -105,40 +103,6 @@ class NotificationUtils @Inject constructor(private val context: Context,
     }
 
     companion object {
-        /**
-         * The class that handle intent send by notifications
-         * The intent actions are:
-         *  - ACTION_DISABLE: Disable the package given as extra
-         */
-        class NotificationActionService : IntentService("NotificationActionService") {
-            @Inject
-            lateinit var packageManager: PackageManager
-
-            override fun onHandleIntent(intent: Intent?) {
-                AndroidInjection.inject(this)
-                val action = intent?.action
-                if (action.equals(ACTION_DISABLE)) {
-                    intent?.extras?.getString(KEY_PACKAGE, null)?.let {
-                        packageManager.disablePackage(Pkg(it))
-                    }
-                }
-            }
-
-            companion object {
-                private const val ACTION_DISABLE = "ACTION_DISABLE"
-                private const val KEY_PACKAGE = "KAY_PACKAGE"
-                /**
-                 * Create a new Intent that disable the package
-                 * @param context The current context
-                 * @param pkg The package that should be disabled
-                 */
-                fun newDisablePackageIntent(context: Context, pkg: Pkg): Intent {
-                    return Intent(context, NotificationActionService::class.java).apply {
-                        action = ACTION_DISABLE
-                        putExtra(KEY_PACKAGE, pkg.s)
-                    }
-                }
-            }
-        }
+        private const val NOTIFICATION_CHANNEL_ID = "1664"
     }
 }

@@ -7,17 +7,11 @@ import android.content.pm.PackageManager
 import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
-import fr.hazegard.drfreeze.Su
 import javax.inject.Named
 import javax.inject.Singleton
 
-
 @Module
-class SuModule(private val context: Context) {
-    @Provides
-    @Singleton
-    fun providesSu(): Su = Su()
-
+class SystemModule(private val context: Context) {
     @Provides
     @Singleton
     @Named("Shared_preferences")

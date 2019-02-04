@@ -6,6 +6,7 @@ import java.io.BufferedReader
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
@@ -17,7 +18,7 @@ import javax.inject.Singleton
  * This class is a singleton in order to prevent the app from requesting several root processes
  */
 @Singleton
-class Su {
+class Su @Inject constructor() {
     private val su: Process = getSuProcess()
     private val os = DataOutputStream(su.outputStream)
     private val osRes = DataInputStream(su.inputStream)
@@ -105,7 +106,6 @@ class Su {
 
     companion object {
         private const val MATCH_ROOT = "uid=0"
-        val instance by lazy { Su() }
         private const val EOF = "EOF"
     }
 }

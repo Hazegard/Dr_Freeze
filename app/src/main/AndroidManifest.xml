@@ -16,7 +16,7 @@
         <activity android:name=".ui.NotRootActivity" />
         <activity android:name=".ui.ListPackagesActivity" />
 
-        <service android:name=".NotificationUtils$Companion$NotificationActionService" />
+        <service android:name=".NotificationActionService" />
 
         <receiver android:name=".OnBootService">
             <intent-filter>

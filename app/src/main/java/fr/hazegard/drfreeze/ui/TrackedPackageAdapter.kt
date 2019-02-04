@@ -7,23 +7,26 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import fr.hazegard.drfreeze.NotificationUtils
-import fr.hazegard.drfreeze.PackageManager
-import fr.hazegard.drfreeze.R
+import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * The adapter used to display tracked packages
  */
-class TrackedPackageAdapter(private val c: Context,
-                            private val packageManager: PackageManager,
-                            private val notificationUtils: NotificationUtils,
-                            private var managedPackage: List<PackageApp>,
-                            private val callback: () -> Unit,
-                            private val requestUpdate: () -> Unit)
+class TrackedPackageAdapter private constructor(
+        private val packageManager: PackageManager,
+        private val packageUtils: PackageUtils,
+        private val notificationManager: NotificationManager,
+        private val imageManager: ImageManager,
+        private val c: Context,
+        private var managedPackage: List<PackageApp>,
+        private val onApplicationStarted: () -> Unit,
+        private val onRequestUpdate: () -> Unit)
     : RecyclerView.Adapter<TrackedPackageAdapter.ManagedAppHolder>() {
 
     private var listDisabledPackages = packageManager.getDisabledPackages()
@@ -36,7 +39,7 @@ class TrackedPackageAdapter(private val c: Context,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ManagedAppHolder {
         val itemView: View = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_manage_apps, parent, false)
-        return ManagedAppHolder(itemView, packageManager, notificationUtils)
+        return ManagedAppHolder(itemView, packageManager, notificationManager)
     }
 
     override fun getItemCount(): Int {
@@ -55,7 +58,7 @@ class TrackedPackageAdapter(private val c: Context,
 
     inner class ManagedAppHolder(private val view: View,
                                  private val packageManager: PackageManager,
-                                 private val notificationUtils: NotificationUtils)
+                                 private val notificationManager: NotificationManager)
         : RecyclerView.ViewHolder(view) {
 
         /**
@@ -77,24 +80,25 @@ class TrackedPackageAdapter(private val c: Context,
 
                 with(manage_add_shortcut) {
                     setOnClickListener {
-                        packageManager.addShortcut(c, packageApp)
+                        packageUtils.addShortcut(c, packageApp)
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, "Add Shortcut for ${packageApp.appName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, c.getString(R.string.button_add_shortcut, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
                 }
 
+                manage_freeze_app.setOnClickListener { }
                 with(manage_freeze_app) {
                     setOnClickListener {
                         GlobalScope.launch {
-                            packageManager.disablePackage(packageApp.pkg)
-                            notificationUtils.removeNotification(packageApp)
-                            requestUpdate()
+                            packageUtils.disablePackage(packageApp.pkg)
+                            notificationManager.removeNotification(packageApp)
+                            onRequestUpdate.invoke()
                         }
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, "Freeze ${packageApp.appName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.button_freeze_app, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
                     isEnabled = isPkgEnabled
@@ -103,25 +107,53 @@ class TrackedPackageAdapter(private val c: Context,
                 with(manage_untrack_app) {
                     setOnClickListener {
                         packageManager.removeTrackedPackage(packageApp)
-                        requestUpdate()
+                        onRequestUpdate.invoke()
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, "Stop tracking ${packageApp.appName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.button_stop_tracking, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
                 }
 
-                manage_app_icon.setImageDrawable(packageApp.getIconDrawable(c.packageManager))
+                manage_app_icon.setImageDrawable(imageManager.getCachedImage(packageApp))
                 with(manage_card_view) {
                     setOnClickListener {
-                        packageManager.start(packageApp, c)
-                        callback()
+                        packageUtils.start(packageApp, c)
+                        onApplicationStarted.invoke()
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, "Start ${packageApp.appName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.button_start_app, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
                 }
+            }
+        }
+    }
+
+    companion object {
+        @Singleton
+        class Factory @Inject constructor(
+                private val packageManager: PackageManager,
+                private val packageUtils: PackageUtils,
+                private val imageManager: ImageManager,
+                private val notificationManager: NotificationManager) {
+
+            fun getTrackedPackageAdapter(
+                    context: Context,
+                    managedPackage: List<PackageApp>,
+                    onApplicationStarted: () -> Unit,
+                    onRequestUpdate: () -> Unit
+            ): TrackedPackageAdapter {
+                return TrackedPackageAdapter(
+                        packageManager,
+                        packageUtils,
+                        notificationManager,
+                        imageManager,
+                        context,
+                        managedPackage,
+                        onApplicationStarted,
+                        onRequestUpdate
+                )
             }
         }
     }

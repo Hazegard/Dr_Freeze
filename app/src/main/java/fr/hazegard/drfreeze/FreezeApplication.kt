@@ -54,8 +54,7 @@ class FreezeApplication : Application(),
     private fun initDagger() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
-                .suModule(SuModule(this))
-                .dbModule(DbModule(this))
+                .systemModule(SystemModule(this))
                 .build()
     }
 

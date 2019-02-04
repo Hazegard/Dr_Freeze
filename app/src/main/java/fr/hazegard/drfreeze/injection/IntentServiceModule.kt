@@ -2,10 +2,10 @@ package fr.hazegard.drfreeze.injection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import fr.hazegard.drfreeze.NotificationUtils
+import fr.hazegard.drfreeze.NotificationActionService
 
 @Module
 abstract class IntentServiceModule {
     @ContributesAndroidInjector
-    abstract fun contributesIntentService(): NotificationUtils.Companion.NotificationActionService
+    abstract fun contributesIntentService(): NotificationActionService
 }

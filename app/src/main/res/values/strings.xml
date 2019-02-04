@@ -25,4 +25,10 @@
     <string name="description_create_shortcut">Create Shortcut</string>
     <string name="description_freeze_app">Freeze App</string>
     <string name="description_untrack_app">Untrack App</string>
+    <string name="notification_click_action">Click to disable %s</string>
+    <string name="application_not_found">Application not found, it may have been uninstalled</string>
+    <string name="button_add_shortcut">Add shortcut for %s</string>
+    <string name="button_freeze_app">Freeze %s</string>
+    <string name="button_stop_tracking">Stop tracking %s</string>
+    <string name="button_start_app">Start %s</string>
 </resources>
