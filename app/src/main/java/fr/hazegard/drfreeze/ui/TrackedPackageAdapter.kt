@@ -39,7 +39,7 @@ class TrackedPackageAdapter private constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ManagedAppHolder {
         val itemView: View = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_manage_apps, parent, false)
-        return ManagedAppHolder(itemView, packageManager, notificationManager)
+        return ManagedAppHolder(itemView)
     }
 
     override fun getItemCount(): Int {
@@ -56,9 +56,7 @@ class TrackedPackageAdapter private constructor(
         notifyDataSetChanged()
     }
 
-    inner class ManagedAppHolder(private val view: View,
-                                 private val packageManager: PackageManager,
-                                 private val notificationManager: NotificationManager)
+    inner class ManagedAppHolder(private val view: View)
         : RecyclerView.ViewHolder(view) {
 
         /**
