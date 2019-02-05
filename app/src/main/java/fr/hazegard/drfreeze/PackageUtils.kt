@@ -56,10 +56,25 @@ class PackageUtils @Inject constructor(
         return try {
             PackageApp(pkg, getAppName(pkg))
         } catch (e: PackageManager.NameNotFoundException) {
-            null
+            PackageApp(pkg, "Uninstalled")
         }
     }
 
+    fun isPackageEnabled(pkg: Pkg): Boolean {
+        return try {
+            pm.getApplicationInfo(pkg.s, 0).enabled
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
+
+    fun isPackageInstalled(pkg: Pkg): Boolean {
+        return try {
+            pm.getPackageInfo(pkg.s, 0) != null
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
 
     /**
      * Start the package
