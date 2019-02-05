@@ -20,7 +20,7 @@ import kotlin.properties.Delegates
 class PackageAdapter private constructor(
         private val imageManager: ImageManager,
         private var packages: List<PackageApp>,
-        var trackedPackages: MutableSet<Pkg>,
+        var trackedPackages: MutableMap<Pkg, PackageApp>,
         private val onUpdateList: () -> Unit)
     : RecyclerView.Adapter<PackageAdapter.PackageHolder>() {
 
@@ -31,8 +31,10 @@ class PackageAdapter private constructor(
 
     var isEdit by Delegates.observable(false) { _, _, _ ->
         notifyDataSetChanged()
-
     }
+
+    val packagesToAdd: MutableMap<Pkg, PackageApp> = mutableMapOf()
+    val packagesToRemove: MutableMap<Pkg, PackageApp> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PackageHolder {
         val itemView: View = LayoutInflater.from(parent.context)
@@ -46,6 +48,8 @@ class PackageAdapter private constructor(
 
     fun updateList(newPackageName: List<PackageApp>) {
         packages = newPackageName
+        packagesToAdd.clear()
+        packagesToRemove.clear()
         notifyDataSetChanged()
     }
 
@@ -54,12 +58,14 @@ class PackageAdapter private constructor(
         fun setContent(packageApp: PackageApp) {
             with(view) {
                 package_checkbox.setOnCheckedChangeListener { _, isChecked ->
-                    with(trackedPackages) {
-                        if (isChecked) {
-                            add(packageApp.pkg)
-                        } else {
-                            remove(packageApp.pkg)
-                        }
+                    if (isChecked) {
+                        trackedPackages[packageApp.pkg] = packageApp
+                        packagesToAdd[packageApp.pkg] = packageApp
+                        packagesToRemove.remove(packageApp.pkg)
+                    } else {
+                        trackedPackages.remove(packageApp.pkg)
+                        packagesToAdd.remove(packageApp.pkg)
+                        packagesToRemove[packageApp.pkg] = packageApp
                     }
                     onUpdateList.invoke()
                 }
@@ -84,7 +90,7 @@ class PackageAdapter private constructor(
         class Factory @Inject constructor(
                 private val imageManager: ImageManager) {
             fun get(packages: List<PackageApp>,
-                    trackedPackages: MutableSet<Pkg>,
+                    trackedPackages: MutableMap<Pkg, PackageApp>,
                     onUpdateList: () -> Unit
             ): PackageAdapter {
                 return PackageAdapter(

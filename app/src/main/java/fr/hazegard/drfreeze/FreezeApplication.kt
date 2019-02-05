@@ -55,6 +55,7 @@ class FreezeApplication : Application(),
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .systemModule(SystemModule(this))
+                .dbModule(DbModule(this))
                 .build()
     }
 

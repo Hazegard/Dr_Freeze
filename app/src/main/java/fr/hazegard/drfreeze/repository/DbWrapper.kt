@@ -6,8 +6,9 @@ import com.squareup.sqldelight.db.SqlDriver
 import fr.hazegard.drfreeze.FreezeDatabase
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
+import javax.inject.Inject
 
-class DbWrapper(private val context: Context) {
+class DbWrapper @Inject constructor(private val context: Context) {
     private val driver: SqlDriver = AndroidSqliteDriver(FreezeDatabase.Schema, context, "query.db")
 
     private val database = FreezeDatabase(driver)
@@ -22,13 +23,17 @@ class DbWrapper(private val context: Context) {
         PackageApp(Pkg(package_name), application_name)
     }
 
-    fun getPackage(packageName: String): PackageApp {
-        return query.selectOne(packageName, mapper = packageMapper).executeAsOne()
+    fun getPackage(pkg: Pkg): PackageApp {
+        return query.selectOne(pkg.s.hashCode().toLong(), mapper = packageMapper).executeAsOne()
     }
 
     fun insertOrUpdateOne(packageApp: PackageApp) {
         with(packageApp) {
-            query.insertOne(pkg.s.hashCode().toLong(), pkg.s, appName)
+            query.insertOne(packageApp.id(), pkg.s, appName)
         }
+    }
+
+    fun deletepackage(packageApp: PackageApp) {
+        query.deleteOne(packageApp.id())
     }
 }

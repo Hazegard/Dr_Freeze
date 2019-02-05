@@ -16,7 +16,7 @@ INSERT OR REPLACE INTO packageAppTable(id,package_name,application_name)
 VALUES (?,?,?);
 
 selectOne:
-SELECT * FROM packageAppTable WHERE package_name = ?;
+SELECT * FROM packageAppTable WHERE id = ?;
 
 deleteOne:
-DELETE FROM packageAppTable WHERE package_name = 1;
+DELETE FROM packageAppTable WHERE id = ?;

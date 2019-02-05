@@ -6,6 +6,7 @@ import fr.hazegard.drfreeze.extensions.isLaunchableApp
 import fr.hazegard.drfreeze.extensions.isSystemApp
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
+import fr.hazegard.drfreeze.repository.DbWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,7 +18,7 @@ class PackageManager @Inject constructor(
         private val preferencesHelper: PreferencesHelper,
         private val commands: Commands,
         private val pm: PackageManager,
-        private val saveHelper: SaveHelper,
+        private val dbWrapper: DbWrapper,
         private val imageManager: ImageManager,
         private val packageUtils: PackageUtils) {
 
@@ -62,8 +63,11 @@ class PackageManager @Inject constructor(
      * Get a set of enabled packages
      * @return The set of enabled packages
      */
-    fun getTrackedPackagesAsSet(): MutableSet<Pkg> {
-        return saveHelper.getTrackedPackages()
+    fun getTrackedPackagesAsMap(): MutableMap<Pkg, PackageApp> {
+        return getTrackedPackages().fold(mutableMapOf()) { acc, curr ->
+            acc[curr.pkg] = curr
+            return@fold acc
+        }
     }
 
     /**
@@ -78,11 +82,12 @@ class PackageManager @Inject constructor(
      * Get a list of enabled and tracked packages
      * @return The list of enabled and tracked packages
      */
-    fun getEnabledAndTracked(): List<PackageApp> {
-        val trackedApplications: List<Pkg> = getTrackedPackagesAsList()
+    fun getEnabledInstalledAndTracked(): List<PackageApp> {
+        val trackedApplications: List<PackageApp> = getTrackedPackagesAsList()
         val disabledApps: List<Pkg> = getDisabledPackages()
-        return trackedApplications.minus(disabledApps).toList().mapNotNull {
-            packageUtils.safeCreatePackageApp(it)
+        val installedApps: List<Pkg> = getInstalledPackages().map { Pkg(it.packageName) }
+        return trackedApplications.filter {
+            !disabledApps.contains(it.pkg) && !installedApps.contains(it.pkg)
         }
     }
 
@@ -90,10 +95,8 @@ class PackageManager @Inject constructor(
      * Get a list of tracked packages
      * @return THe list of tracked packages
      */
-    private fun getTrackedPackagesAsList(): List<Pkg> {
-        return saveHelper.getTrackedPackages()
-                .sortedBy { it.s }
-                .toList()
+    private fun getTrackedPackagesAsList(): List<PackageApp> {
+        return dbWrapper.getAllPackages()
     }
 
     /**
@@ -101,27 +104,29 @@ class PackageManager @Inject constructor(
      * @return THe list of tracked packages
      */
     fun getTrackedPackages(): List<PackageApp> {
-        return saveHelper.getTrackedPackages()
-                .toList().mapNotNull {
-                    packageUtils.safeCreatePackageApp(it)
-                }
-                .sortedBy { it.appName }
+        return dbWrapper.getAllPackages()
     }
 
     /**
      * Save a list of tracked packages
      * @param packages The list of packages to save
      */
-    fun saveTrackedPackages(packages: List<Pkg>) {
-        saveHelper.saveTrackedPackages(packages)
+    fun saveTrackedPackages(packages: List<PackageApp>) {
+        //TODO Optimize multiple insertions
+        packages.forEach {
+            dbWrapper.insertOrUpdateOne(it)
+        }
     }
 
     /**
      * Save a set of tracked packages
      * @param packages The set of packages to save
      */
-    fun saveTrackedPackages(packages: Set<Pkg>) {
-        saveHelper.saveTrackedPackages(packages)
+    fun saveTrackedPackages(packages: Map<Pkg, PackageApp>) {
+        //TODO Optimize multiple insertions
+        packages.values.forEach {
+            dbWrapper.insertOrUpdateOne(it)
+        }
     }
 
     /**
@@ -129,16 +134,33 @@ class PackageManager @Inject constructor(
      * @param pkg The package to untrack
      */
     fun removeTrackedPackage(pkg: PackageApp) {
-        saveHelper.removeTrackedPackage(pkg.pkg)
+        dbWrapper.deletepackage(pkg)
         imageManager.deleteImage(pkg)
         packageUtils.enablePackage(pkg.pkg)
+    }
+
+    fun removeTrackedPackages(packages: List<PackageApp>) {
+        packages.forEach {
+            dbWrapper.deletepackage(it)
+            imageManager.deleteImage(it)
+            packageUtils.enablePackage(it.pkg)
+        }
+    }
+
+
+    fun removeTrackedPackages(packages: Map<Pkg, PackageApp>) {
+        packages.values.forEach {
+            dbWrapper.deletepackage(it)
+            imageManager.deleteImage(it)
+            packageUtils.enablePackage(it.pkg)
+        }
     }
 
     /**
      * Track the package
      * @param pkg The package to track
      */
-    fun addTrackedPackage(pkg: Pkg) {
-        saveHelper.saveTrackedPackage(pkg)
+    fun addTrackedPackage(pkg: PackageApp) {
+        dbWrapper.insertOrUpdateOne(pkg)
     }
 }

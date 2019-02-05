@@ -111,13 +111,16 @@ class ListPackagesActivity : AppCompatActivity() {
     }
 
     private fun resetAdapterContent() {
-        val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
+        val trackedPackages: MutableMap<Pkg, PackageApp> = packageManager.getTrackedPackagesAsMap().toMutableMap()
         packageAdapter.trackedPackages = trackedPackages
     }
 
     private fun validateChanges() {
-        val newTrackedPackages = packageAdapter.trackedPackages
-        packageManager.saveTrackedPackages(newTrackedPackages)
+        GlobalScope.launch {
+            packageManager.saveTrackedPackages(packageAdapter.packagesToAdd)
+            packageManager.removeTrackedPackages(packageAdapter.packagesToRemove)
+
+        }
     }
 
     private fun getPackagesAsync(): Deferred<List<PackageApp>> {
@@ -129,7 +132,7 @@ class ListPackagesActivity : AppCompatActivity() {
     private fun initListView() {
         GlobalScope.launch {
             listPackage = getPackagesAsync().await()
-            val trackedPackages: MutableSet<Pkg> = packageManager.getTrackedPackagesAsSet().toMutableSet()
+            val trackedPackages: MutableMap<Pkg, PackageApp> = packageManager.getTrackedPackagesAsMap().toMutableMap()
             val layout: RecyclerView.LayoutManager = LinearLayoutManager(
                     this@ListPackagesActivity, RecyclerView.VERTICAL, false)
             packageAdapter = packageAdapterFactory.get(listPackage, trackedPackages) {

@@ -26,7 +26,7 @@ class OnBootService : BroadcastReceiver() {
         AndroidInjection.inject(this, context)
         if (Intent.ACTION_BOOT_COMPLETED == intent?.action
                 && !preferencesHelper.isBootNotificationDisabled()) {
-            val enabledAndTrackedApps = packageManager.getEnabledAndTracked()
+            val enabledAndTrackedApps = packageManager.getEnabledInstalledAndTracked()
             if (enabledAndTrackedApps.isNotEmpty()) {
                 notificationManager.sendNotification(enabledAndTrackedApps)
             }
