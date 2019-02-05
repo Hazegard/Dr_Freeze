@@ -3,7 +3,8 @@ import kotlin.collections.List;
 CREATE TABLE packageAppTable (
     id INTEGER NOT NULL PRIMARY KEY,
     package_name TEXT NOT NULL,
-    application_name TEXT NOT NULL
+    application_name TEXT NOT NULL,
+    doNotify INTEGER AS Boolean NOT NULL DEFAULT 1
 );
 
 CREATE INDEX packageApp_pkgName ON packageAppTable(package_name);
@@ -12,11 +13,17 @@ selectAll:
 SELECT * FROM packageAppTable ;
 
 insertOne:
-INSERT OR REPLACE INTO packageAppTable(id,package_name,application_name)
-VALUES (?,?,?);
+INSERT OR REPLACE INTO packageAppTable(id,package_name,application_name, doNotify)
+VALUES (?,?,?,?);
 
 selectOne:
 SELECT * FROM packageAppTable WHERE id = ?;
 
 deleteOne:
 DELETE FROM packageAppTable WHERE id = ?;
+
+doNotify:
+SELECT doNotify FROM packageAppTable WHERE id = ?;
+
+updateNotification:
+UPDATE packageAppTable SET doNotify=? WHERE id = ?;

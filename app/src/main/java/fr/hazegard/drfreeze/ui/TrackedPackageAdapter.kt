@@ -131,12 +131,17 @@ class TrackedPackageAdapter private constructor(
                         return@setOnLongClickListener true
                     }
                 }
-//
-//                with(groups_notifications) {
-//                    setOnClickListener {
-//                        switch_show_notifications.isChecked = !switch_show_notifications.isChecked
-//                    }
-//                }
+                with(switch_show_notifications) {
+                    isChecked = packageApp.doNotify
+                    setOnCheckedChangeListener { _, isChecked ->
+                        packageApp.doNotify = isChecked
+                        packageManager.updateNotification(packageApp)
+                    }
+                    setOnLongClickListener {
+                        Toast.makeText(context, "TOAST", Toast.LENGTH_LONG).show()
+                        return@setOnLongClickListener true
+                    }
+                }
             }
         }
     }

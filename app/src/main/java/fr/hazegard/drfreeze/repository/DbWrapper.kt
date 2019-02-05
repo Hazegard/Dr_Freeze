@@ -23,8 +23,8 @@ class DbWrapper @Inject constructor(private val context: Context) {
         return query.selectAll(mapper = packageMapper).executeAsList()
     }
 
-    private val packageMapper: ((id: Long, String, String) -> PackageApp) = { _, package_name: String, application_name: String ->
-        PackageApp(Pkg(package_name), application_name)
+    private val packageMapper: ((id: Long, String, String, Boolean) -> PackageApp) = { _, package_name: String, application_name: String, doNotify: Boolean ->
+        PackageApp(Pkg(package_name), application_name, doNotify)
     }
 
 
@@ -37,11 +37,19 @@ class DbWrapper @Inject constructor(private val context: Context) {
      */
     fun insertOrUpdateOne(packageApp: PackageApp) {
         with(packageApp) {
-            query.insertOne(packageApp.id(), pkg.s, appName)
+            query.insertOne(packageApp.id(), pkg.s, appName, doNotify)
         }
     }
 
-    fun deletepackage(packageApp: PackageApp) {
+    fun deletePackage(packageApp: PackageApp) {
         query.deleteOne(packageApp.id())
+    }
+
+    fun updateNotificationStatus(packageApp: PackageApp) {
+        query.updateNotification(packageApp.doNotify, packageApp.id())
+    }
+
+    fun getNotificationStatus(pkg: Pkg): Boolean {
+        return query.doNotify(pkg.s.hashCode().toLong()).executeAsOne()
     }
 }

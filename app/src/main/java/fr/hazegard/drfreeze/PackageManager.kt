@@ -134,14 +134,14 @@ class PackageManager @Inject constructor(
      * @param pkg The package to untrack
      */
     fun removeTrackedPackage(pkg: PackageApp) {
-        dbWrapper.deletepackage(pkg)
+        dbWrapper.deletePackage(pkg)
         imageManager.deleteImage(pkg)
         packageUtils.enablePackage(pkg.pkg)
     }
 
     fun removeTrackedPackages(packages: List<PackageApp>) {
         packages.forEach {
-            dbWrapper.deletepackage(it)
+            dbWrapper.deletePackage(it)
             imageManager.deleteImage(it)
             packageUtils.enablePackage(it.pkg)
         }
@@ -150,10 +150,24 @@ class PackageManager @Inject constructor(
 
     fun removeTrackedPackages(packages: Map<Pkg, PackageApp>) {
         packages.values.forEach {
-            dbWrapper.deletepackage(it)
+            dbWrapper.deletePackage(it)
             imageManager.deleteImage(it)
             packageUtils.enablePackage(it.pkg)
         }
+    }
+
+    /**
+     * Update in the database th notification status
+     */
+    fun updateNotification(packageApp: PackageApp) {
+        dbWrapper.updateNotificationStatus(packageApp)
+    }
+
+    /**
+     * Get whether the package must be notified
+     */
+    fun getNotificationStatus(pkg: Pkg): Boolean {
+        return dbWrapper.getNotificationStatus(pkg)
     }
 
     /**

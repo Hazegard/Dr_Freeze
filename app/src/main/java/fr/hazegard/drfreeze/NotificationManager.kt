@@ -27,6 +27,9 @@ class NotificationManager @Inject constructor(private val context: Context,
      * @param packages THe packages targeted by the notifications
      */
     fun sendNotification(packages: List<PackageApp>) {
+        if (preferencesHelper.isNotificationDisabled()) {
+            return
+        }
         val isPersistent = preferencesHelper.isNotificationPersistent()
         packages.forEach {
             sendNotification(it, isPersistent)
@@ -39,6 +42,9 @@ class NotificationManager @Inject constructor(private val context: Context,
      * @param pkg THe package targeted by the notification
      */
     fun sendNotification(pkg: PackageApp) {
+        if (preferencesHelper.isNotificationDisabled()) {
+            return
+        }
         val isPersistent = preferencesHelper.isNotificationPersistent()
         sendNotification(pkg, isPersistent)
     }
@@ -50,7 +56,7 @@ class NotificationManager @Inject constructor(private val context: Context,
      * @param isPersistent Whether the notification should be persistent
      */
     private fun sendNotification(packageApp: PackageApp, isPersistent: Boolean) {
-        if (preferencesHelper.isNotificationDisabled()) {
+        if (!packageApp.doNotify) {
             return
         }
 
