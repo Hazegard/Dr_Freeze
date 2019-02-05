@@ -26,6 +26,8 @@
     <style name="ImageButtonThem" parent="Widget.AppCompat.ImageButton">
         <item name="backgroundTint">@color/button_background</item>
         <item name="tint">@color/button_foreground</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
     </style>
 
 </resources>

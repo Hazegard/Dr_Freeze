@@ -131,6 +131,12 @@ class TrackedPackageAdapter private constructor(
                         return@setOnLongClickListener true
                     }
                 }
+//
+//                with(groups_notifications) {
+//                    setOnClickListener {
+//                        switch_show_notifications.isChecked = !switch_show_notifications.isChecked
+//                    }
+//                }
             }
         }
     }

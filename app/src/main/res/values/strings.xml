@@ -31,4 +31,6 @@
     <string name="button_freeze_app">Freeze %s</string>
     <string name="button_stop_tracking">Stop tracking %s</string>
     <string name="button_start_app">Start %s</string>
+    <string name="notifications_disabled">NOtifications disabled</string>
+    <string name="notifications_enabled">Notifications enabled</string>
 </resources>
