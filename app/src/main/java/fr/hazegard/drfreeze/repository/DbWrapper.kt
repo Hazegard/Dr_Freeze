@@ -15,6 +15,10 @@ class DbWrapper @Inject constructor(private val context: Context) {
 
     private val query = database.packageAppQueries
 
+    /**
+     * Get all tracked packages
+     * @return The list of all tracked packages
+     */
     fun getAllPackages(): List<PackageApp> {
         return query.selectAll(mapper = packageMapper).executeAsList()
     }
@@ -23,10 +27,14 @@ class DbWrapper @Inject constructor(private val context: Context) {
         PackageApp(Pkg(package_name), application_name)
     }
 
+
     fun getPackage(pkg: Pkg): PackageApp {
         return query.selectOne(pkg.s.hashCode().toLong(), mapper = packageMapper).executeAsOne()
     }
 
+    /**
+     * Insert or Update
+     */
     fun insertOrUpdateOne(packageApp: PackageApp) {
         with(packageApp) {
             query.insertOne(packageApp.id(), pkg.s, appName)

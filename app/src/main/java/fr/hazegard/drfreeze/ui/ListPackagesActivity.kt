@@ -110,11 +110,17 @@ class ListPackagesActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Reset the checkbox to the previous saved state
+     */
     private fun resetAdapterContent() {
         val trackedPackages: MutableMap<Pkg, PackageApp> = packageManager.getTrackedPackagesAsMap().toMutableMap()
         packageAdapter.trackedPackages = trackedPackages
     }
 
+    /**
+     * Save the current checkbox state
+     */
     private fun validateChanges() {
         GlobalScope.launch {
             packageManager.saveTrackedPackages(packageAdapter.packagesToAdd)
