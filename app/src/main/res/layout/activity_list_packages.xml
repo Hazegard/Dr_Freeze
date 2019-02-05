@@ -41,7 +41,6 @@
                 android:contentDescription="@string/app_icon" />
 
             <TextView
-                android:drawableTop="@drawable/android_robot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
