@@ -3,12 +3,15 @@ package fr.hazegard.drfreeze
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import fr.hazegard.drfreeze.extensions.toBitmap
 import fr.hazegard.drfreeze.model.PackageApp
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,11 +29,22 @@ class ImageManager @Inject constructor(
     fun saveImage(packageApp: PackageApp, image: Drawable) {
         val imagePath = getFilePath(packageApp)
         val fos = FileOutputStream(imagePath)
-        try {
+        return try {
             image.toBitmap().compress(Bitmap.CompressFormat.PNG, 100, fos)
             fos.close()
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun getImageFromCached(packageApp: PackageApp): Drawable? {
+        return try {
+            val imagePath = getFilePath(packageApp)
+            val fis = FileInputStream(imagePath)
+            BitmapDrawable(context.resources, BitmapFactory.decodeStream(fis))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 
@@ -42,11 +56,15 @@ class ImageManager @Inject constructor(
      * @return The icon of the package
      */
     fun getCachedImage(packageApp: PackageApp): Drawable {
-        val image = getImageFromPacMan(packageApp)
+        val image = getImageFromCached(packageApp)
         if (image != null) {
             return image
         }
-        val imageDrawable: Drawable? = pm.getApplicationIcon(packageApp.pkg.s) ?: null
+        val imageDrawable: Drawable? = try {
+            pm.getApplicationIcon(packageApp.pkg.s)
+        } catch (e: PackageManager.NameNotFoundException) {
+            null
+        }
         if (imageDrawable != null) {
             saveImage(packageApp, imageDrawable)
             return imageDrawable

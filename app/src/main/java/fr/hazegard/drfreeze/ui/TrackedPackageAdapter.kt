@@ -39,7 +39,7 @@ class TrackedPackageAdapter private constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ManagedAppHolder {
         val itemView: View = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_manage_apps, parent, false)
-        return ManagedAppHolder(itemView, packageManager, notificationManager)
+        return ManagedAppHolder(itemView)
     }
 
     override fun getItemCount(): Int {
@@ -56,9 +56,7 @@ class TrackedPackageAdapter private constructor(
         notifyDataSetChanged()
     }
 
-    inner class ManagedAppHolder(private val view: View,
-                                 private val packageManager: PackageManager,
-                                 private val notificationManager: NotificationManager)
+    inner class ManagedAppHolder(private val view: View)
         : RecyclerView.ViewHolder(view) {
 
         /**
@@ -66,12 +64,15 @@ class TrackedPackageAdapter private constructor(
          * @param packageApp The package to be displayed
          */
         fun setContent(packageApp: PackageApp) {
-            val isPkgEnabled = packageApp.isEnable(c.packageManager)
+            val isPkgEnabled = packageUtils.isPackageEnabled(packageApp.pkg)
+            val isPackageInstalled = packageUtils.isPackageInstalled(packageApp.pkg)
             with(view) {
                 manage_app_name.text = packageApp.appName
 
                 with(manage_card_view) {
-                    setBackgroundColor(ContextCompat.getColor(c, if (!isPkgEnabled) {
+                    setBackgroundColor(ContextCompat.getColor(c, if (!isPackageInstalled) {
+                        R.color.colorPrimaryLight
+                    } else if (!isPkgEnabled) {
                         R.color.colorBackgroundBlueLight
                     } else {
                         R.color.background
@@ -101,7 +102,7 @@ class TrackedPackageAdapter private constructor(
                         Toast.makeText(context, context.getString(R.string.button_freeze_app, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
-                    isEnabled = isPkgEnabled
+                    isEnabled = isPkgEnabled && isPackageInstalled
                 }
 
                 with(manage_untrack_app) {
@@ -118,8 +119,12 @@ class TrackedPackageAdapter private constructor(
                 manage_app_icon.setImageDrawable(imageManager.getCachedImage(packageApp))
                 with(manage_card_view) {
                     setOnClickListener {
-                        packageUtils.start(packageApp, c)
-                        onApplicationStarted.invoke()
+                        if (isPackageInstalled) {
+                            packageUtils.start(packageApp, c)
+                            onApplicationStarted.invoke()
+                        } else {
+                            Toast.makeText(context, context.getString(R.string.application_not_found), Toast.LENGTH_LONG).show()
+                        }
                     }
                     setOnLongClickListener {
                         Toast.makeText(context, context.getString(R.string.button_start_app, packageApp.appName), Toast.LENGTH_SHORT).show()
