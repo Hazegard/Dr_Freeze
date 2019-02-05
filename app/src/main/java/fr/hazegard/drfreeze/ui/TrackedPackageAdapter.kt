@@ -71,7 +71,7 @@ class TrackedPackageAdapter private constructor(
 
                 with(manage_card_view) {
                     setBackgroundColor(ContextCompat.getColor(c, if (!isPackageInstalled) {
-                        R.color.colorPrimaryLight
+                        R.color.backgroundDarker
                     } else if (!isPkgEnabled) {
                         R.color.colorBackgroundBlueLight
                     } else {

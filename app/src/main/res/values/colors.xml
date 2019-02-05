@@ -8,5 +8,6 @@
     <color name="colorAccentLight">#93e7fb</color>
     <color name="colorAccent">#2196f3</color>
     <color name="backgroundDark">#eeeeee</color>
+    <color name="backgroundDarker">#cccccc</color>
     <color name="background">#fafafa</color>
 </resources>
