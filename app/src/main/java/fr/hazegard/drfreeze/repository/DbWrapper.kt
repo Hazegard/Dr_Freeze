@@ -18,38 +18,17 @@ class DbWrapper(private val context: Context) {
         return query.selectAll(mapper = packageMapper).executeAsList()
     }
 
-    private val packageMapper: ((String, String, Boolean?, Boolean?) -> PackageApp) = { package_name: String, application_name: String, is_disabled: Boolean?, is_uninstalled: Boolean? ->
-        PackageApp(
-                Pkg(package_name),
-                application_name,
-                is_disabled ?: false,
-                is_uninstalled ?: false)
+    private val packageMapper: ((id: Long, String, String) -> PackageApp) = { _, package_name: String, application_name: String ->
+        PackageApp(Pkg(package_name), application_name)
     }
 
     fun getPackage(packageName: String): PackageApp {
         return query.selectOne(packageName, mapper = packageMapper).executeAsOne()
     }
 
-    fun getAllEnabledPackages(): List<PackageApp> {
-        return query.selectAllEnabledPackages(packageMapper).executeAsList()
-    }
-
-    fun getAllDisabledPackages(): List<PackageApp> {
-        return query.selectAllDisabledPackages(packageMapper).executeAsList()
-    }
-
-    fun insertOne(packageApp: PackageApp) {
+    fun insertOrUpdateOne(packageApp: PackageApp) {
         with(packageApp) {
-            query.insertOne(pkg.s, appName, isDisabled, isDisabled)
-        }
-    }
-
-    fun getTrackedPackages(): List<PackageApp> {
-        return query.selectTrackedPackages(packageMapper).executeAsList()
-    }
-
-    fun totoA() {
-        driver.newTransaction().transaction {
+            query.insertOne(pkg.s.hashCode().toLong(), pkg.s, appName)
         }
     }
 }
