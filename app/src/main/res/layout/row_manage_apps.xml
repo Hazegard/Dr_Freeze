@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp">
+        android:paddingTop="4dp">
 
         <ImageView
             android:id="@+id/manage_app_icon"
@@ -85,9 +85,9 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_show_notifications"
+            style="@style/SwitchCompatStyle"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            style="@style/SwitchCompatStyle"
             app:layout_constraintBottom_toBottomOf="@id/manage_untrack_app"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"

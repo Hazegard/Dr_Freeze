@@ -35,8 +35,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/android_robot"
-                android:contentDescription="@string/app_icon" />
+                android:contentDescription="@string/app_icon"
+                app:srcCompat="@drawable/android_robot" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,8 +56,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/add"
-                    android:contentDescription="@string/add_applications" />
+                    android:contentDescription="@string/add_applications"
+                    app:srcCompat="@drawable/add" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -71,10 +71,6 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/managed_app_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp" />
+            android:layout_height="match_parent"/>
     </ViewAnimator>
 </androidx.constraintlayout.widget.ConstraintLayout>
