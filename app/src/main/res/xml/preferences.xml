@@ -10,10 +10,12 @@
             android:title="Disable notifications" />
         <SwitchPreference
             android:defaultValue="false"
+            android:icon="@drawable/notification_boot"
             android:key="@string/preferences_disable_boot_notification"
             android:title="Disable notifications on boot" />
         <SwitchPreference
             android:defaultValue="true"
+            android:icon="@drawable/notification_persistent"
             android:key="@string/preferences_disable_persistent_notification"
             android:title="Set persistent notifications" />
     </PreferenceCategory>
