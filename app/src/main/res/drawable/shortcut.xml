@@ -4,6 +4,7 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
     <group
+        android:translateY="-2"
         android:pivotX="12"
         android:pivotY="12"
         android:rotation="135"

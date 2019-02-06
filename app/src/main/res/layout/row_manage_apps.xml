@@ -37,62 +37,99 @@
 
         <!--Ugly Hack I think :(-->
         <ImageView
+            android:id="@+id/background_hack"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="32dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="0dp"
-            android:background="@drawable/switch_bg"
-            app:layout_constraintBottom_toBottomOf="@id/manage_add_shortcut"
+            android:background="@color/colorAccentLight"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/switch_show_notifications"
             app:layout_constraintStart_toStartOf="@id/manage_add_shortcut"
             app:layout_constraintTop_toTopOf="@id/manage_add_shortcut" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_25"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_50"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_75"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75" />
+
+        <!--<ImageButton-->
+        <!--android:id="@+id/manage_add_shortcut"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:background="?selectableItemBackground"-->
+        <!--android:contentDescription="@string/description_create_shortcut"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/background_hack"-->
+        <!--app:layout_constraintEnd_toStartOf="@id/guideline_25"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/manage_app_name"-->
+        <!--app:srcCompat="@drawable/shortcut" />-->
+
         <ImageButton
             android:id="@+id/manage_add_shortcut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/description_create_shortcut"
-            app:layout_constraintEnd_toStartOf="@id/manage_freeze_app"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/description_untrack_app"
+            android:tint="@color/backgroundDarker"
+            app:layout_constraintBottom_toBottomOf="@id/background_hack"
+            app:layout_constraintEnd_toStartOf="@id/guideline_25"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/manage_app_name"
             app:srcCompat="@drawable/shortcut" />
 
         <ImageButton
             android:id="@+id/manage_freeze_app"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?selectableItemBackground"
             android:contentDescription="@string/description_freeze_app"
             android:tint="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="@id/manage_add_shortcut"
-            app:layout_constraintEnd_toStartOf="@id/manage_untrack_app"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@id/manage_add_shortcut"
+            app:layout_constraintEnd_toStartOf="@id/guideline_50"
+            app:layout_constraintStart_toEndOf="@id/guideline_25"
             app:layout_constraintTop_toBottomOf="@id/manage_app_name"
             app:layout_constraintTop_toTopOf="@id/manage_add_shortcut"
             app:srcCompat="@drawable/snowflake" />
 
         <ImageButton
             android:id="@+id/manage_untrack_app"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?selectableItemBackground"
             android:contentDescription="@string/description_untrack_app"
-            app:layout_constraintEnd_toStartOf="@id/switch_show_notifications"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@id/manage_freeze_app"
-            app:layout_constraintTop_toBottomOf="@id/manage_app_name"
+            android:tint="@color/backgroundDarker"
+            app:layout_constraintBottom_toBottomOf="@id/background_hack"
+            app:layout_constraintEnd_toStartOf="@id/guideline_75"
+            app:layout_constraintStart_toEndOf="@id/guideline_50"
+            app:layout_constraintTop_toTopOf="@id/background_hack"
             app:srcCompat="@drawable/clear" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_show_notifications"
             style="@style/SwitchCompatStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@id/manage_untrack_app"
+            app:layout_constraintBottom_toBottomOf="@id/background_hack"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@id/manage_untrack_app"
-            app:layout_constraintTop_toTopOf="@id/manage_untrack_app" />
+            app:layout_constraintStart_toEndOf="@id/guideline_75"
+            app:layout_constraintTop_toTopOf="@id/background_hack" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
