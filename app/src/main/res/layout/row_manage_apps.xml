@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="?selectableItemBackground"
-            android:contentDescription="@string/description_untrack_app"
+            android:contentDescription="@string/description_create_shortcut"
             android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="@id/background_hack"
             app:layout_constraintEnd_toStartOf="@id/guideline_25"

@@ -30,7 +30,7 @@ import kotlin.properties.Delegates
 class ListPackagesActivity : AppCompatActivity() {
     @Inject
     lateinit var packageAdapterFactory: PackageAdapter.Companion.Factory
-    lateinit var packageAdapter: PackageAdapter
+    private lateinit var packageAdapter: PackageAdapter
     private lateinit var menu: Menu
     private var sendDoUpdate = false
     private var listPackage: List<PackageApp> by Delegates.observable(

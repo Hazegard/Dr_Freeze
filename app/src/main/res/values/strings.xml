@@ -32,8 +32,6 @@
     <string name="button_stop_tracking">Stop tracking %s</string>
     <string name="button_start_app">Start %s</string>
     <string name="switch_notification_status">Enable/Disable notification for %s</string>
-    <string name="notifications_disabled">Notifications disabled</string>
-    <string name="notifications_enabled">Notifications enabled</string>
     <string name="settings_list_apps_filtering">Application filtering</string>
     <string name="notifications_settings">Notifications</string>
 </resources>
