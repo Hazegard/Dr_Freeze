@@ -52,4 +52,8 @@ class DbWrapper @Inject constructor(private val context: Context) {
     fun getNotificationStatus(pkg: Pkg): Boolean {
         return query.doNotify(pkg.s.hashCode().toLong()).executeAsOne()
     }
+
+    fun selectPackagesToNotify(): List<PackageApp> {
+        return query.selectAllWithNotificationEnabled(mapper = packageMapper).executeAsList()
+    }
 }

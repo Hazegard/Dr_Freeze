@@ -27,3 +27,6 @@ SELECT doNotify FROM packageAppTable WHERE id = ?;
 
 updateNotification:
 UPDATE packageAppTable SET doNotify=? WHERE id = ?;
+
+selectAllWithNotificationEnabled:
+SELECT * FROM packageAppTable WHERE doNotify = 1;

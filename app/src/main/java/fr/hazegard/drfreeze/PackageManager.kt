@@ -83,7 +83,7 @@ class PackageManager @Inject constructor(
      * @return The list of enabled and tracked packages
      */
     fun getEnabledInstalledAndTracked(): List<PackageApp> {
-        val trackedApplications: List<PackageApp> = getTrackedPackagesAsList()
+        val trackedApplications: List<PackageApp> = dbWrapper.selectPackagesToNotify()
         val disabledApps: List<Pkg> = getDisabledPackages()
         val installedApps: List<Pkg> = getInstalledPackages().map { Pkg(it.packageName) }
         return trackedApplications.filter {
