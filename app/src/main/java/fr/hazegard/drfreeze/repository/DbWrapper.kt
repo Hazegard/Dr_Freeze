@@ -28,6 +28,9 @@ class DbWrapper @Inject constructor(context: Context) {
     }
 
 
+    /**
+     * Get the package from the database
+     */
     fun getPackage(pkg: Pkg): PackageApp {
         return query.selectOne(pkg.s.hashCode().toLong(), mapper = packageMapper).executeAsOne()
     }
@@ -41,18 +44,32 @@ class DbWrapper @Inject constructor(context: Context) {
         }
     }
 
+    /**
+     * Delete the package from the database
+     */
     fun deletePackage(packageApp: PackageApp) {
         query.deleteOne(packageApp.id())
     }
 
+    /**
+     * Update the field 'doNotify' in the database
+     * @param packageApp The package with the updated notification status
+     */
     fun updateNotificationStatus(packageApp: PackageApp) {
         query.updateNotification(packageApp.doNotify, packageApp.id())
     }
 
+    /**
+     * Get the notification status
+     * @return Whether the application must be notified
+     */
     fun getNotificationStatus(pkg: Pkg): Boolean {
         return query.doNotify(pkg.s.hashCode().toLong()).executeAsOne()
     }
 
+    /**
+     * Get all packages with enabled notifications
+     */
     fun selectPackagesToNotify(): List<PackageApp> {
         return query.selectAllWithNotificationEnabled(mapper = packageMapper).executeAsList()
     }

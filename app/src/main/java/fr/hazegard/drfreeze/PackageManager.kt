@@ -139,6 +139,10 @@ class PackageManager @Inject constructor(
         packageUtils.enablePackage(pkg.pkg)
     }
 
+    /**
+     * Untrack the list of package
+     * @param packages The list of package to untrack
+     */
     fun removeTrackedPackages(packages: List<PackageApp>) {
         packages.forEach {
             dbWrapper.deletePackage(it)
@@ -146,7 +150,6 @@ class PackageManager @Inject constructor(
             packageUtils.enablePackage(it.pkg)
         }
     }
-
 
     fun removeTrackedPackages(packages: Map<Pkg, PackageApp>) {
         packages.values.forEach {

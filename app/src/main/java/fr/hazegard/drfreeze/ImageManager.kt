@@ -37,6 +37,10 @@ class ImageManager @Inject constructor(
         }
     }
 
+    /**
+     * Get the image from cache if it exists
+     * @return THe image or null if not found
+     */
     private fun getImageFromCached(packageApp: PackageApp): Drawable? {
         return try {
             val imagePath = getFilePath(packageApp)
