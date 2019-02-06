@@ -138,7 +138,7 @@ class TrackedPackageAdapter private constructor(
                         packageManager.updateNotification(packageApp)
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, "TOAST", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, context.getString(R.string.switch_notification_status, packageApp.appName), Toast.LENGTH_LONG).show()
                         return@setOnLongClickListener true
                     }
                 }
