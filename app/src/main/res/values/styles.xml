@@ -30,4 +30,15 @@
         <item name="android:layout_marginRight">0dp</item>
     </style>
 
+    <style name="SwitchCompatStyle">
+        <item name="android:thumb">@drawable/switch_notification</item>
+        <item name="android:scaleX">0.9</item>
+        <item name="android:scaleY">0.9</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="thumbTint">@color/switch_thumb_colors</item>
+        <item name="trackTint">@color/switch_track_colors</item>
+        <item name="android:background">@drawable/switch_bg</item>
+    </style>
+
 </resources>

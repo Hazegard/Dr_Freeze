@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:name="backgroundTint" android:color="@color/colorAccentLight" android:state_pressed="true" />
-    <item android:name="tint" android:color="@color/backgroundDark" android:state_enabled="false" />
+    <item android:name="tint" android:color="@color/colorBackgroundBlueLight" android:state_enabled="false" />
     <item android:name="tint" android:color="@color/colorAccentLight" android:state_enabled="true" />
     <item android:name="backgroundTint" android:color="@color/colorPrimary" android:state_enabled="true" />
 </selector>
