@@ -28,6 +28,7 @@
             android:name=".ui.ShortcutDispatcherActivity"
             android:exported="true"
             android:launchMode="singleInstance"
+            android:noHistory="true"
             android:theme="@style/AppTheme.Transparent" />
         <activity android:name=".ui.ManageTrackedAppActivity">
             <intent-filter>
