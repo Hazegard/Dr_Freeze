@@ -38,6 +38,7 @@ class PackageUtils @Inject constructor(
      * @param pkg The package to enable
      */
     fun enablePackage(pkg: Pkg): String {
+        notificationManager.removeNotification(pkg)
         return commands.enablePackage(pkg).trim()
     }
 
