@@ -15,8 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="0dp"
-        android:paddingBottom="0dp"
-        android:paddingTop="4dp">
+        android:paddingTop="4dp"
+        android:paddingBottom="0dp">
 
         <ImageView
             android:id="@+id/manage_app_icon"
@@ -71,18 +71,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.75" />
-
-        <!--<ImageButton-->
-        <!--android:id="@+id/manage_add_shortcut"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:background="?selectableItemBackground"-->
-        <!--android:contentDescription="@string/description_create_shortcut"-->
-        <!--app:layout_constraintBottom_toBottomOf="@id/background_hack"-->
-        <!--app:layout_constraintEnd_toStartOf="@id/guideline_25"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@id/manage_app_name"-->
-        <!--app:srcCompat="@drawable/shortcut" />-->
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/manage_add_shortcut"
