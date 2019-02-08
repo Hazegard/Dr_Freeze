@@ -80,7 +80,6 @@ class ManageTrackedAppActivity : AppCompatActivity() {
                     listTrackedApp,
                     onApplicationStarted = {
                         this@ManageTrackedAppActivity.finishAffinity()
-                        System.exit(0)
                     },
                     onRequestUpdate = {
                         listTrackedApp = appsManager.getTrackedPackages()

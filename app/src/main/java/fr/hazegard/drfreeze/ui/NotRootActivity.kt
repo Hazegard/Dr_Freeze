@@ -22,7 +22,6 @@ class NotRootActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         button_exit.setOnClickListener {
             finishAffinity()
-            System.exit(0)
         }
         button_continue.setOnClickListener {
             preferencesHelper.setBypassRootNeeded()
@@ -32,7 +31,6 @@ class NotRootActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         finishAffinity()
-        System.exit(0)
     }
 
     companion object {
