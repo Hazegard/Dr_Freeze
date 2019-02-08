@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
+
 
 class ManageTrackedAppActivity : AppCompatActivity() {
     /**
@@ -74,7 +76,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     private fun initListView() {
         GlobalScope.launch {
             listTrackedApp = getTrackedPackagesAsync().await()
-            val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, 2)
+            val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, computeSpan())
             trackedPackageAdapter = trackedPackageAdapterFactory.getTrackedPackageAdapter(
                     this@ManageTrackedAppActivity,
                     listTrackedApp,
@@ -96,6 +98,15 @@ class ManageTrackedAppActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun computeSpan(): Int {
+
+        val displayMetrics = DisplayMetrics()
+        this.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenWidth = displayMetrics.widthPixels
+        val itemWidthPx = 200 * this.resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT
+        return screenWidth / itemWidthPx
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
