@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import fr.hazegard.drfreeze.*
+import fr.hazegard.drfreeze.ImageManager
+import fr.hazegard.drfreeze.PackageManager
+import fr.hazegard.drfreeze.PackageUtils
+import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
 import kotlinx.coroutines.GlobalScope
@@ -21,7 +24,6 @@ import javax.inject.Singleton
 class TrackedPackageAdapter private constructor(
         private val packageManager: PackageManager,
         private val packageUtils: PackageUtils,
-        private val notificationManager: NotificationManager,
         private val imageManager: ImageManager,
         private val c: Context,
         private var managedPackage: List<PackageApp>,
@@ -94,7 +96,6 @@ class TrackedPackageAdapter private constructor(
                     setOnClickListener {
                         GlobalScope.launch {
                             packageUtils.disablePackage(packageApp.pkg)
-                            notificationManager.removeNotification(packageApp)
                             onRequestUpdate.invoke()
                         }
                     }
@@ -151,8 +152,7 @@ class TrackedPackageAdapter private constructor(
         class Factory @Inject constructor(
                 private val packageManager: PackageManager,
                 private val packageUtils: PackageUtils,
-                private val imageManager: ImageManager,
-                private val notificationManager: NotificationManager) {
+                private val imageManager: ImageManager) {
 
             fun getTrackedPackageAdapter(
                     context: Context,
@@ -163,7 +163,6 @@ class TrackedPackageAdapter private constructor(
                 return TrackedPackageAdapter(
                         packageManager,
                         packageUtils,
-                        notificationManager,
                         imageManager,
                         context,
                         managedPackage,

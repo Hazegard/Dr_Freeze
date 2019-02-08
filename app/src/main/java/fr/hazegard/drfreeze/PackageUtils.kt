@@ -29,6 +29,7 @@ class PackageUtils @Inject constructor(
      * @param pkg The package to disable
      */
     fun disablePackage(pkg: Pkg): String {
+        notificationManager.removeNotification(pkg)
         return commands.disablePackage(pkg).trim()
     }
 
