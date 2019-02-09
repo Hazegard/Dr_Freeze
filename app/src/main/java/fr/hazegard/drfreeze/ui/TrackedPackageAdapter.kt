@@ -95,14 +95,22 @@ class TrackedPackageAdapter private constructor(
 
                 manage_freeze_app.setOnClickListener { }
                 with(manage_freeze_app) {
-                    setOnClickListener {
-                        onClick.onFreezeClick(position)
+                    if (isPkgEnabled) {
+                        setOnClickListener {
+                            onClick.onFreezeClick(position)
+                        }
+                        setImageResource(R.drawable.snowflake)
+                    } else {
+                        setOnClickListener {
+                            onClick.onUnfreezeClick(position)
+                        }
+                        setImageResource(R.drawable.fire)
                     }
                     setOnLongClickListener {
                         Toast.makeText(context, context.getString(R.string.button_freeze_app, packageApp.appName), Toast.LENGTH_SHORT).show()
                         return@setOnLongClickListener true
                     }
-                    isEnabled = isPkgEnabled && isPackageInstalled
+                    isEnabled = isPackageInstalled
                 }
 
                 with(manage_untrack_app) {
@@ -170,6 +178,7 @@ class TrackedPackageAdapter private constructor(
     interface OnClick {
         fun onAddShortCutCLick(position: Int)
         fun onFreezeClick(position: Int)
+        fun onUnfreezeClick(position: Int)
         fun onUntrackClick(position: Int)
         fun onNotificationSwitchClick(position: Int, newState: Boolean)
         fun onClickStartApplication(position: Int)

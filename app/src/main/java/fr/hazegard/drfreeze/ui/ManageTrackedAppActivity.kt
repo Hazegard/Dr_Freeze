@@ -28,6 +28,15 @@ import kotlin.properties.Delegates
 
 
 class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnClick {
+    override fun onUnfreezeClick(position: Int) {
+        GlobalScope.launch {
+            packageUtils.enablePackage(listTrackedApp[position].pkg)
+            runOnUiThread {
+                trackedPackageAdapter.updateItem(position)
+            }
+        }
+    }
+
     override fun onAddShortCutCLick(position: Int) {
         packageUtils.addShortcut(this, listTrackedApp[position])
     }
