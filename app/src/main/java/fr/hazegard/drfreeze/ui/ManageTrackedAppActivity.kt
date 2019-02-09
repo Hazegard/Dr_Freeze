@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import fr.hazegard.drfreeze.FreezeApplication
 import fr.hazegard.drfreeze.PackageManager
+import fr.hazegard.drfreeze.PackageUtils
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
 import fr.hazegard.drfreeze.model.PackageApp
@@ -26,11 +27,45 @@ import javax.inject.Inject
 import kotlin.properties.Delegates
 
 
-class ManageTrackedAppActivity : AppCompatActivity() {
+class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnClick {
+    override fun onAddShortCutCLick(position: Int) {
+        packageUtils.addShortcut(this, listTrackedApp[position])
+    }
+
+    override fun onFreezeClick(position: Int) {
+        GlobalScope.launch {
+            packageUtils.disablePackage(listTrackedApp[position].pkg)
+            runOnUiThread {
+                trackedPackageAdapter.updateItem(position)
+            }
+        }
+    }
+
+    override fun onUntrackClick(position: Int) {
+        GlobalScope.launch {
+            appsManager.removeTrackedPackage(listTrackedApp[position])
+            runOnUiThread {
+                trackedPackageAdapter.removeAt(position)
+            }
+        }
+    }
+
+    override fun onNotificationSwitchClick(position: Int, newState: Boolean) {
+        listTrackedApp[position].doNotify = newState
+        appsManager.updateNotification(listTrackedApp[position])
+    }
+
+    override fun onClickStartApplication(position: Int) {
+        GlobalScope.launch {
+            packageUtils.start(listTrackedApp[position], this@ManageTrackedAppActivity)
+            this@ManageTrackedAppActivity.finishAffinity()
+        }
+    }
+
     /**
      * Updating the list of tracked packages update also the view depending on the list size
      */
-    private var listTrackedApp: List<PackageApp> by Delegates.observable(
+    private var listTrackedApp: MutableList<PackageApp> by Delegates.observable(
             Collections.emptyList()) { _, _, newValue ->
         runOnUiThread {
             tracked_view_animator.displayedChild = if (newValue.isEmpty()) {
@@ -44,6 +79,9 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     @Inject
     lateinit var trackedPackageAdapterFactory: TrackedPackageAdapter.Companion.Factory
     private lateinit var trackedPackageAdapter: TrackedPackageAdapter
+
+    @Inject
+    lateinit var packageUtils: PackageUtils
 
     @Inject
     lateinit var appsManager: PackageManager
@@ -75,20 +113,12 @@ class ManageTrackedAppActivity : AppCompatActivity() {
      */
     private fun initListView() {
         GlobalScope.launch {
-            listTrackedApp = getTrackedPackagesAsync().await()
+            listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
             val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, computeSpan())
             trackedPackageAdapter = trackedPackageAdapterFactory.getTrackedPackageAdapter(
                     this@ManageTrackedAppActivity,
-                    listTrackedApp,
-                    onApplicationStarted = {
-                        this@ManageTrackedAppActivity.finishAffinity()
-                    },
-                    onRequestUpdate = {
-                        listTrackedApp = appsManager.getTrackedPackages()
-                        runOnUiThread {
-                            trackedPackageAdapter.updateList(listTrackedApp)
-                        }
-                    })
+                    this@ManageTrackedAppActivity,
+                    listTrackedApp)
 
             runOnUiThread {
                 with(managed_app_list)
@@ -101,7 +131,6 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     }
 
     private fun computeSpan(): Int {
-
         val displayMetrics = DisplayMetrics()
         this.windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
@@ -140,7 +169,7 @@ class ManageTrackedAppActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ListPackagesActivity.UPDATE_TRACKED_APPS_CODE && resultCode == Activity.RESULT_OK) {
             GlobalScope.launch {
-                listTrackedApp = getTrackedPackagesAsync().await()
+                listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
                 runOnUiThread { trackedPackageAdapter.updateList(listTrackedApp) }
             }
         }
