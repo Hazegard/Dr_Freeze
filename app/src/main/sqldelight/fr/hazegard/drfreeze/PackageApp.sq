@@ -10,7 +10,7 @@ CREATE TABLE packageAppTable (
 CREATE INDEX packageApp_pkgName ON packageAppTable(package_name);
 
 selectAll:
-SELECT * FROM packageAppTable ;
+SELECT * FROM packageAppTable ORDER BY application_name COLLATE NOCASE ASC;
 
 insertOne:
 INSERT OR REPLACE INTO packageAppTable(id,package_name,application_name, doNotify)
@@ -29,4 +29,4 @@ updateNotification:
 UPDATE packageAppTable SET doNotify=? WHERE id = ?;
 
 selectAllWithNotificationEnabled:
-SELECT * FROM packageAppTable WHERE doNotify = 1;
+SELECT * FROM packageAppTable WHERE doNotify = 1 ORDER BY application_name COLLATE NOCASE ASC;
