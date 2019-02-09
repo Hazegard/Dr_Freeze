@@ -56,7 +56,7 @@ class PackageManager @Inject constructor(
                     val pkg = Pkg(it.packageName)
                     return@mapNotNull packageUtils.safeCreatePackageApp(pkg)
                 }
-                .sortedBy { it.appName }
+                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.appName })
     }
 
     /**
