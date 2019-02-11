@@ -123,8 +123,9 @@ class ListPackagesActivity : AppCompatActivity() {
      */
     private fun validateChanges() {
         GlobalScope.launch {
-            packageManager.saveTrackedPackages(packageAdapter.packagesToAdd)
-            packageManager.removeTrackedPackages(packageAdapter.packagesToRemove)
+            with(packageAdapter) {
+                packageManager.updateTrackedPackages(packagesToAdd.values.toList(), packagesToRemove.values.toList())
+            }
 
         }
     }

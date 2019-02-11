@@ -145,17 +145,22 @@ class PackageManager @Inject constructor(
      */
     fun removeTrackedPackages(packages: List<PackageApp>) {
         packages.forEach {
-            dbWrapper.deletePackage(it)
-            imageManager.deleteImage(it)
-            packageUtils.enablePackage(it.pkg)
+            removeTrackedPackage(it)
         }
     }
 
     fun removeTrackedPackages(packages: Map<Pkg, PackageApp>) {
         packages.values.forEach {
-            dbWrapper.deletePackage(it)
-            imageManager.deleteImage(it)
-            packageUtils.enablePackage(it.pkg)
+            removeTrackedPackage(it)
+        }
+    }
+
+    fun updateTrackedPackages(packagesToAdd: List<PackageApp>?, packagesToRemove: List<PackageApp>?) {
+        packagesToAdd?.let {
+            saveTrackedPackages(it)
+        }
+        packagesToRemove?.let {
+            removeTrackedPackages(it)
         }
     }
 
