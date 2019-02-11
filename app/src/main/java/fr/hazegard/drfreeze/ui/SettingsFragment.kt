@@ -9,8 +9,10 @@ import fr.hazegard.drfreeze.R
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key == getString(R.string.preferences_show_system_apps) || key == getString(R.string.preferences_show_only_launcher_apps)) {
-            callback?.onListAppsSettingChange()
+        if (isAdded) {
+            if (key == getString(R.string.preferences_show_system_apps) || key == getString(R.string.preferences_show_only_launcher_apps)) {
+                callback?.onListAppsSettingChange()
+            }
         }
     }
 
