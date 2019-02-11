@@ -25,6 +25,7 @@ class NotRootActivity : AppCompatActivity() {
         }
         button_continue.setOnClickListener {
             preferencesHelper.setBypassRootNeeded()
+            startActivity(ManageTrackedAppActivity.newIntent(this))
             finish()
         }
     }
