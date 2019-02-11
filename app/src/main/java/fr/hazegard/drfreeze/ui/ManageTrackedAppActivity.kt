@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -94,21 +93,11 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     lateinit var appsManager: PackageManager
 
     @Inject
-    lateinit var su: Su
-
-    @Inject
     lateinit var preferencesHelper: PreferencesHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FreezeApplication.appComponent.inject(this)
-        if (!su.isRoot) {
-            if (preferencesHelper.doBypassRootNeeded()) {
-                Toast.makeText(this, getString(R.string.no_root_warning), Toast.LENGTH_LONG).show()
-            } else {
-                startActivity(NotRootActivity.newIntent(this))
-            }
-        }
         setContentView(R.layout.activity_manage_tracked_app)
         with(animation_android.drawable) {
             (this as Animatable).start()

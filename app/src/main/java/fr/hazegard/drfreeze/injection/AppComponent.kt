@@ -3,10 +3,7 @@ package fr.hazegard.drfreeze.injection
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import fr.hazegard.drfreeze.FreezeApplication
-import fr.hazegard.drfreeze.ui.ListPackagesActivity
-import fr.hazegard.drfreeze.ui.ManageTrackedAppActivity
-import fr.hazegard.drfreeze.ui.NotRootActivity
-import fr.hazegard.drfreeze.ui.ShortcutDispatcherActivity
+import fr.hazegard.drfreeze.ui.*
 import javax.inject.Singleton
 
 @Singleton
@@ -19,6 +16,7 @@ import javax.inject.Singleton
     IntentServiceModule::class
 ])
 interface AppComponent {
+    fun inject(splashScreenActivity: SplashScreenActivity)
     fun inject(manageActivity: ManageTrackedAppActivity)
     fun inject(freezeApplication: FreezeApplication)
     fun inject(shortcutDispatcherActivity: ShortcutDispatcherActivity)

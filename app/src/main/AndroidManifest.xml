@@ -13,6 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.NotRootActivity" />
         <activity android:name=".ui.ListPackagesActivity" />
 
@@ -30,15 +38,7 @@
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:theme="@style/AppTheme.Transparent" />
-        <activity android:name=".ui.ManageTrackedAppActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.ManageTrackedAppActivity" />
         <activity android:name=".ui.SettingsActivity" />
     </application>
-
 </manifest>

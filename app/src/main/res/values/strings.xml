@@ -34,4 +34,5 @@
     <string name="switch_notification_status">Enable/Disable notification for %s</string>
     <string name="settings_list_apps_filtering">Application filtering</string>
     <string name="notifications_settings">Notifications</string>
+    <string name="waiting_su">Requesting root access...</string>
 </resources>
