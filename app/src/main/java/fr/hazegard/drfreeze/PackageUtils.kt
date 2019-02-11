@@ -54,7 +54,7 @@ class PackageUtils @Inject constructor(
     }
 
 
-    fun safeCreatePackageApp(pkg: Pkg): PackageApp? {
+    fun safeCreatePackageApp(pkg: Pkg): PackageApp {
         return try {
             PackageApp(pkg, getAppName(pkg))
         } catch (e: PackageManager.NameNotFoundException) {
