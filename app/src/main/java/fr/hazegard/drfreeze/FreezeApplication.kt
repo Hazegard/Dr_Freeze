@@ -42,13 +42,6 @@ class FreezeApplication : Application(),
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         initDagger()
         appComponent.inject(this)
-        if (!su.isRoot) {
-            if (preferencesHelper.doBypassRootNeeded()) {
-                Toast.makeText(this, getString(R.string.no_root_warning), Toast.LENGTH_LONG).show()
-            } else {
-                startActivity(NotRootActivity.newIntent(this))
-            }
-        }
     }
 
     private fun initDagger() {

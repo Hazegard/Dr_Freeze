@@ -8,13 +8,11 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import fr.hazegard.drfreeze.FreezeApplication
-import fr.hazegard.drfreeze.PackageManager
-import fr.hazegard.drfreeze.PackageUtils
-import fr.hazegard.drfreeze.R
+import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
 import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.activity_manage_tracked_app.*
@@ -95,10 +93,23 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     @Inject
     lateinit var appsManager: PackageManager
 
+    @Inject
+    lateinit var su: Su
+
+    @Inject
+    lateinit var preferencesHelper: PreferencesHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_manage_tracked_app)
         FreezeApplication.appComponent.inject(this)
+        if (!su.isRoot) {
+            if (preferencesHelper.doBypassRootNeeded()) {
+                Toast.makeText(this, getString(R.string.no_root_warning), Toast.LENGTH_LONG).show()
+            } else {
+                startActivity(NotRootActivity.newIntent(this))
+            }
+        }
+        setContentView(R.layout.activity_manage_tracked_app)
         with(animation_android.drawable) {
             (this as Animatable).start()
             onAnimationEnd {
