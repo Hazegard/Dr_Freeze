@@ -12,7 +12,6 @@ import fr.hazegard.drfreeze.Su
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,7 +44,9 @@ class SplashScreenActivity : AppCompatActivity() {
                     NotRootActivity.newIntent(this@SplashScreenActivity)
                 }
                 RootState.ACCESS_DENIED_BYPASS -> {
-                    Toast.makeText(this@SplashScreenActivity, getString(R.string.no_root_warning), Toast.LENGTH_LONG).show()
+                    runOnUiThread {
+                        Toast.makeText(this@SplashScreenActivity, getString(R.string.no_root_warning), Toast.LENGTH_LONG).show()
+                    }
                     ManageTrackedAppActivity.newIntent(this@SplashScreenActivity)
                 }
                 RootState.ACCESS_GRANTED -> {
