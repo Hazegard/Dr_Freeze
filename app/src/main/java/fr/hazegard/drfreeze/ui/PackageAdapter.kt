@@ -21,6 +21,8 @@ class PackageAdapter private constructor(
         private val imageManager: ImageManager,
         private var packages: List<PackageApp>,
         var trackedPackages: MutableMap<Pkg, PackageApp>,
+        val packagesToAdd: MutableMap<Pkg, PackageApp>,
+        val packagesToRemove: MutableMap<Pkg, PackageApp>,
         private val onUpdateList: () -> Unit)
     : RecyclerView.Adapter<PackageAdapter.PackageHolder>() {
 
@@ -32,9 +34,6 @@ class PackageAdapter private constructor(
     var isEdit by Delegates.observable(false) { _, _, _ ->
         notifyDataSetChanged()
     }
-
-    val packagesToAdd: MutableMap<Pkg, PackageApp> = mutableMapOf()
-    val packagesToRemove: MutableMap<Pkg, PackageApp> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PackageHolder {
         val itemView: View = LayoutInflater.from(parent.context)
@@ -89,6 +88,16 @@ class PackageAdapter private constructor(
     companion object {
         class Factory @Inject constructor(
                 private val imageManager: ImageManager) {
+            private val packagesToAdd: MutableMap<Pkg, PackageApp> = mutableMapOf()
+            fun addPackagesToAdd(packagesToAdd: MutableMap<Pkg, PackageApp>) {
+                this.packagesToAdd.putAll(packagesToAdd)
+            }
+
+            private val packagesToRemove: MutableMap<Pkg, PackageApp> = mutableMapOf()
+            fun addPackagesToRemove(packagesToRemove: MutableMap<Pkg, PackageApp>) {
+                this.packagesToRemove.putAll(packagesToRemove)
+            }
+
             fun get(packages: List<PackageApp>,
                     trackedPackages: MutableMap<Pkg, PackageApp>,
                     onUpdateList: () -> Unit
@@ -97,6 +106,8 @@ class PackageAdapter private constructor(
                         imageManager,
                         packages,
                         trackedPackages,
+                        packagesToAdd,
+                        packagesToRemove,
                         onUpdateList
                 )
             }

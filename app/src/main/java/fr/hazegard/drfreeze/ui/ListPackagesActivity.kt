@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import fr.hazegard.drfreeze.FreezeApplication
 import fr.hazegard.drfreeze.PackageManager
+import fr.hazegard.drfreeze.PackageUtils
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
 import fr.hazegard.drfreeze.model.PackageApp
@@ -29,9 +30,12 @@ import kotlin.properties.Delegates
 
 class ListPackagesActivity : AppCompatActivity() {
     @Inject
+    lateinit var packageUtils: PackageUtils
+
+    @Inject
     lateinit var packageAdapterFactory: PackageAdapter.Companion.Factory
     private lateinit var packageAdapter: PackageAdapter
-    private lateinit var menu: Menu
+    private var menu: Menu? = null
     private var sendDoUpdate = false
     private var listPackage: List<PackageApp> by Delegates.observable(
             Collections.emptyList()) { _, _, newValue ->
@@ -42,6 +46,16 @@ class ListPackagesActivity : AppCompatActivity() {
                 2
             }
         }
+    }
+    private var isEdit: Boolean by Delegates.observable(false) { _, _, newValue ->
+        packageAdapter.isEdit = newValue
+        if (newValue) {
+            package_fab.hide()
+        } else {
+            package_fab.show()
+        }
+        menu?.findItem(R.id.packageList_cancel)?.isVisible = newValue
+        menu?.findItem(R.id.packageList_validate)?.isVisible = newValue
     }
 
     @Inject
@@ -64,12 +78,9 @@ class ListPackagesActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        initListView()
+        initListView(savedInstanceState)
         package_fab.setOnClickListener {
-            packageAdapter.isEdit = true
-            package_fab.hide()
-            menu.findItem(R.id.packageList_cancel).isVisible = true
-            menu.findItem(R.id.packageList_validate).isVisible = true
+            isEdit = true
         }
     }
 
@@ -91,10 +102,7 @@ class ListPackagesActivity : AppCompatActivity() {
                 return true
             }
         }
-        packageAdapter.isEdit = false
-        package_fab.show()
-        menu.findItem(R.id.packageList_cancel).isVisible = false
-        menu.findItem(R.id.packageList_validate).isVisible = false
+        isEdit = false
         return super.onOptionsItemSelected(item)
     }
 
@@ -136,15 +144,38 @@ class ListPackagesActivity : AppCompatActivity() {
         }
     }
 
-    private fun initListView() {
+    private fun initListView(savedInstanceState: Bundle?) {
         GlobalScope.launch {
             listPackage = getPackagesAsync().await()
             val trackedPackages: MutableMap<Pkg, PackageApp> = packageManager.getTrackedPackagesAsMap().toMutableMap()
             val layout: RecyclerView.LayoutManager = LinearLayoutManager(
                     this@ListPackagesActivity, RecyclerView.VERTICAL, false)
+            var doEdit = false
+            savedInstanceState?.let {
+                doEdit = it.getBoolean(STATE_IS_EDIT)
+                val mapSavedAppToAdd: MutableMap<Pkg, PackageApp>? = it.getStringArray(STATE_APP_TO_ADD)?.fold(mutableMapOf()) { acc, curr ->
+                    acc[Pkg(curr)] = packageUtils.safeCreatePackageApp(Pkg(curr))
+                    return@fold acc
+                }
+                val mapSavedAppToRemove: MutableMap<Pkg, PackageApp>? = it.getStringArray(STATE_APP_TO_REMOVE)?.fold(mutableMapOf()) { acc, curr ->
+                    acc[Pkg(curr)] = packageUtils.safeCreatePackageApp(Pkg(curr))
+                    return@fold acc
+                }
+                mapSavedAppToAdd?.let { packages ->
+                    packageAdapterFactory.addPackagesToAdd(packages)
+                    trackedPackages.putAll(packages)
+                }
+                mapSavedAppToRemove?.let { packages ->
+                    packageAdapterFactory.addPackagesToRemove(packages)
+                    trackedPackages.keys.removeAll(packages.keys)
+                }
+            }
+
             packageAdapter = packageAdapterFactory.get(listPackage, trackedPackages) {
                 sendDoUpdate = true
             }
+            isEdit = doEdit
+
             runOnUiThread {
                 with(packageList) {
                     layoutManager = layout
@@ -159,7 +190,23 @@ class ListPackagesActivity : AppCompatActivity() {
         this.menu = menu
         menuInflater.inflate(R.menu.package_list_menu, menu)
         menuInflater.inflate(R.menu.main, menu)
+
+        menu.findItem(R.id.packageList_cancel)?.isVisible = isEdit
+        menu.findItem(R.id.packageList_validate)?.isVisible = isEdit
         return true
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putBoolean(STATE_IS_EDIT, isEdit)
+        if (isEdit) {
+            if (packageAdapter.packagesToAdd.isNotEmpty()) {
+                outState?.putStringArray(STATE_APP_TO_ADD, packageAdapter.packagesToAdd.keys.map { it.s }.toTypedArray())
+            }
+            if (packageAdapter.packagesToRemove.isNotEmpty()) {
+                outState?.putStringArray(STATE_APP_TO_REMOVE, packageAdapter.packagesToRemove.keys.map { it.s }.toTypedArray())
+            }
+        }
+        super.onSaveInstanceState(outState)
     }
 
     override fun onBackPressed() {
@@ -173,6 +220,9 @@ class ListPackagesActivity : AppCompatActivity() {
         private const val TAG: String = "ListPackagesActivity"
         const val UPDATE_TRACKED_APPS_CODE = 64
         const val RESULT = "UPDATE_TRACKED_APPS"
+        private const val STATE_APP_TO_REMOVE = "STATE_APP_TO_REMOVE"
+        private const val STATE_IS_EDIT = "STATE_IS_EDIT "
+        private const val STATE_APP_TO_ADD = "STATE_APP_TO_ADD"
         fun newIntent(context: Context): Intent {
             return Intent(context, ListPackagesActivity::class.java)
         }
