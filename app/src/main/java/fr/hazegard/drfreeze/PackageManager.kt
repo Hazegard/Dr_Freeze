@@ -52,9 +52,9 @@ class PackageManager @Inject constructor(
         return getAllPackages()
                 .filter { doKeepSystemApps || it.isSystemApp() }
                 .filter { !showOnlyLaunchApps || pm.isLaunchableApp(Pkg(it.packageName)) }
-                .mapNotNull {
+                .map {
                     val pkg = Pkg(it.packageName)
-                    return@mapNotNull packageUtils.safeCreatePackageApp(pkg)
+                    return@map packageUtils.safeCreatePackageApp(pkg)
                 }
                 .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.appName })
     }
@@ -74,7 +74,7 @@ class PackageManager @Inject constructor(
      * Get a list of disabled packages
      * @return The list of disabled packages
      */
-    fun getDisabledPackages(): List<Pkg> {
+    private fun getDisabledPackages(): List<Pkg> {
         return commands.listDisabledPackages()
     }
 

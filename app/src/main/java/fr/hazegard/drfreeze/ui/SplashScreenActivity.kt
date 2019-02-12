@@ -59,7 +59,7 @@ class SplashScreenActivity : AppCompatActivity() {
     }
 
     /**
-     * Check the current state of root access, and whether the user wants to acess to the app
+     * Check the current state of root access, and whether the user wants to access to the app
      * even if root is not available
      * @return
      *      - ACCESS_DENIED: The root is not available
