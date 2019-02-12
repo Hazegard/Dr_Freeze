@@ -176,7 +176,9 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == ListPackagesActivity.UPDATE_TRACKED_APPS_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == ListPackagesActivity.UPDATE_TRACKED_APPS_CODE
+                && resultCode == Activity.RESULT_OK
+                && data?.getBooleanExtra(ListPackagesActivity.RESULT, false) == true) {
             GlobalScope.launch {
                 listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
                 runOnUiThread { trackedPackageAdapter.updateList(listTrackedApp) }
