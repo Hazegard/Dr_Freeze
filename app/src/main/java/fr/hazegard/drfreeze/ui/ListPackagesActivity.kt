@@ -144,6 +144,10 @@ class ListPackagesActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initialize the listView, restore the state if it exists
+     * @param savedInstanceState the saved state to restore
+     */
     private fun initListView(savedInstanceState: Bundle?) {
         GlobalScope.launch {
             listPackage = getPackagesAsync().await()

@@ -58,13 +58,20 @@ class SplashScreenActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check the current state of root access, and whether the user wants to acess to the app
+     * even if root is not available
+     * @return
+     *      - ACCESS_DENIED: The root is not available
+     *      - ACCESS_DENIED_BYPASS: The root is not available, and the user wants to
+     *      - ACCESS_GRANTED: The root is available
+     */
     private fun checkSu(): RootState {
         return if (!su.isRoot) {
             if (preferencesHelper.doBypassRootNeeded()) {
                 RootState.ACCESS_DENIED_BYPASS
             } else {
                 RootState.ACCESS_DENIED
-                //                startActivity(NotRootActivity.newIntent(this))
             }
         } else {
             RootState.ACCESS_GRANTED
