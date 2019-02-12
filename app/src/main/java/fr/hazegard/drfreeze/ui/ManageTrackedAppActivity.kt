@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
 import fr.hazegard.drfreeze.model.PackageApp
@@ -19,15 +18,13 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 
 class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnClick {
     override fun onUnfreezeClick(position: Int) {
         GlobalScope.launch {
-            packageUtils.enablePackage(listTrackedApp[position].pkg)
+            packageUtils.enablePackage(trackedPackageAdapter.managedPackage[position].pkg)
             runOnUiThread {
                 trackedPackageAdapter.updateItem(position)
             }
@@ -35,12 +32,12 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     }
 
     override fun onAddShortCutCLick(position: Int) {
-        packageUtils.addShortcut(this, listTrackedApp[position])
+        packageUtils.addShortcut(this, trackedPackageAdapter.managedPackage[position])
     }
 
     override fun onFreezeClick(position: Int) {
         GlobalScope.launch {
-            packageUtils.disablePackage(listTrackedApp[position].pkg)
+            packageUtils.disablePackage(trackedPackageAdapter.managedPackage[position].pkg)
             runOnUiThread {
                 trackedPackageAdapter.updateItem(position)
             }
@@ -49,36 +46,23 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
 
     override fun onUntrackClick(position: Int) {
         GlobalScope.launch {
-            appsManager.removeTrackedPackage(listTrackedApp[position])
+            appsManager.removeTrackedPackage(trackedPackageAdapter.managedPackage[position])
             runOnUiThread {
                 trackedPackageAdapter.removeAt(position)
+                updateView()
             }
         }
     }
 
     override fun onNotificationSwitchClick(position: Int, newState: Boolean) {
-        listTrackedApp[position].doNotify = newState
-        appsManager.updateNotification(listTrackedApp[position])
+        trackedPackageAdapter.managedPackage[position].doNotify = newState
+        appsManager.updateNotification(trackedPackageAdapter.managedPackage[position])
     }
 
     override fun onClickStartApplication(position: Int) {
         GlobalScope.launch {
-            packageUtils.start(listTrackedApp[position], this@ManageTrackedAppActivity)
+            packageUtils.start(trackedPackageAdapter.managedPackage[position], this@ManageTrackedAppActivity)
             this@ManageTrackedAppActivity.finishAffinity()
-        }
-    }
-
-    /**
-     * Updating the list of tracked packages update also the view depending on the list size
-     */
-    private var listTrackedApp: MutableList<PackageApp> by Delegates.observable(
-            Collections.emptyList()) { _, _, newValue ->
-        runOnUiThread {
-            tracked_view_animator.displayedChild = if (newValue.isEmpty()) {
-                1
-            } else {
-                2
-            }
         }
     }
 
@@ -122,19 +106,19 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
      */
     private fun initListView() {
         GlobalScope.launch {
-            listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
-            val layout: RecyclerView.LayoutManager = GridLayoutManager(this@ManageTrackedAppActivity, computeSpan())
+            val listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
+            val layout = GridLayoutManager(this@ManageTrackedAppActivity, computeSpan())
             trackedPackageAdapter = trackedPackageAdapterFactory.getTrackedPackageAdapter(
                     this@ManageTrackedAppActivity,
                     this@ManageTrackedAppActivity,
                     listTrackedApp)
 
             runOnUiThread {
-                with(managed_app_list)
-                {
+                with(managed_app_list) {
                     layoutManager = layout
                     adapter = trackedPackageAdapter
                 }
+                updateView()
             }
         }
     }
@@ -145,6 +129,19 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         val screenWidth = displayMetrics.widthPixels
         val itemWidthPx = 200 * this.resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT
         return screenWidth / itemWidthPx
+    }
+
+    /**
+     * Update the view depending on the size of tracked application list
+     */
+    private fun updateView() {
+        runOnUiThread {
+            tracked_view_animator.displayedChild = if (trackedPackageAdapter.managedPackage.isEmpty()) {
+                1
+            } else {
+                2
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -180,8 +177,11 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
                 && resultCode == Activity.RESULT_OK
                 && data?.getBooleanExtra(ListPackagesActivity.RESULT, false) == true) {
             GlobalScope.launch {
-                listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
-                runOnUiThread { trackedPackageAdapter.updateList(listTrackedApp) }
+                val listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
+                runOnUiThread {
+                    trackedPackageAdapter.updateList(listTrackedApp)
+                    updateView()
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

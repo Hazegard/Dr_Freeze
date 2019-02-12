@@ -23,7 +23,7 @@ class TrackedPackageAdapter private constructor(
         private val packageUtils: PackageUtils,
         private val imageManager: ImageManager,
         private val c: Context,
-        private var managedPackage: MutableList<PackageApp>)
+        var managedPackage: MutableList<PackageApp>)
     : RecyclerView.Adapter<TrackedPackageAdapter.ManagedAppHolder>() {
 
     override fun onBindViewHolder(holder: ManagedAppHolder, position: Int) {
