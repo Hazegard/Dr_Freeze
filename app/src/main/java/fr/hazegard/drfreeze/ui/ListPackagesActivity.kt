@@ -108,12 +108,11 @@ class ListPackagesActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE && resultCode == Activity.RESULT_OK) {
-            if (data?.getBooleanExtra(SettingsActivity.RESULT, false) == true) {
-                GlobalScope.launch {
-                    listPackage = getPackagesAsync().await()
-                    runOnUiThread { packageAdapter.updateList(listPackage) }
-                }
+        if (requestCode == SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE && resultCode == Activity.RESULT_OK
+                && data?.getBooleanExtra(SettingsActivity.UPDATE_FILTER, false) == true) {
+            GlobalScope.launch {
+                listPackage = getPackagesAsync().await()
+                runOnUiThread { packageAdapter.updateList(listPackage) }
             }
         }
     }
