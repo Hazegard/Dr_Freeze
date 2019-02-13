@@ -12,18 +12,7 @@ import fr.hazegard.drfreeze.R
 import javax.inject.Inject
 
 
-class SettingsActivity : AppCompatActivity(), SettingsFragment.OnSettingChangeListener {
-    override fun onFilterLauncherAppChanged() {
-        newFilterLauncherApp = preferencesHelper.isOnlyLauncherApp()
-    }
-
-    override fun onNotificationChanged() {
-        newNotificationSettings = preferencesHelper.isNotificationDisabled()
-    }
-
-    override fun onFilterSystemAppChanged() {
-        newFilterSystemApp = preferencesHelper.isSystemAppsEnabled()
-    }
+class SettingsActivity : AppCompatActivity() {
 
     @Inject
     lateinit var preferencesHelper: PreferencesHelper
@@ -32,15 +21,9 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.OnSettingChangeLi
     private var prevFilterLauncherApp = false
     private var prevFilterSystemApp = false
 
-    private var newNotificationSettings = false
-    private var newFilterLauncherApp = false
-    private var newFilterSystemApp = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         FreezeApplication.appComponent.inject(this)
-        prevNotificationSettings = preferencesHelper.isNotificationDisabled()
-        prevFilterLauncherApp = preferencesHelper.isOnlyLauncherApp()
-        prevFilterSystemApp = preferencesHelper.isSystemAppsEnabled()
+        initPreviousSettings()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -50,8 +33,18 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.OnSettingChangeLi
         supportFragmentManager.beginTransaction().add(R.id.container, fragment).commit()
     }
 
+    private fun initPreviousSettings() {
+        prevNotificationSettings = preferencesHelper.isNotificationDisabled()
+        prevFilterLauncherApp = preferencesHelper.isOnlyLauncherApp()
+        prevFilterSystemApp = preferencesHelper.isSystemAppsEnabled()
+    }
+
     override fun onBackPressed() {
         val result = Intent()
+        val newFilterLauncherApp = preferencesHelper.isOnlyLauncherApp()
+        val newNotificationSettings = preferencesHelper.isNotificationDisabled()
+        val newFilterSystemApp = preferencesHelper.isSystemAppsEnabled()
+
         val hasFiltersChanged = (newFilterSystemApp != prevFilterSystemApp) || (newFilterLauncherApp != prevFilterLauncherApp)
         val hasNotificationsChanged = newNotificationSettings != prevNotificationSettings
         result.putExtra(UPDATE_FILTER, hasFiltersChanged)
