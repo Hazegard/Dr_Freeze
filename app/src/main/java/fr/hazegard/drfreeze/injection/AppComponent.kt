@@ -22,4 +22,5 @@ interface AppComponent {
     fun inject(shortcutDispatcherActivity: ShortcutDispatcherActivity)
     fun inject(listPackagesActivity: ListPackagesActivity)
     fun inject(notRootActivity: NotRootActivity)
+    fun inject(settingsActivity: SettingsActivity)
 }

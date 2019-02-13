@@ -4,18 +4,42 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import fr.hazegard.drfreeze.FreezeApplication
+import fr.hazegard.drfreeze.PreferencesHelper
 import fr.hazegard.drfreeze.R
+import javax.inject.Inject
 
 
-class SettingsActivity : AppCompatActivity(), SettingsFragment.OnListAppsSettingChangeListener {
-    private var hasChanged = false
-    override fun onListAppsSettingChange() {
-        hasChanged = true
+class SettingsActivity : AppCompatActivity(), SettingsFragment.OnSettingChangeListener {
+    override fun onFilterLauncherAppChanged() {
+        newFilterLauncherApp = preferencesHelper.isOnlyLauncherApp()
     }
 
+    override fun onNotificationChanged() {
+        newNotificationSettings = preferencesHelper.isNotificationDisabled()
+    }
+
+    override fun onFilterSystemAppChanged() {
+        newFilterSystemApp = preferencesHelper.isSystemAppsEnabled()
+    }
+
+    @Inject
+    lateinit var preferencesHelper: PreferencesHelper
+    private var prevNotificationSettings = false
+    private var prevFilterLauncherApp = false
+    var prevFilterSystemApp = false
+
+    var newNotificationSettings = false
+    var newFilterLauncherApp = false
+    var newFilterSystemApp = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        FreezeApplication.appComponent.inject(this)
+        prevNotificationSettings = preferencesHelper.isNotificationDisabled()
+        prevFilterLauncherApp = preferencesHelper.isOnlyLauncherApp()
+        prevFilterSystemApp = preferencesHelper.isSystemAppsEnabled()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -27,7 +51,10 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.OnListAppsSetting
 
     override fun onBackPressed() {
         val result = Intent()
-        result.putExtra(RESULT, hasChanged)
+        val hasFiltersChanged = (newFilterSystemApp != prevFilterSystemApp) || (newFilterLauncherApp != prevFilterLauncherApp)
+        val hasNotificationsChanged = newNotificationSettings != prevNotificationSettings
+        result.putExtra(UPDATE_FILTER, hasFiltersChanged)
+        result.putExtra(UPDATE_NOTIFICATIONS, hasNotificationsChanged)
         setResult(Activity.RESULT_OK, result)
         finish()
     }
@@ -45,7 +72,8 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.OnListAppsSetting
     }
 
     companion object {
-        const val RESULT = "REQUEST_UPDATE_APP_LIST"
+        const val UPDATE_FILTER = "UPDATE_FILTER"
+        const val UPDATE_NOTIFICATIONS = "UPDATE_NOTIFICATIONS"
         const val REQUEST_UPDATE_APP_LIST_CODE = 42
 
         fun newIntent(context: Context): Intent {

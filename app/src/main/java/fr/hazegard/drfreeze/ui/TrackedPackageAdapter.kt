@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import fr.hazegard.drfreeze.ImageManager
 import fr.hazegard.drfreeze.PackageUtils
+import fr.hazegard.drfreeze.PreferencesHelper
 import fr.hazegard.drfreeze.R
 import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
@@ -22,9 +23,12 @@ class TrackedPackageAdapter private constructor(
         val onClick: OnClick,
         private val packageUtils: PackageUtils,
         private val imageManager: ImageManager,
+        private val preferencesHelper: PreferencesHelper,
         private val c: Context,
         var managedPackage: MutableList<PackageApp>)
     : RecyclerView.Adapter<TrackedPackageAdapter.ManagedAppHolder>() {
+
+    private var isNotificationsDisabled = preferencesHelper.isNotificationDisabled()
 
     override fun onBindViewHolder(holder: ManagedAppHolder, position: Int) {
         val appName = managedPackage[position]
@@ -46,6 +50,7 @@ class TrackedPackageAdapter private constructor(
      * @param packages The new list of packages
      */
     fun updateList(packages: List<PackageApp>) {
+        isNotificationsDisabled = preferencesHelper.isNotificationDisabled()
         managedPackage = packages.toMutableList()
         notifyDataSetChanged()
     }
@@ -139,10 +144,19 @@ class TrackedPackageAdapter private constructor(
                 }
                 with(switch_show_notifications) {
                     setOnCheckedChangeListener(null)
-                    isChecked = packageApp.doNotify
+                    if (isNotificationsDisabled) {
+                        isChecked = false
+                        isClickable = false
+                    } else {
+                        isChecked = packageApp.doNotify
+                    }
                     setOnCheckedChangeListener { _, isChecked ->
-                        onClick.onNotificationSwitchClick(position, isChecked)
-                        packageApp.doNotify = isChecked
+                        if (isNotificationsDisabled) {
+                            this.isChecked = false
+                        } else {
+                            onClick.onNotificationSwitchClick(position, isChecked)
+                            packageApp.doNotify = isChecked
+                        }
                     }
                     setOnLongClickListener {
                         Toast.makeText(context, context.getString(R.string.switch_notification_status, packageApp.appName), Toast.LENGTH_LONG).show()
@@ -157,6 +171,7 @@ class TrackedPackageAdapter private constructor(
         @Singleton
         class Factory @Inject constructor(
                 private val packageUtils: PackageUtils,
+                private val preferencesHelper: PreferencesHelper,
                 private val imageManager: ImageManager) {
 
             fun getTrackedPackageAdapter(
@@ -168,6 +183,7 @@ class TrackedPackageAdapter private constructor(
                         OnClick,
                         packageUtils,
                         imageManager,
+                        preferencesHelper,
                         context,
                         managedPackage
                 )
