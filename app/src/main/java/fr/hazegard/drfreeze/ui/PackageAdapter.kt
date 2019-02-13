@@ -56,27 +56,27 @@ class PackageAdapter private constructor(
 
         fun setContent(packageApp: PackageApp) {
             with(view) {
-                package_checkbox.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        trackedPackages[packageApp.pkg] = packageApp
-                        packagesToAdd[packageApp.pkg] = packageApp
-                        packagesToRemove.remove(packageApp.pkg)
-                    } else {
-                        trackedPackages.remove(packageApp.pkg)
-                        packagesToAdd.remove(packageApp.pkg)
-                        packagesToRemove[packageApp.pkg] = packageApp
-                    }
-                    onUpdateList.invoke()
-                }
-
                 row_package.setOnClickListener {
                     if (isEdit) {
                         package_checkbox.isChecked = !package_checkbox.isChecked
                     }
                 }
                 with(package_checkbox) {
+                    setOnCheckedChangeListener(null)
                     isChecked = trackedPackages.contains(packageApp.pkg)
                     isEnabled = isEdit && packageApp.pkg.s != c.packageName
+                    setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked) {
+                            trackedPackages[packageApp.pkg] = packageApp
+                            packagesToAdd[packageApp.pkg] = packageApp
+                            packagesToRemove.remove(packageApp.pkg)
+                        } else {
+                            trackedPackages.remove(packageApp.pkg)
+                            packagesToAdd.remove(packageApp.pkg)
+                            packagesToRemove[packageApp.pkg] = packageApp
+                        }
+                        onUpdateList.invoke()
+                    }
                 }
                 packageNameTv.text = packageApp.pkg.s
                 packageAppNameTv.text = packageApp.appName
