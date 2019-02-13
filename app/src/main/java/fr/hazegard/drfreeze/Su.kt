@@ -22,7 +22,6 @@ class Su @Inject constructor() {
     private val su: Process = getSuProcess()
     private val os = DataOutputStream(su.outputStream)
     private val osRes = DataInputStream(su.inputStream)
-    private val osErr = DataInputStream(su.errorStream)
     var isRoot: Boolean = false
 
     /**
@@ -49,7 +48,7 @@ class Su @Inject constructor() {
     private fun getSuProcess(): Process {
         try {
             val su: Process = Runtime.getRuntime().exec("su")
-            val (os, osRes, osErr) = getDataStream(su)
+            val (os, osRes, _) = getDataStream(su)
             os.writeBytes("id\n")
             os.flush()
             val currUid: String? = BufferedReader(osRes.bufferedReader()).readLine()

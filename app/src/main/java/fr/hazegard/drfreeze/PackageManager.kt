@@ -111,7 +111,7 @@ class PackageManager @Inject constructor(
      * Save a list of tracked packages
      * @param packages The list of packages to save
      */
-    fun saveTrackedPackages(packages: List<PackageApp>) {
+    private fun saveTrackedPackages(packages: List<PackageApp>) {
         //TODO Optimize multiple insertions
         packages.forEach {
             dbWrapper.insertOrUpdateOne(it)
@@ -143,7 +143,7 @@ class PackageManager @Inject constructor(
      * Untrack the list of package
      * @param packages The list of package to untrack
      */
-    fun removeTrackedPackages(packages: List<PackageApp>) {
+    private fun removeTrackedPackages(packages: List<PackageApp>) {
         packages.forEach {
             removeTrackedPackage(it)
         }

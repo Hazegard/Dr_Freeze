@@ -27,13 +27,14 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.OnSettingChangeLi
 
     @Inject
     lateinit var preferencesHelper: PreferencesHelper
+
     private var prevNotificationSettings = false
     private var prevFilterLauncherApp = false
-    var prevFilterSystemApp = false
+    private var prevFilterSystemApp = false
 
-    var newNotificationSettings = false
-    var newFilterLauncherApp = false
-    var newFilterSystemApp = false
+    private var newNotificationSettings = false
+    private var newFilterLauncherApp = false
+    private var newFilterSystemApp = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         FreezeApplication.appComponent.inject(this)

@@ -26,7 +26,7 @@ class ImageManager @Inject constructor(
      * @param packageApp THe package to save
      * @param image The icon of the package to save
      */
-    fun saveImage(packageApp: PackageApp, image: Drawable) {
+    private fun saveImage(packageApp: PackageApp, image: Drawable) {
         val imagePath = getFilePath(packageApp)
         val fos = FileOutputStream(imagePath)
         return try {
