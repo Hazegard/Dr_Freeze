@@ -18,7 +18,6 @@ sqldelight {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "fr.hazegard.dr_freeze"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
@@ -31,6 +30,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -51,6 +54,9 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.21'
 
     implementation "com.squareup.sqldelight:android-driver:1.0.2"
+
+    implementation "com.mikepenz:aboutlibraries:6.2.3"
+    implementation "androidx.cardview:cardview:1.0.0"
 
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0-alpha01'
     testImplementation 'junit:junit:4.12'

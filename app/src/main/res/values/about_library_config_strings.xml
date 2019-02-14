@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--AboutLibrary configs-->
+    <string name="aboutLibraries_description_name">About Dr Freeze</string>
+    <string name="aboutLibraries_title">About Dr Freeze</string>
+    <string name="aboutLibraries_description_showIcon">true</string>
+    <string name="aboutLibraries_description_showVersion">true</string>
+    <string name="aboutLibraries_description_text">
+        <![CDATA[
+            This app allows you to disable and enable on the fly other applications
+            <br/>
+            <br/>
+            <b> Open Source libraries used:</b>
+        ]]>
+    </string>
+    <string name="aboutLibraries_description_special1_name">Changelog</string>
+    <string name="aboutLibraries_description_special1_text">
+        <![CDATA[
+            <b><u>Changelog</u></b>
+            <br/>
+            <i>Version 1.0.0:</i>
+            <br/>
+             - First release :D
+        ]]>
+    </string>
+</resources>

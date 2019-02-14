@@ -4,8 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.LibsBuilder
 import fr.hazegard.drfreeze.FreezeApplication
 import fr.hazegard.drfreeze.PreferencesHelper
 import fr.hazegard.drfreeze.R
@@ -53,10 +57,25 @@ class SettingsActivity : AppCompatActivity() {
         finish()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.about, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             android.R.id.home -> {
                 onBackPressed()
+                true
+            }
+            R.id.menu_about -> {
+                LibsBuilder().withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                        .withActivityTitle(getString(R.string.about))
+                        .withLicenseShown(true)
+                        .withExcludedLibraries("AndroidIconics", "fastadapter")
+                        .withFields(R.string::class.java.fields)
+                        .start(this)
                 true
             }
             else -> {

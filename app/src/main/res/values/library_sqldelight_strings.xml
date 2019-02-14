@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="define_Sqldelight">2019;Square</string>
+    <string name="library_Sqldelight_author">Square</string>
+    <string name="library_Sqldelight_authorWebsite">https://squareup.com</string>
+    <string name="library_Sqldelight_libraryName">Sqldelight</string>
+    <string name="library_Sqldelight_libraryDescription">
+        <![CDATA[
+        <b>SQLDelight</b> generates typesafe APIs from your SQL statements.
+        <br /><br />
+          It compile-time verifies your schema, statements, and migrations and provides IDE features like autocomplete and refactoring which make writing and maintaining SQL simple. SQLDelight currently supports the SQLite dialect and there are supported SQLite drivers on Android, JVM and iOS.
+        ]]>
+    </string>
+    <string name="library_Sqldelight_libraryVersion">@string/aboutlibrary_lib_version</string>
+    <string name="library_Sqldelight_libraryWebsite">https://github.com/square/sqldelight</string>
+    <string name="library_Sqldelight_licenseId">apache_2_0</string>
+    <string name="library_Sqldelight_isOpenSource">true</string>
+    <string name="library_Sqldelight_repositoryLink">https://github.com/square/sqldelight</string>
+    <!-- Custom variables section -->
+    <string name="library_Sqldelight_owner">Square</string>
+    <string name="library_Sqldelight_year">2019</string>-->
+</resources>
