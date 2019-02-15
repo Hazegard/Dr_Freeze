@@ -111,7 +111,6 @@
             app:layout_constraintEnd_toStartOf="@id/guideline_75"
             app:layout_constraintStart_toEndOf="@id/guideline_50"
             app:layout_constraintTop_toTopOf="@id/background_hack"
-            app:srcCompat="@drawable/clear"
             app:tint="@color/colorPrimary" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -121,6 +120,7 @@
             android:layout_height="0dp"
             android:layout_margin="0dp"
             android:padding="0dp"
+            android:thumb="@drawable/switch_notification"
             app:layout_constraintBottom_toBottomOf="@id/background_hack"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline_75"
