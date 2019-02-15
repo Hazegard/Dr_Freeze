@@ -27,9 +27,9 @@ class ImageManager @Inject constructor(
      * @param image The icon of the package to save
      */
     private fun saveImage(packageApp: PackageApp, image: Drawable) {
-        val imagePath = getFilePath(packageApp)
-        val fos = FileOutputStream(imagePath)
-        return try {
+        try {
+            val imagePath = getFilePath(packageApp)
+            val fos = FileOutputStream(imagePath)
             image.toBitmap().compress(Bitmap.CompressFormat.PNG, 100, fos)
             fos.close()
         } catch (e: Exception) {
@@ -115,8 +115,17 @@ class ImageManager @Inject constructor(
      * Get the path of the file in the internal storage
      */
     private fun getFilePath(packageApp: PackageApp): File {
-        val imageDir = context.getDir(IMAGE_FOLDER, Context.MODE_PRIVATE)
+        val imageDir = context.cacheDir
         return File(imageDir, packageApp.pkg.s)
+    }
+
+    fun updateImage(packageApp: PackageApp) {
+        val image = getImageFromPacMan(packageApp) ?: return
+        saveImage(packageApp, image)
+    }
+
+    fun updateImages(packages: List<PackageApp>) {
+        packages.forEach { updateImage(it) }
     }
 
     companion object {
