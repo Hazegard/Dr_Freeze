@@ -106,11 +106,13 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="?selectableItemBackground"
+            android:padding="4dp"
             android:contentDescription="@string/description_untrack_app"
             app:layout_constraintBottom_toBottomOf="@id/background_hack"
             app:layout_constraintEnd_toStartOf="@id/guideline_75"
             app:layout_constraintStart_toEndOf="@id/guideline_50"
             app:layout_constraintTop_toTopOf="@id/background_hack"
+            app:srcCompat="@drawable/stop_track"
             app:tint="@color/colorPrimary" />
 
         <androidx.appcompat.widget.SwitchCompat
