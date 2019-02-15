@@ -57,7 +57,7 @@ class PackageAdapter private constructor(
         fun setContent(packageApp: PackageApp) {
             with(view) {
                 row_package.setOnClickListener {
-                    if (isEdit) {
+                    if (isEdit&& packageApp.pkg.s != c.packageName) {
                         package_checkbox.isChecked = !package_checkbox.isChecked
                     }
                 }
