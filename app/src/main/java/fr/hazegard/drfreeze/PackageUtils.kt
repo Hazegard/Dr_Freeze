@@ -35,11 +35,13 @@ class PackageUtils @Inject constructor(
 
     /**
      * Enable the package
-     * @param pkg The package to enable
+     * @param packageApp The package to enable
      */
-    fun enablePackage(pkg: Pkg): String {
-        notificationManager.removeNotification(pkg)
-        return commands.enablePackage(pkg).trim()
+    fun enablePackage(packageApp: PackageApp, doNotify: Boolean = true): String {
+        if (doNotify) {
+            notificationManager.sendNotification(packageApp)
+        }
+        return commands.enablePackage(packageApp.pkg).trim()
     }
 
     /**
@@ -83,7 +85,7 @@ class PackageUtils @Inject constructor(
      * @param context The current context
      */
     fun start(pkg: PackageApp, context: Context) {
-        enablePackage(pkg.pkg)
+        enablePackage(pkg)
         val launchIntent = pm.getLaunchIntentForPackage(pkg.pkg.s)
         if (launchIntent != null) {
             ContextCompat.startActivity(context, launchIntent, null)

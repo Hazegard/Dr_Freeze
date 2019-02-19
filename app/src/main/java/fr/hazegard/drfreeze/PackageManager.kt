@@ -136,7 +136,7 @@ class PackageManager @Inject constructor(
     fun removeTrackedPackage(pkg: PackageApp) {
         dbWrapper.deletePackage(pkg)
         imageManager.deleteImage(pkg)
-        packageUtils.enablePackage(pkg.pkg)
+        packageUtils.enablePackage(pkg, false)
     }
 
     /**
