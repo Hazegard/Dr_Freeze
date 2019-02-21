@@ -23,7 +23,7 @@ class DbWrapper @Inject constructor(context: Context) {
         return query.selectAll(mapper = packageMapper).executeAsList()
     }
 
-    private val packageMapper: ((id: Long, String, String, Boolean) -> PackageApp) = { _, package_name: String, application_name: String, doNotify: Boolean ->
+    private val packageMapper: ((id: Long, String, String, Boolean, Boolean) -> PackageApp) = { _, package_name: String, application_name: String, doNotify: Boolean, _ ->
         PackageApp(Pkg(package_name), application_name, doNotify)
     }
 
@@ -73,4 +73,17 @@ class DbWrapper @Inject constructor(context: Context) {
     fun selectPackagesToNotify(): List<PackageApp> {
         return query.selectAllWithNotificationEnabled(mapper = packageMapper).executeAsList()
     }
+
+    fun selectFlaggedUpdatePackages(): List<PackageApp> {
+        return query.selectFlaggedUpdate(mapper = packageMapper).executeAsList()
+    }
+
+    fun setFlagUpdate(packageApp: PackageApp) {
+        query.updateFlagUpdateStatus(true, packageApp.id())
+    }
+
+    fun resetFlagUpdate(packageApp: PackageApp) {
+        query.updateFlagUpdateStatus(false, packageApp.id())
+    }
+
 }

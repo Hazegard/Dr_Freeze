@@ -79,6 +79,10 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     @Inject
     lateinit var preferencesHelper: PreferencesHelper
 
+    @Inject
+    lateinit var batchUpdate: BatchUpdate
+    private lateinit var menu: Menu
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FreezeApplication.appComponent.inject(this)
@@ -147,6 +151,12 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.tracked_app_menu, menu)
         menuInflater.inflate(R.menu.main, menu)
+        this.menu = menu
+        if (batchUpdate.isUpdateModeEnabled()) {
+            showUpdateModeEnabled()
+        } else {
+            showUpdateModeDisabled()
+        }
         return true
     }
 
@@ -160,6 +170,14 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
             R.id.menu_list_apps -> {
                 val listAppActivityIntent = ListPackagesActivity.newIntent(this)
                 startActivityForResult(listAppActivityIntent, ListPackagesActivity.UPDATE_TRACKED_APPS_CODE)
+                true
+            }
+            R.id.menu_enable_update_mode -> {
+                enableUpdateMode()
+                true
+            }
+            R.id.menu_disable_update_mode -> {
+                disableUpdateMode()
                 true
             }
             android.R.id.home -> {
@@ -194,6 +212,27 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
      */
     private fun getTrackedPackagesAsync(): Deferred<List<PackageApp>> {
         return GlobalScope.async { appsManager.getTrackedPackages() }
+    }
+
+    private fun enableUpdateMode() {
+        showUpdateModeEnabled()
+        batchUpdate.enableUpdateMode()
+    }
+
+    private fun showUpdateModeEnabled() {
+        this.menu.findItem(R.id.menu_enable_update_mode).isVisible = false
+        this.menu.findItem(R.id.menu_disable_update_mode).isVisible = true
+
+    }
+
+    private fun showUpdateModeDisabled() {
+        this.menu.findItem(R.id.menu_enable_update_mode).isVisible = true
+        this.menu.findItem(R.id.menu_disable_update_mode).isVisible = false
+    }
+
+    private fun disableUpdateMode() {
+        showUpdateModeDisabled()
+        batchUpdate.disableUpdateMode()
     }
 
     companion object {
