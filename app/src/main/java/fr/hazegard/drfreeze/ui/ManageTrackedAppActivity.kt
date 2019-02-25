@@ -276,7 +276,6 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     inner class StopBatchUpdateReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == ACTION_STOP_BATCH_UPDATE) {
-                trackedPackageAdapter.updateHeader()
                 disableUpdateMode()
             }
         }
