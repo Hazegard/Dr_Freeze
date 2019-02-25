@@ -27,7 +27,6 @@ class TrackedPackageAdapter private constructor(
         var managedPackage: MutableList<PackageApp>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var headerOffset: Int = 0
     private var isUpdateModeEnabled by Delegates.observable(batchUpdate.isUpdateModeEnabled()) { _, b: Boolean, newValue: Boolean ->
         headerOffset = if (newValue) {
             1
@@ -36,6 +35,11 @@ class TrackedPackageAdapter private constructor(
         }
     }
 
+    private var headerOffset: Int = if (isUpdateModeEnabled) {
+        1
+    } else {
+        0
+    }
     private var isNotificationsDisabled = preferencesHelper.isNotificationDisabled()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -106,13 +110,13 @@ class TrackedPackageAdapter private constructor(
 
     inner class HeaderHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun setHeader() {
-            view.visibility = if (isUpdateModeEnabled) {
-                View.VISIBLE
-            } else {
-                val layoutParams: RecyclerView.LayoutParams = itemView.layoutParams as RecyclerView.LayoutParams
-                layoutParams.setMargins(0, 0, 0, 0)
-                itemView.layoutParams = layoutParams
-                View.GONE
+            with(view) {
+                setOnClickListener {
+                }
+                setOnLongClickListener {
+                    Toast.makeText(c, "Stop batch Update", Toast.LENGTH_LONG).show()
+                    return@setOnLongClickListener true
+                }
             }
         }
     }
