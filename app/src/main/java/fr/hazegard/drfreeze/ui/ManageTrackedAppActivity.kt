@@ -111,11 +111,22 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     private fun initListView() {
         GlobalScope.launch {
             val listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
-            val layout = GridLayoutManager(this@ManageTrackedAppActivity, computeSpan())
             trackedPackageAdapter = trackedPackageAdapterFactory.getTrackedPackageAdapter(
                     this@ManageTrackedAppActivity,
                     this@ManageTrackedAppActivity,
                     listTrackedApp)
+            val rows = computeSpan()
+            val layout = GridLayoutManager(this@ManageTrackedAppActivity, rows).apply {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return when (trackedPackageAdapter.getItemViewType(position)) {
+                            TrackedPackageAdapter.HEADER -> rows
+                            TrackedPackageAdapter.ITEM -> 1
+                            else -> 1
+                        }
+                    }
+                }
+            }
 
             runOnUiThread {
                 with(managed_app_list) {

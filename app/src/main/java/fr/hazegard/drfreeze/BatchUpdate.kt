@@ -25,7 +25,7 @@ class BatchUpdate @Inject constructor(
         val disabledPackages = packageManager.getDisabledInstalledAndTracked()
         sharedPreferences.edit().putBoolean(UPDATE_MODE, true).apply()
         disabledPackages.forEach { packageApp ->
-            packageUtils.enablePackage(packageApp, false)
+            packageUtils.enablePackage(packageApp.pkg, false)
             dbWrapper.setFlagUpdate(packageApp)
         }
         sendBatchNotification()

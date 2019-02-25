@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import fr.hazegard.drfreeze.ImageManager
-import fr.hazegard.drfreeze.PackageUtils
-import fr.hazegard.drfreeze.PreferencesHelper
-import fr.hazegard.drfreeze.R
+import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
 import javax.inject.Inject
@@ -22,27 +19,50 @@ import javax.inject.Singleton
 class TrackedPackageAdapter private constructor(
         val onClick: OnClick,
         private val packageUtils: PackageUtils,
+        batchUpdate: BatchUpdate,
         private val imageManager: ImageManager,
         private val preferencesHelper: PreferencesHelper,
         private val c: Context,
         var managedPackage: MutableList<PackageApp>)
-    : RecyclerView.Adapter<TrackedPackageAdapter.ManagedAppHolder>() {
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private var isUpdateModeEnabled = batchUpdate.isUpdateModeEnabled()
     private var isNotificationsDisabled = preferencesHelper.isNotificationDisabled()
 
-    override fun onBindViewHolder(holder: ManagedAppHolder, position: Int) {
-        val appName = managedPackage[position]
-        holder.setContent(appName, position)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is HeaderHolder -> {
+                holder.setHeader()
+            }
+            is ManagedAppHolder -> {
+                val appName = managedPackage[position - 1]
+                holder.setContent(appName, position - 1)
+            }
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ManagedAppHolder {
-        val itemView: View = LayoutInflater.from(parent.context)
-                .inflate(R.layout.row_manage_apps, parent, false)
-        return ManagedAppHolder(itemView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == ITEM) {
+            val itemView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.row_manage_apps, parent, false)
+            ManagedAppHolder(itemView)
+        } else {
+            val itemView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.row_update_mode, parent, false)
+            HeaderHolder(itemView)
+        }
     }
 
     override fun getItemCount(): Int {
-        return managedPackage.size
+        return managedPackage.size + 1
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) {
+            HEADER
+        } else {
+            ITEM
+        }
     }
 
     /**
@@ -56,13 +76,25 @@ class TrackedPackageAdapter private constructor(
     }
 
     fun removeAt(position: Int) {
-        managedPackage.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, managedPackage.size)
+        val packagePosition = position - 1
+        managedPackage.removeAt(packagePosition)
+        notifyItemRemoved(packagePosition)
+        notifyItemRangeChanged(packagePosition, managedPackage.size)
     }
 
     fun updateItem(position: Int) {
-        notifyItemChanged(position)
+        val packagePosition = position - 1
+        notifyItemChanged(packagePosition)
+    }
+
+    inner class HeaderHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+        fun setHeader() {
+            view.visibility = if (!isUpdateModeEnabled) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
     }
 
     inner class ManagedAppHolder(private val view: View)
@@ -168,9 +200,13 @@ class TrackedPackageAdapter private constructor(
     }
 
     companion object {
+        const val ITEM = 1
+        const val HEADER = 0
+
         @Singleton
         class Factory @Inject constructor(
                 private val packageUtils: PackageUtils,
+                private val batchUpdate: BatchUpdate,
                 private val preferencesHelper: PreferencesHelper,
                 private val imageManager: ImageManager) {
 
@@ -182,6 +218,7 @@ class TrackedPackageAdapter private constructor(
                 return TrackedPackageAdapter(
                         OnClick,
                         packageUtils,
+                        batchUpdate,
                         imageManager,
                         preferencesHelper,
                         context,
