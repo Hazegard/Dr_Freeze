@@ -19,7 +19,7 @@ import javax.inject.Singleton
 class TrackedPackageAdapter private constructor(
         val onClick: OnClick,
         private val packageUtils: PackageUtils,
-        batchUpdate: BatchUpdate,
+        private val batchUpdate: BatchUpdate,
         private val imageManager: ImageManager,
         private val preferencesHelper: PreferencesHelper,
         private val c: Context,
@@ -86,9 +86,14 @@ class TrackedPackageAdapter private constructor(
         notifyItemChanged(packagePosition)
     }
 
+    fun updateHeader() {
+        isUpdateModeEnabled = batchUpdate.isUpdateModeEnabled()
+        notifyItemChanged(0)
+    }
+
     inner class HeaderHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun setHeader() {
-            view.visibility = if (!isUpdateModeEnabled) {
+            view.visibility = if (isUpdateModeEnabled) {
                 View.VISIBLE
             } else {
                 View.GONE

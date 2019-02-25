@@ -1,14 +1,17 @@
 package fr.hazegard.drfreeze.ui
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
@@ -82,6 +85,8 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     @Inject
     lateinit var batchUpdate: BatchUpdate
     private lateinit var menu: Menu
+
+    private val stopBatchUpdateReceiver: StopBatchUpdateReceiver = StopBatchUpdateReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -217,6 +222,19 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onStart() {
+        super.onStart()
+        val filter = IntentFilter().apply {
+            addAction(ACTION_STOP_BATCH_UPDATE)
+        }
+        LocalBroadcastManager.getInstance(this).registerReceiver(stopBatchUpdateReceiver, filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(stopBatchUpdateReceiver)
+    }
+
     /**
      * Get a list of tracked packages, sorted by application name
      * @return THe list of tracked packages
@@ -228,6 +246,7 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     private fun enableUpdateMode() {
         showUpdateModeEnabled()
         batchUpdate.enableUpdateMode()
+        trackedPackageAdapter.updateHeader()
     }
 
     private fun showUpdateModeEnabled() {
@@ -244,11 +263,22 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     private fun disableUpdateMode() {
         showUpdateModeDisabled()
         batchUpdate.disableUpdateMode()
+        trackedPackageAdapter.updateHeader()
     }
 
     companion object {
+        const val ACTION_STOP_BATCH_UPDATE = "fr.hazegard.dr_freeze.ACTION_STOP_BATCH_UPDATE"
         fun newIntent(context: Context): Intent {
             return Intent(context, ManageTrackedAppActivity::class.java)
+        }
+    }
+
+    inner class StopBatchUpdateReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == ACTION_STOP_BATCH_UPDATE) {
+                trackedPackageAdapter.updateHeader()
+                disableUpdateMode()
+            }
         }
     }
 }
