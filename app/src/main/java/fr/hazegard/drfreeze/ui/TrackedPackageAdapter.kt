@@ -112,6 +112,7 @@ class TrackedPackageAdapter private constructor(
         fun setHeader() {
             with(view) {
                 setOnClickListener {
+                    onClick.onClickStopBatchUpdate()
                 }
                 setOnLongClickListener {
                     Toast.makeText(c, "Stop batch Update", Toast.LENGTH_LONG).show()
@@ -259,5 +260,6 @@ class TrackedPackageAdapter private constructor(
         fun onUntrackClick(position: Int)
         fun onNotificationSwitchClick(position: Int, newState: Boolean)
         fun onClickStartApplication(position: Int)
+        fun onClickStopBatchUpdate()
     }
 }

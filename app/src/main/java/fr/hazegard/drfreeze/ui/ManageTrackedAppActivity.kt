@@ -25,6 +25,10 @@ import javax.inject.Inject
 
 
 class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnClick {
+    override fun onClickStopBatchUpdate() {
+        disableUpdateMode()
+    }
+
     override fun onUnfreezeClick(position: Int) {
         GlobalScope.launch {
             packageUtils.enablePackage(trackedPackageAdapter.managedPackage[position].pkg)
