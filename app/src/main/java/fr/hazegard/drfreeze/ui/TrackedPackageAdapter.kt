@@ -12,6 +12,7 @@ import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.properties.Delegates
 
 /**
  * The adapter used to display tracked packages
@@ -26,7 +27,15 @@ class TrackedPackageAdapter private constructor(
         var managedPackage: MutableList<PackageApp>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var isUpdateModeEnabled = batchUpdate.isUpdateModeEnabled()
+    private var headerOffset: Int = 0
+    private var isUpdateModeEnabled by Delegates.observable(batchUpdate.isUpdateModeEnabled()) { _, b: Boolean, newValue: Boolean ->
+        headerOffset = if (newValue) {
+            1
+        } else {
+            0
+        }
+    }
+
     private var isNotificationsDisabled = preferencesHelper.isNotificationDisabled()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -35,8 +44,8 @@ class TrackedPackageAdapter private constructor(
                 holder.setHeader()
             }
             is ManagedAppHolder -> {
-                val appName = managedPackage[position - 1]
-                holder.setContent(appName, position - 1)
+                val appName = managedPackage[position - headerOffset]
+                holder.setContent(appName, position - headerOffset)
             }
         }
     }
@@ -54,11 +63,11 @@ class TrackedPackageAdapter private constructor(
     }
 
     override fun getItemCount(): Int {
-        return managedPackage.size + 1
+        return managedPackage.size + headerOffset
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0) {
+        return if (position == 0 && isUpdateModeEnabled) {
             HEADER
         } else {
             ITEM
@@ -88,7 +97,11 @@ class TrackedPackageAdapter private constructor(
 
     fun updateHeader() {
         isUpdateModeEnabled = batchUpdate.isUpdateModeEnabled()
-        notifyItemChanged(0)
+        if (isUpdateModeEnabled) {
+            notifyItemInserted(0)
+        } else {
+            notifyItemRemoved(0)
+        }
     }
 
     inner class HeaderHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -96,6 +109,9 @@ class TrackedPackageAdapter private constructor(
             view.visibility = if (isUpdateModeEnabled) {
                 View.VISIBLE
             } else {
+                val layoutParams: RecyclerView.LayoutParams = itemView.layoutParams as RecyclerView.LayoutParams
+                layoutParams.setMargins(0, 0, 0, 0)
+                itemView.layoutParams = layoutParams
                 View.GONE
             }
         }
