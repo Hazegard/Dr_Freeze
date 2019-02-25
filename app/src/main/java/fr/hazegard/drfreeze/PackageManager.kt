@@ -50,8 +50,11 @@ class PackageManager @Inject constructor(
         val doKeepSystemApps = preferencesHelper.isSystemAppsEnabled()
         val showOnlyLaunchApps = preferencesHelper.isOnlyLauncherApp()
         return getAllPackages()
-                .filter { doKeepSystemApps || it.isSystemApp() }
-                .filter { !showOnlyLaunchApps || pm.isLaunchableApp(Pkg(it.packageName)) }
+                .filter {
+                    (doKeepSystemApps || it.isSystemApp())
+                            && (!showOnlyLaunchApps || pm.isLaunchableApp(Pkg(it.packageName)))
+                            || !it.enabled
+                }
                 .map {
                     val pkg = Pkg(it.packageName)
                     return@map packageUtils.safeCreatePackageApp(pkg)
