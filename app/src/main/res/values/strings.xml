@@ -38,4 +38,5 @@
     <string name="about">About</string>
     <string name="enable_update_mode">Enable Update Mode</string>
     <string name="disable_update_mode">Disable Update Mode</string>
+    <string name="update_mode_enabled">Update mode enabled</string>
 </resources>
