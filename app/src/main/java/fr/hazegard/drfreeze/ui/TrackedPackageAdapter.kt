@@ -76,14 +76,13 @@ class TrackedPackageAdapter private constructor(
     }
 
     fun removeAt(position: Int) {
-        val packagePosition = position - 1
-        managedPackage.removeAt(packagePosition)
-        notifyItemRemoved(packagePosition)
-        notifyItemRangeChanged(packagePosition, managedPackage.size)
+        managedPackage.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, managedPackage.size)
     }
 
     fun updateItem(position: Int) {
-        val packagePosition = position - 1
+        val packagePosition = position + 1
         notifyItemChanged(packagePosition)
     }
 
