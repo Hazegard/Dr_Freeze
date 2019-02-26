@@ -27,7 +27,7 @@ class TrackedPackageAdapter private constructor(
         var managedPackage: MutableList<PackageApp>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var isUpdateModeEnabled by Delegates.observable(batchUpdate.isUpdateModeEnabled()) { _, b: Boolean, newValue: Boolean ->
+    private var isUpdateModeEnabled by Delegates.observable(batchUpdate.isUpdateModeEnabled()) { _, _, newValue: Boolean ->
         headerOffset = if (newValue) {
             1
         } else {

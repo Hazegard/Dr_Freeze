@@ -45,7 +45,7 @@ class BatchUpdate @Inject constructor(
         sharedPreferences.edit().remove(UPDATE_MODE).apply()
     }
 
-    fun sendBatchNotification() {
+    private fun sendBatchNotification() {
         val onClickIntent = StopBatchUpdateService.newIntent(context)
         val pendingIntent: PendingIntent = PendingIntent.getService(
                 context, System.currentTimeMillis().toInt(), onClickIntent, PendingIntent.FLAG_ONE_SHOT)
@@ -81,7 +81,7 @@ class BatchUpdate @Inject constructor(
         notificationManagerCompat.notify(ID, notification)
     }
 
-    fun removeNotification() {
+    private fun removeNotification() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(ID)
     }

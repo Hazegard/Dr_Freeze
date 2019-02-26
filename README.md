@@ -6,12 +6,12 @@
 ![Dr Freeze logo](docs/icon.svg)
 
 This app allows you to disable and enable on the fly other applications.
-As a result, theses disabled applications won't be able to send any informations to trackers.
+As a result, theses disabled applications won't be able to send any information to trackers.
 
 
 However, some drawbacks exists as the application is disabled:
 - You will not receive any notifications when the application is disabled (which is normal :D)
-- The app will not appear in the launcher. But you can use the shortcus provided by Dr Freeze to launch the app
+- The app will not appear in the launcher. But you can use the shortcut provided by Dr Freeze to launch the app
 - You will not be able to update disabled application. In order to update apps, you have to enable it first
 ## Functionalities
 
