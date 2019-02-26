@@ -147,6 +147,9 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         }
     }
 
+    /**
+     * Return the number of rows the current screen width can show
+     */
     private fun computeSpan(): Int {
         val displayMetrics = DisplayMetrics()
         this.windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -247,23 +250,35 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         return GlobalScope.async { appsManager.getTrackedPackages() }
     }
 
+    /**
+     * Enable the batch mode
+     */
     private fun enableUpdateMode() {
         showUpdateModeEnabled()
         batchUpdate.enableUpdateMode()
         trackedPackageAdapter.updateHeader()
     }
 
+    /**
+     * Update the menu to show that the update mode is enabled
+     */
     private fun showUpdateModeEnabled() {
         this.menu.findItem(R.id.menu_enable_update_mode).isVisible = false
         this.menu.findItem(R.id.menu_disable_update_mode).isVisible = true
 
     }
 
+    /**
+     * Update the menu to show that the update mode is disabled
+     */
     private fun showUpdateModeDisabled() {
         this.menu.findItem(R.id.menu_enable_update_mode).isVisible = true
         this.menu.findItem(R.id.menu_disable_update_mode).isVisible = false
     }
 
+    /**
+     * Disable the batch mode
+     */
     private fun disableUpdateMode() {
         showUpdateModeDisabled()
         batchUpdate.disableUpdateMode()
@@ -277,6 +292,10 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         }
     }
 
+    /**
+     * Receiver used to update the activity when the notification allowing to stop the update mode
+     * is clicked
+     */
     inner class StopBatchUpdateReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == ACTION_STOP_BATCH_UPDATE) {

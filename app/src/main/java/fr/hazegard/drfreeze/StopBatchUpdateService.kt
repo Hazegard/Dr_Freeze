@@ -13,6 +13,9 @@ class StopBatchUpdateService : IntentService("BatchUpdateService") {
     @Inject
     lateinit var batchUpdate: BatchUpdate
 
+    /**
+     * Intent received when the user click on the notification to disable the batch update mode
+     */
     override fun onHandleIntent(intent: Intent?) {
         AndroidInjection.inject(this)
         if (intent?.action?.equals(ACTION_STOP) == true) {

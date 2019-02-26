@@ -21,6 +21,11 @@ class BatchUpdate @Inject constructor(
         private val packageManager: PackageManager,
         private val context: Context) {
 
+    /**
+     * Enable the update mode
+     * Set the flag of all applications and them
+     * Then send a notification displaying the mode is enabled
+     */
     fun enableUpdateMode() {
         val disabledPackages = packageManager.getDisabledInstalledAndTracked()
         sharedPreferences.edit().putBoolean(UPDATE_MODE, true).apply()
@@ -31,10 +36,18 @@ class BatchUpdate @Inject constructor(
         sendBatchNotification()
     }
 
+    /**
+     * Return whether the update mode is enabled
+     */
     fun isUpdateModeEnabled(): Boolean {
         return sharedPreferences.getBoolean(UPDATE_MODE, false)
     }
 
+    /**
+     * Disable the update mode
+     * Remove the flag of all applications and them
+     * Then send a notification displaying the mode is enabled
+     */
     fun disableUpdateMode() {
         val flaggedPackages = dbWrapper.selectFlaggedUpdatePackages()
         flaggedPackages.forEach { packageApp ->
@@ -45,6 +58,10 @@ class BatchUpdate @Inject constructor(
         sharedPreferences.edit().remove(UPDATE_MODE).apply()
     }
 
+    /**
+     * Send a notification displaying that the batch update mode is enabled
+     * Clicking on it will disable the mode
+     */
     private fun sendBatchNotification() {
         val onClickIntent = StopBatchUpdateService.newIntent(context)
         val pendingIntent: PendingIntent = PendingIntent.getService(
@@ -68,7 +85,6 @@ class BatchUpdate @Inject constructor(
                 .setContentIntent(pendingIntent)
                 .setContentTitle("Update Enabled")
                 .setContentText("Click to disable the update mode")
-//                .setLargeIcon(imageManager.getCachedImage(packageApp).toBitmap())
                 .setSmallIcon(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     R.drawable.snowflake
                 } else {
@@ -81,6 +97,9 @@ class BatchUpdate @Inject constructor(
         notificationManagerCompat.notify(ID, notification)
     }
 
+    /**
+     * Remove the notification of the batch update mode
+     */
     private fun removeNotification() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(ID)

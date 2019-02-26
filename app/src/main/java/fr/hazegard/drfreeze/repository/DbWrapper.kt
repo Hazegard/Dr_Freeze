@@ -74,14 +74,23 @@ class DbWrapper @Inject constructor(context: Context) {
         return query.selectAllWithNotificationEnabled(mapper = packageMapper).executeAsList()
     }
 
+    /**
+     * Get all packages that were enabled with the batch update mode
+     */
     fun selectFlaggedUpdatePackages(): List<PackageApp> {
         return query.selectFlaggedUpdate(mapper = packageMapper).executeAsList()
     }
 
+    /**
+     * Set the update flag to true
+     */
     fun setFlagUpdate(packageApp: PackageApp) {
         query.updateFlagUpdateStatus(true, packageApp.id())
     }
 
+    /**
+     * Set the update flag to false
+     */
     fun resetFlagUpdate(packageApp: PackageApp) {
         query.updateFlagUpdateStatus(false, packageApp.id())
     }

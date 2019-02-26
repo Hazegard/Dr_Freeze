@@ -88,17 +88,28 @@ class TrackedPackageAdapter private constructor(
         notifyDataSetChanged()
     }
 
+    /**
+     * Remove the item from the list and update the view
+     * @param position THe position of the item to remove
+     */
     fun removeAt(position: Int) {
         managedPackage.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, managedPackage.size)
     }
 
+    /**
+     * Update an item
+     * @param position The position to update
+     */
     fun updateItem(position: Int) {
         val packagePosition = position + 1
         notifyItemChanged(packagePosition)
     }
 
+    /**
+     * Update the view to show the header if needed
+     */
     fun updateHeader() {
         isUpdateModeEnabled = batchUpdate.isUpdateModeEnabled()
         if (isUpdateModeEnabled) {
