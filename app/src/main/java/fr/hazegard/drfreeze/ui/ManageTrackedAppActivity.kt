@@ -1,14 +1,17 @@
 package fr.hazegard.drfreeze.ui
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
@@ -22,6 +25,10 @@ import javax.inject.Inject
 
 
 class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnClick {
+    override fun onClickStopBatchUpdate() {
+        disableUpdateMode()
+    }
+
     override fun onUnfreezeClick(position: Int) {
         GlobalScope.launch {
             packageUtils.enablePackage(trackedPackageAdapter.managedPackage[position])
@@ -79,6 +86,12 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     @Inject
     lateinit var preferencesHelper: PreferencesHelper
 
+    @Inject
+    lateinit var batchUpdate: BatchUpdate
+    private lateinit var menu: Menu
+
+    private val stopBatchUpdateReceiver: StopBatchUpdateReceiver = StopBatchUpdateReceiver()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FreezeApplication.appComponent.inject(this)
@@ -107,11 +120,22 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     private fun initListView() {
         GlobalScope.launch {
             val listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
-            val layout = GridLayoutManager(this@ManageTrackedAppActivity, computeSpan())
             trackedPackageAdapter = trackedPackageAdapterFactory.getTrackedPackageAdapter(
                     this@ManageTrackedAppActivity,
                     this@ManageTrackedAppActivity,
                     listTrackedApp)
+            val rows = computeSpan()
+            val layout = GridLayoutManager(this@ManageTrackedAppActivity, rows).apply {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return when (trackedPackageAdapter.getItemViewType(position)) {
+                            TrackedPackageAdapter.HEADER -> rows
+                            TrackedPackageAdapter.ITEM -> 1
+                            else -> 1
+                        }
+                    }
+                }
+            }
 
             runOnUiThread {
                 with(managed_app_list) {
@@ -123,6 +147,9 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         }
     }
 
+    /**
+     * Return the number of rows the current screen width can show
+     */
     private fun computeSpan(): Int {
         val displayMetrics = DisplayMetrics()
         this.windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -147,6 +174,12 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.tracked_app_menu, menu)
         menuInflater.inflate(R.menu.main, menu)
+        this.menu = menu
+        if (batchUpdate.isUpdateModeEnabled()) {
+            showUpdateModeEnabled()
+        } else {
+            showUpdateModeDisabled()
+        }
         return true
     }
 
@@ -160,6 +193,14 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
             R.id.menu_list_apps -> {
                 val listAppActivityIntent = ListPackagesActivity.newIntent(this)
                 startActivityForResult(listAppActivityIntent, ListPackagesActivity.UPDATE_TRACKED_APPS_CODE)
+                true
+            }
+            R.id.menu_enable_update_mode -> {
+                enableUpdateMode()
+                true
+            }
+            R.id.menu_disable_update_mode -> {
+                disableUpdateMode()
                 true
             }
             android.R.id.home -> {
@@ -188,6 +229,19 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onStart() {
+        super.onStart()
+        val filter = IntentFilter().apply {
+            addAction(ACTION_STOP_BATCH_UPDATE)
+        }
+        LocalBroadcastManager.getInstance(this).registerReceiver(stopBatchUpdateReceiver, filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(stopBatchUpdateReceiver)
+    }
+
     /**
      * Get a list of tracked packages, sorted by application name
      * @return THe list of tracked packages
@@ -196,9 +250,57 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         return GlobalScope.async { appsManager.getTrackedPackages() }
     }
 
+    /**
+     * Enable the batch mode
+     */
+    private fun enableUpdateMode() {
+        showUpdateModeEnabled()
+        batchUpdate.enableUpdateMode()
+        trackedPackageAdapter.updateHeader()
+    }
+
+    /**
+     * Update the menu to show that the update mode is enabled
+     */
+    private fun showUpdateModeEnabled() {
+        this.menu.findItem(R.id.menu_enable_update_mode).isVisible = false
+        this.menu.findItem(R.id.menu_disable_update_mode).isVisible = true
+
+    }
+
+    /**
+     * Update the menu to show that the update mode is disabled
+     */
+    private fun showUpdateModeDisabled() {
+        this.menu.findItem(R.id.menu_enable_update_mode).isVisible = true
+        this.menu.findItem(R.id.menu_disable_update_mode).isVisible = false
+    }
+
+    /**
+     * Disable the batch mode
+     */
+    private fun disableUpdateMode() {
+        showUpdateModeDisabled()
+        batchUpdate.disableUpdateMode()
+        trackedPackageAdapter.updateHeader()
+    }
+
     companion object {
+        const val ACTION_STOP_BATCH_UPDATE = "fr.hazegard.dr_freeze.ACTION_STOP_BATCH_UPDATE"
         fun newIntent(context: Context): Intent {
             return Intent(context, ManageTrackedAppActivity::class.java)
+        }
+    }
+
+    /**
+     * Receiver used to update the activity when the notification allowing to stop the update mode
+     * is clicked
+     */
+    inner class StopBatchUpdateReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == ACTION_STOP_BATCH_UPDATE) {
+                disableUpdateMode()
+            }
         }
     }
 }

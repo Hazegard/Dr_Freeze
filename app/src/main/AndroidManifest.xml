@@ -25,6 +25,7 @@
         <activity android:name=".ui.ListPackagesActivity" />
 
         <service android:name=".NotificationActionService" />
+        <service android:name=".StopBatchUpdateService" />
 
         <receiver android:name=".OnBootService">
             <intent-filter>

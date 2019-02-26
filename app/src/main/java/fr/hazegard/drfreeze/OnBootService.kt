@@ -22,6 +22,10 @@ class OnBootService : BroadcastReceiver() {
     @Inject
     lateinit var notificationManager: NotificationManager
 
+    /**
+     * Display notifications for each application tracked and enabled on boot
+     * if the user enables the setting
+     */
     override fun onReceive(context: Context, intent: Intent?) {
         AndroidInjection.inject(this, context)
         if (Intent.ACTION_BOOT_COMPLETED == intent?.action

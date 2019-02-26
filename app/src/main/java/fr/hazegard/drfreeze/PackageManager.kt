@@ -50,8 +50,11 @@ class PackageManager @Inject constructor(
         val doKeepSystemApps = preferencesHelper.isSystemAppsEnabled()
         val showOnlyLaunchApps = preferencesHelper.isOnlyLauncherApp()
         return getAllPackages()
-                .filter { doKeepSystemApps || it.isSystemApp() }
-                .filter { !showOnlyLaunchApps || pm.isLaunchableApp(Pkg(it.packageName)) }
+                .filter {
+                    (doKeepSystemApps || it.isSystemApp())
+                            && (!showOnlyLaunchApps || pm.isLaunchableApp(Pkg(it.packageName)))
+                            || !it.enabled
+                }
                 .map {
                     val pkg = Pkg(it.packageName)
                     return@map packageUtils.safeCreatePackageApp(pkg)
@@ -88,6 +91,19 @@ class PackageManager @Inject constructor(
         val installedApps: List<Pkg> = getInstalledPackages().map { Pkg(it.packageName) }
         return trackedApplications.filter {
             !disabledApps.contains(it.pkg) && !installedApps.contains(it.pkg)
+        }
+    }
+
+    /**
+     * Get a list of enabled and tracked packages
+     * @return The list of enabled and tracked packages
+     */
+    fun getDisabledInstalledAndTracked(): List<PackageApp> {
+        val trackedApplications: List<PackageApp> = dbWrapper.selectPackagesToNotify()
+        val disabledApps: List<Pkg> = getDisabledPackages()
+        val installedApps: List<Pkg> = getInstalledPackages().map { Pkg(it.packageName) }
+        return trackedApplications.filter {
+            disabledApps.contains(it.pkg) // && installedApps.contains(it.pkg)
         }
     }
 

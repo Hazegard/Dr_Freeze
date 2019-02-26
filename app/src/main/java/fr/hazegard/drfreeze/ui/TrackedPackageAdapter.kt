@@ -7,14 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import fr.hazegard.drfreeze.ImageManager
-import fr.hazegard.drfreeze.PackageUtils
-import fr.hazegard.drfreeze.PreferencesHelper
-import fr.hazegard.drfreeze.R
+import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.row_manage_apps.view.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.properties.Delegates
 
 /**
  * The adapter used to display tracked packages
@@ -22,27 +20,62 @@ import javax.inject.Singleton
 class TrackedPackageAdapter private constructor(
         val onClick: OnClick,
         private val packageUtils: PackageUtils,
+        private val batchUpdate: BatchUpdate,
         private val imageManager: ImageManager,
         private val preferencesHelper: PreferencesHelper,
         private val c: Context,
         var managedPackage: MutableList<PackageApp>)
-    : RecyclerView.Adapter<TrackedPackageAdapter.ManagedAppHolder>() {
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var isNotificationsDisabled = preferencesHelper.isNotificationDisabled()
-
-    override fun onBindViewHolder(holder: ManagedAppHolder, position: Int) {
-        val appName = managedPackage[position]
-        holder.setContent(appName, position)
+    private var isUpdateModeEnabled by Delegates.observable(batchUpdate.isUpdateModeEnabled()) { _, _, newValue: Boolean ->
+        headerOffset = if (newValue) {
+            1
+        } else {
+            0
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ManagedAppHolder {
-        val itemView: View = LayoutInflater.from(parent.context)
-                .inflate(R.layout.row_manage_apps, parent, false)
-        return ManagedAppHolder(itemView)
+    private var headerOffset: Int = if (isUpdateModeEnabled) {
+        1
+    } else {
+        0
+    }
+    private var isNotificationsDisabled = preferencesHelper.isNotificationDisabled()
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is HeaderHolder -> {
+                holder.setHeader()
+            }
+            is ManagedAppHolder -> {
+                val appName = managedPackage[position - headerOffset]
+                holder.setContent(appName, position - headerOffset)
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == ITEM) {
+            val itemView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.row_manage_apps, parent, false)
+            ManagedAppHolder(itemView)
+        } else {
+            val itemView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.row_update_mode, parent, false)
+            HeaderHolder(itemView)
+        }
     }
 
     override fun getItemCount(): Int {
-        return managedPackage.size
+        return managedPackage.size + headerOffset
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0 && isUpdateModeEnabled) {
+            HEADER
+        } else {
+            ITEM
+        }
     }
 
     /**
@@ -55,14 +88,49 @@ class TrackedPackageAdapter private constructor(
         notifyDataSetChanged()
     }
 
+    /**
+     * Remove the item from the list and update the view
+     * @param position THe position of the item to remove
+     */
     fun removeAt(position: Int) {
         managedPackage.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, managedPackage.size)
     }
 
+    /**
+     * Update an item
+     * @param position The position to update
+     */
     fun updateItem(position: Int) {
-        notifyItemChanged(position)
+        val packagePosition = position + 1
+        notifyItemChanged(packagePosition)
+    }
+
+    /**
+     * Update the view to show the header if needed
+     */
+    fun updateHeader() {
+        isUpdateModeEnabled = batchUpdate.isUpdateModeEnabled()
+        if (isUpdateModeEnabled) {
+            notifyItemInserted(0)
+        } else {
+            notifyItemRemoved(0)
+        }
+    }
+
+    inner class HeaderHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+        fun setHeader() {
+            with(view) {
+                setOnClickListener {
+                    onClick.onClickStopBatchUpdate()
+                }
+                setOnLongClickListener {
+                    Toast.makeText(c, "Stop batch Update", Toast.LENGTH_LONG).show()
+                    return@setOnLongClickListener true
+                }
+            }
+        }
     }
 
     inner class ManagedAppHolder(private val view: View)
@@ -168,9 +236,13 @@ class TrackedPackageAdapter private constructor(
     }
 
     companion object {
+        const val ITEM = 1
+        const val HEADER = 0
+
         @Singleton
         class Factory @Inject constructor(
                 private val packageUtils: PackageUtils,
+                private val batchUpdate: BatchUpdate,
                 private val preferencesHelper: PreferencesHelper,
                 private val imageManager: ImageManager) {
 
@@ -182,6 +254,7 @@ class TrackedPackageAdapter private constructor(
                 return TrackedPackageAdapter(
                         OnClick,
                         packageUtils,
+                        batchUpdate,
                         imageManager,
                         preferencesHelper,
                         context,
@@ -198,5 +271,6 @@ class TrackedPackageAdapter private constructor(
         fun onUntrackClick(position: Int)
         fun onNotificationSwitchClick(position: Int, newState: Boolean)
         fun onClickStartApplication(position: Int)
+        fun onClickStopBatchUpdate()
     }
 }

@@ -1,10 +1,12 @@
+import java.lang.Boolean;
 import kotlin.collections.List;
 
 CREATE TABLE packageAppTable (
     id INTEGER NOT NULL PRIMARY KEY,
     package_name TEXT NOT NULL,
     application_name TEXT NOT NULL,
-    doNotify INTEGER AS Boolean NOT NULL DEFAULT 1
+    doNotify INTEGER AS Boolean NOT NULL DEFAULT 1,
+    flag_update INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
 CREATE INDEX packageApp_pkgName ON packageAppTable(package_name);
@@ -30,3 +32,9 @@ UPDATE packageAppTable SET doNotify=? WHERE id = ?;
 
 selectAllWithNotificationEnabled:
 SELECT * FROM packageAppTable WHERE doNotify = 1 ORDER BY application_name COLLATE NOCASE ASC;
+
+updateFlagUpdateStatus:
+UPDATE packageAppTable SET flag_update = ? WHERE id = ?;
+
+selectFlaggedUpdate:
+SELECT * FROM packageAppTable WHERE flag_update = 1;

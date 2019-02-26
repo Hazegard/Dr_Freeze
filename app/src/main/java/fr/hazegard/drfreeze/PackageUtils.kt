@@ -37,6 +37,7 @@ class PackageUtils @Inject constructor(
      * Enable the package
      * @param packageApp The package to enable
      */
+
     fun enablePackage(packageApp: PackageApp, doNotify: Boolean = true): String {
         if (doNotify) {
             notificationManager.sendNotification(packageApp)
