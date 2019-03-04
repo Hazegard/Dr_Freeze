@@ -103,7 +103,7 @@ class TrackedPackageAdapter private constructor(
      * @param position The position to update
      */
     fun updateItem(position: Int) {
-        val packagePosition = position + 1
+        val packagePosition = position + headerOffset
         notifyItemChanged(packagePosition)
     }
 
