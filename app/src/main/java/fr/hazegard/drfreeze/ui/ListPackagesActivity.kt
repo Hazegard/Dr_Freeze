@@ -19,10 +19,10 @@ import fr.hazegard.drfreeze.extensions.onAnimationEnd
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
 import kotlinx.android.synthetic.main.activity_list_packages.*
-import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -111,7 +111,7 @@ class ListPackagesActivity : AppCompatActivity() {
         if (requestCode == SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE && resultCode == Activity.RESULT_OK
                 && data?.getBooleanExtra(SettingsActivity.UPDATE_FILTER, false) == true) {
             GlobalScope.launch {
-                listPackage = getPackagesAsync().await()
+                listPackage = getPackagesAsync()
                 runOnUiThread { packageAdapter.updateList(listPackage) }
             }
         }
@@ -133,12 +133,11 @@ class ListPackagesActivity : AppCompatActivity() {
             with(packageAdapter) {
                 packageManager.updateTrackedPackages(packagesToAdd.values.toList(), packagesToRemove.values.toList())
             }
-
         }
     }
 
-    private fun getPackagesAsync(): Deferred<List<PackageApp>> {
-        return GlobalScope.async {
+    private suspend fun getPackagesAsync(): List<PackageApp> {
+        return withContext(Dispatchers.Default) {
             packageManager.getPackages()
         }
     }
@@ -149,21 +148,19 @@ class ListPackagesActivity : AppCompatActivity() {
      */
     private fun initListView(savedInstanceState: Bundle?) {
         GlobalScope.launch {
-            listPackage = getPackagesAsync().await()
+            listPackage = getPackagesAsync()
             val trackedPackages: MutableMap<Pkg, PackageApp> = packageManager.getTrackedPackagesAsMap().toMutableMap()
             val layout: RecyclerView.LayoutManager = LinearLayoutManager(
                     this@ListPackagesActivity, RecyclerView.VERTICAL, false)
             var doEdit = false
-            savedInstanceState?.let {
-                doEdit = it.getBoolean(STATE_IS_EDIT)
-                val mapSavedAppToAdd: MutableMap<Pkg, PackageApp>? = it.getStringArray(STATE_APP_TO_ADD)?.fold(mutableMapOf()) { acc, curr ->
-                    acc[Pkg(curr)] = packageUtils.safeCreatePackageApp(Pkg(curr))
-                    return@fold acc
-                }
-                val mapSavedAppToRemove: MutableMap<Pkg, PackageApp>? = it.getStringArray(STATE_APP_TO_REMOVE)?.fold(mutableMapOf()) { acc, curr ->
-                    acc[Pkg(curr)] = packageUtils.safeCreatePackageApp(Pkg(curr))
-                    return@fold acc
-                }
+            savedInstanceState?.let { bundle ->
+                doEdit = bundle.getBoolean(STATE_IS_EDIT)
+                val mapSavedAppToAdd: MutableMap<Pkg, PackageApp>? = bundle.getStringArray(STATE_APP_TO_ADD)
+                        ?.map { Pkg(it) }
+                        ?.associateByTo(mutableMapOf(), { it }, { packageUtils.safeCreatePackageApp(it) })
+                val mapSavedAppToRemove: MutableMap<Pkg, PackageApp>? = bundle.getStringArray(STATE_APP_TO_REMOVE)
+                        ?.map { Pkg(it) }
+                        ?.associateByTo(mutableMapOf(), { it }, { packageUtils.safeCreatePackageApp(it) })
                 mapSavedAppToAdd?.let { packages ->
                     packageAdapterFactory.addPackagesToAdd(packages)
                     trackedPackages.putAll(packages)

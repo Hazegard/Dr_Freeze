@@ -17,10 +17,10 @@ import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
 import fr.hazegard.drfreeze.model.PackageApp
 import kotlinx.android.synthetic.main.activity_manage_tracked_app.*
-import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -119,7 +119,7 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
      */
     private fun initListView() {
         GlobalScope.launch {
-            val listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
+            val listTrackedApp = getTrackedPackagesAsync().toMutableList()
             trackedPackageAdapter = trackedPackageAdapterFactory.getTrackedPackageAdapter(
                     this@ManageTrackedAppActivity,
                     this@ManageTrackedAppActivity,
@@ -219,7 +219,7 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
                         || (requestCode == ListPackagesActivity.UPDATE_TRACKED_APPS_CODE && data?.getBooleanExtra(ListPackagesActivity.RESULT, false) == true)
                         )) {
             GlobalScope.launch {
-                val listTrackedApp = getTrackedPackagesAsync().await().toMutableList()
+                val listTrackedApp = getTrackedPackagesAsync().toMutableList()
                 runOnUiThread {
                     trackedPackageAdapter.updateList(listTrackedApp)
                     updateView()
@@ -246,8 +246,10 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
      * Get a list of tracked packages, sorted by application name
      * @return THe list of tracked packages
      */
-    private fun getTrackedPackagesAsync(): Deferred<List<PackageApp>> {
-        return GlobalScope.async { appsManager.getTrackedPackages() }
+    private suspend fun getTrackedPackagesAsync(): List<PackageApp> {
+        return withContext(Dispatchers.Default) {
+            appsManager.getTrackedPackages()
+        }
     }
 
     /**

@@ -66,11 +66,8 @@ class PackageManager @Inject constructor(
      * Get a set of enabled packages
      * @return The set of enabled packages
      */
-    fun getTrackedPackagesAsMap(): MutableMap<Pkg, PackageApp> {
-        return getTrackedPackages().fold(mutableMapOf()) { acc, curr ->
-            acc[curr.pkg] = curr
-            return@fold acc
-        }
+    fun getTrackedPackagesAsMap(): Map<Pkg, PackageApp> {
+        return getTrackedPackages().associateBy({ it.pkg }, { it })
     }
 
     /**
