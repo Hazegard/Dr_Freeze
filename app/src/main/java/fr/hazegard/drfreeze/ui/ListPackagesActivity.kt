@@ -84,8 +84,8 @@ class ListPackagesActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.packageList_validate -> {
                 validateChanges()
             }
@@ -196,14 +196,14 @@ class ListPackagesActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putBoolean(STATE_IS_EDIT, isEdit)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(STATE_IS_EDIT, isEdit)
         if (isEdit) {
             if (packageAdapter.packagesToAdd.isNotEmpty()) {
-                outState?.putStringArray(STATE_APP_TO_ADD, packageAdapter.packagesToAdd.keys.map { it.s }.toTypedArray())
+                outState.putStringArray(STATE_APP_TO_ADD, packageAdapter.packagesToAdd.keys.map { it.s }.toTypedArray())
             }
             if (packageAdapter.packagesToRemove.isNotEmpty()) {
-                outState?.putStringArray(STATE_APP_TO_REMOVE, packageAdapter.packagesToRemove.keys.map { it.s }.toTypedArray())
+                outState.putStringArray(STATE_APP_TO_REMOVE, packageAdapter.packagesToRemove.keys.map { it.s }.toTypedArray())
             }
         }
         super.onSaveInstanceState(outState)

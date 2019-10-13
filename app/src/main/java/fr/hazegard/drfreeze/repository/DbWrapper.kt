@@ -3,7 +3,7 @@ package fr.hazegard.drfreeze.repository
 import android.content.Context
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
-import fr.hazegard.drfreeze.FreezeDatabase
+import fr.hazegard.drfreeze.db.FreezeDatabase
 import fr.hazegard.drfreeze.model.PackageApp
 import fr.hazegard.drfreeze.model.Pkg
 import javax.inject.Inject

@@ -1,33 +1,34 @@
 package fr.hazegard.drfreeze
 
 import android.app.Application
-import android.app.Service
-import android.content.BroadcastReceiver
 import androidx.appcompat.app.AppCompatDelegate
 import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasBroadcastReceiverInjector
-import dagger.android.HasServiceInjector
+import dagger.android.HasAndroidInjector
 import fr.hazegard.drfreeze.injection.*
 import javax.inject.Inject
 
-class FreezeApplication : Application(),
-        HasBroadcastReceiverInjector,
-        HasServiceInjector {
+class FreezeApplication : Application(), HasAndroidInjector {
+//        HasBroadcastReceiverInjector,
+//        HasServiceInjector {
 
-    @Inject
-    lateinit var intentServiceInjector: DispatchingAndroidInjector<Service>
-
-    override fun serviceInjector(): AndroidInjector<Service> {
-        return intentServiceInjector
+    lateinit var androidInjector: AndroidInjector<Any>
+    override fun androidInjector(): AndroidInjector<Any>? {
+        return androidInjector
     }
 
-    @Inject
-    lateinit var broadcastReceiverInjector: DispatchingAndroidInjector<BroadcastReceiver>
-
-    override fun broadcastReceiverInjector(): AndroidInjector<BroadcastReceiver> {
-        return broadcastReceiverInjector
-    }
+//    @Inject
+//    lateinit var intentServiceInjector: DispatchingAndroidInjector<Service>
+//
+//    override fun serviceInjector(): AndroidInjector<Service> {
+//        return intentServiceInjector
+//    }
+//
+//    @Inject
+//    lateinit var broadcastReceiverInjector: DispatchingAndroidInjector<BroadcastReceiver>
+//
+//    override fun broadcastReceiverInjector(): AndroidInjector<BroadcastReceiver> {
+//        return broadcastReceiverInjector
+//    }
 
     @Inject
     lateinit var preferencesHelper: PreferencesHelper

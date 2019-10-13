@@ -183,8 +183,8 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             R.id.menu_settings -> {
                 val settingActivityIntent = SettingsActivity.newIntent(this)
                 startActivityForResult(settingActivityIntent, SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE)

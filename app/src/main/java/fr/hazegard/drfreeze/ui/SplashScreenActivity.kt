@@ -38,8 +38,7 @@ class SplashScreenActivity : AppCompatActivity() {
         }
         FreezeApplication.appComponent.inject(this)
         GlobalScope.launch {
-            val nextActivity = checkSu()
-            val nextIntent: Intent = when (nextActivity) {
+            val nextIntent: Intent = when (checkSu()) {
                 RootState.ACCESS_DENIED -> {
                     NotRootActivity.newIntent(this@SplashScreenActivity)
                 }

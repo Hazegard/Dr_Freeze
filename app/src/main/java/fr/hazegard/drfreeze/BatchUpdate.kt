@@ -67,12 +67,12 @@ class BatchUpdate @Inject constructor(
         val pendingIntent: PendingIntent = PendingIntent.getService(
                 context, System.currentTimeMillis().toInt(), onClickIntent, PendingIntent.FLAG_ONE_SHOT)
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = BATCH_UPDATE_CHANNEL_ID
         val name = context.getString(R.string.channel_name)
         val descriptionChannel = context.getString(R.string.channel_description)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val importance = android.app.NotificationManager.IMPORTANCE_LOW
+            val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel(channelId, name, importance).apply {
                 description = descriptionChannel
                 enableLights(false)

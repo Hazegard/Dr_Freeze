@@ -112,7 +112,7 @@ class PackageUtils @Inject constructor(
                         .setShortLabel(packageApp.appName)
                         .setIntent(intent)
                         .build()
-                shortcutManager.requestPinShortcut(pinShortcutInfo, null)
+                shortcutManager?.requestPinShortcut(pinShortcutInfo, null)
             }
         } else {
             val shortcutIntent = ShortcutDispatcherActivity.newIntent(context, packageApp.pkg)
