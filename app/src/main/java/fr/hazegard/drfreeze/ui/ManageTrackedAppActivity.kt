@@ -256,8 +256,12 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
      */
     private fun enableUpdateMode() {
         showUpdateModeEnabled()
-        batchUpdate.enableUpdateMode()
-        trackedPackageAdapter.updateHeader()
+        GlobalScope.launch {
+            batchUpdate.enableUpdateMode()
+            runOnUiThread{
+                trackedPackageAdapter.updateHeader()
+            }
+        }
     }
 
     /**
@@ -282,8 +286,12 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
      */
     private fun disableUpdateMode() {
         showUpdateModeDisabled()
-        batchUpdate.disableUpdateMode()
-        trackedPackageAdapter.updateHeader()
+        GlobalScope.launch {
+            batchUpdate.disableUpdateMode()
+            runOnUiThread {
+                trackedPackageAdapter.updateHeader()
+            }
+        }
     }
 
     companion object {
