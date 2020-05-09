@@ -11,7 +11,6 @@ import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import fr.hazegard.drfreeze.*
 import fr.hazegard.drfreeze.extensions.onAnimationEnd
@@ -234,12 +233,12 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         val filter = IntentFilter().apply {
             addAction(ACTION_STOP_BATCH_UPDATE)
         }
-        LocalBroadcastManager.getInstance(this).registerReceiver(stopBatchUpdateReceiver, filter)
+        registerReceiver(stopBatchUpdateReceiver, filter)
     }
 
     override fun onStop() {
         super.onStop()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(stopBatchUpdateReceiver)
+        unregisterReceiver(stopBatchUpdateReceiver)
     }
 
     /**
