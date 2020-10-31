@@ -9,7 +9,11 @@ import fr.hazegard.drfreeze.model.Pkg
 import javax.inject.Inject
 
 class DbWrapper @Inject constructor(context: Context) {
-    private val driver: SqlDriver = AndroidSqliteDriver(FreezeDatabase.Schema, context, "query.db")
+    private val driver: SqlDriver = AndroidSqliteDriver(
+            FreezeDatabase.Schema,
+            context,
+            "query.db"
+    )
 
     private val database = FreezeDatabase(driver)
 

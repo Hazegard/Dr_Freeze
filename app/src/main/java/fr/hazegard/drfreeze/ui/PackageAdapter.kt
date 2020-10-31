@@ -23,8 +23,8 @@ class PackageAdapter private constructor(
         var trackedPackages: MutableMap<Pkg, PackageApp>,
         val packagesToAdd: MutableMap<Pkg, PackageApp>,
         val packagesToRemove: MutableMap<Pkg, PackageApp>,
-        private val onUpdateList: () -> Unit)
-    : RecyclerView.Adapter<PackageAdapter.PackageHolder>() {
+        private val onUpdateList: () -> Unit
+) : RecyclerView.Adapter<PackageAdapter.PackageHolder>() {
 
     override fun onBindViewHolder(holder: PackageHolder, position: Int) {
         val pkg: PackageApp = packages[position]
@@ -57,38 +57,39 @@ class PackageAdapter private constructor(
         fun setContent(packageApp: PackageApp) {
             with(view) {
                 row_package.setOnClickListener {
-                    if (isEdit&& packageApp.pkg.s != c.packageName) {
+                    if (isEdit && packageApp.pkg.s != c.packageName) {
                         package_checkbox.isChecked = !package_checkbox.isChecked
-                    }
-                }
-                with(package_checkbox) {
-                    setOnCheckedChangeListener(null)
-                    isChecked = trackedPackages.contains(packageApp.pkg)
-                    isEnabled = isEdit && packageApp.pkg.s != c.packageName
-                    setOnCheckedChangeListener { _, isChecked ->
-                        if (isChecked) {
-                            trackedPackages[packageApp.pkg] = packageApp
-                            packagesToAdd[packageApp.pkg] = packageApp
-                            packagesToRemove.remove(packageApp.pkg)
-                        } else {
-                            trackedPackages.remove(packageApp.pkg)
-                            packagesToAdd.remove(packageApp.pkg)
-                            packagesToRemove[packageApp.pkg] = packageApp
-                        }
-                        onUpdateList.invoke()
                     }
                 }
                 packageNameTv.text = packageApp.pkg.s
                 packageAppNameTv.text = packageApp.appName
                 package_image.setImageDrawable(imageManager.getImage(packageApp))
             }
+            with(view.package_checkbox) {
+                setOnCheckedChangeListener(null)
+                isChecked = trackedPackages.contains(packageApp.pkg)
+                isEnabled = isEdit && packageApp.pkg.s != c.packageName
+                setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        trackedPackages[packageApp.pkg] = packageApp
+                        packagesToAdd[packageApp.pkg] = packageApp
+                        packagesToRemove.remove(packageApp.pkg)
+                    } else {
+                        trackedPackages.remove(packageApp.pkg)
+                        packagesToAdd.remove(packageApp.pkg)
+                        packagesToRemove[packageApp.pkg] = packageApp
+                    }
+                    onUpdateList.invoke()
+                }
+            }
         }
     }
 
     companion object {
-        class Factory @Inject constructor(
-                private val imageManager: ImageManager) {
+        class Factory @Inject constructor(private val imageManager: ImageManager) {
+
             private val packagesToAdd: MutableMap<Pkg, PackageApp> = mutableMapOf()
+
             fun addPackagesToAdd(packagesToAdd: MutableMap<Pkg, PackageApp>) {
                 this.packagesToAdd.putAll(packagesToAdd)
             }

@@ -65,7 +65,11 @@ class BatchUpdate @Inject constructor(
     private fun sendBatchNotification() {
         val onClickIntent = StopBatchUpdateService.newIntent(context)
         val pendingIntent: PendingIntent = PendingIntent.getService(
-                context, System.currentTimeMillis().toInt(), onClickIntent, PendingIntent.FLAG_ONE_SHOT)
+                context,
+                System.currentTimeMillis().toInt(),
+                onClickIntent,
+                PendingIntent.FLAG_ONE_SHOT
+        )
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = BATCH_UPDATE_CHANNEL_ID

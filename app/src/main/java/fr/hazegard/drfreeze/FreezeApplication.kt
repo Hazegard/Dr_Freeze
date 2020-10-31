@@ -8,27 +8,10 @@ import fr.hazegard.drfreeze.injection.*
 import javax.inject.Inject
 
 class FreezeApplication : Application(), HasAndroidInjector {
-//        HasBroadcastReceiverInjector,
-//        HasServiceInjector {
-
     lateinit var androidInjector: AndroidInjector<Any>
     override fun androidInjector(): AndroidInjector<Any>? {
         return androidInjector
     }
-
-//    @Inject
-//    lateinit var intentServiceInjector: DispatchingAndroidInjector<Service>
-//
-//    override fun serviceInjector(): AndroidInjector<Service> {
-//        return intentServiceInjector
-//    }
-//
-//    @Inject
-//    lateinit var broadcastReceiverInjector: DispatchingAndroidInjector<BroadcastReceiver>
-//
-//    override fun broadcastReceiverInjector(): AndroidInjector<BroadcastReceiver> {
-//        return broadcastReceiverInjector
-//    }
 
     @Inject
     lateinit var preferencesHelper: PreferencesHelper

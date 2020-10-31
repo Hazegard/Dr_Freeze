@@ -48,7 +48,8 @@ class SettingsActivity : AppCompatActivity() {
         val newNotificationSettings = preferencesHelper.isNotificationDisabled()
         val newFilterSystemApp = preferencesHelper.isSystemAppsEnabled()
 
-        val hasFiltersChanged = (newFilterSystemApp != prevFilterSystemApp) || (newFilterLauncherApp != prevFilterLauncherApp)
+        val hasFiltersChanged = (newFilterSystemApp != prevFilterSystemApp)
+                || (newFilterLauncherApp != prevFilterLauncherApp)
         val hasNotificationsChanged = newNotificationSettings != prevNotificationSettings
         result.putExtra(UPDATE_FILTER, hasFiltersChanged)
         result.putExtra(UPDATE_NOTIFICATIONS, hasNotificationsChanged)
@@ -69,7 +70,8 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_about -> {
-                LibsBuilder().withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                LibsBuilder()
+                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
                         .withActivityTitle(getString(R.string.about))
                         .withLicenseShown(true)
                         .withExcludedLibraries("AndroidIconics", "fastadapter")

@@ -19,5 +19,6 @@ fun Animatable.onAnimationEnd(callback: () -> Unit) {
                 override fun onAnimationEnd(drawable: Drawable?) {
                     handler.post { callback() }
                 }
-            })
+            }
+    )
 }

@@ -92,7 +92,10 @@ class PackageUtils @Inject constructor(
             ContextCompat.startActivity(context, launchIntent, null)
             notificationManager.sendNotification(pkg)
         } else {
-            Log.d("PackageApp", "Unable to start ${pkg.appName} (Launch intent fo package: ${pkg.pkg.s} is null)")
+            Log.d(
+                    "PackageApp",
+                    "Unable to start ${pkg.appName} (Launch intent fo package: ${pkg.pkg.s} is null)"
+            )
         }
     }
 
@@ -117,7 +120,12 @@ class PackageUtils @Inject constructor(
         } else {
             val shortcutIntent = ShortcutDispatcherActivity.newIntent(context, packageApp.pkg)
             shortcutIntent.action = Intent.ACTION_MAIN
-            val icon = Bitmap.createScaledBitmap(imageManager.getCachedImage(packageApp).toBitmap(), 128, 128, true)
+            val icon = Bitmap.createScaledBitmap(
+                    imageManager.getCachedImage(packageApp).toBitmap(),
+                    128,
+                    128,
+                    true
+            )
             @Suppress("DEPRECATION") val addIntent = Intent().apply {
                 putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
                 putExtra(Intent.EXTRA_SHORTCUT_NAME, packageApp.appName)

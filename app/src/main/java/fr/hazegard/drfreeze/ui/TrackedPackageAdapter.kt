@@ -147,13 +147,14 @@ class TrackedPackageAdapter private constructor(
                 manage_app_name.text = packageApp.appName
 
                 with(manage_card_view) {
-                    setBackgroundColor(ContextCompat.getColor(c, if (!isPackageInstalled) {
+                    val color = if (!isPackageInstalled) {
                         R.color.backgroundDarker
                     } else if (!isPkgEnabled) {
                         R.color.colorBackgroundBlueLight
                     } else {
                         R.color.background
-                    }))
+                    }
+                    setBackgroundColor(ContextCompat.getColor(c, color))
                 }
 
                 with(manage_add_shortcut) {
@@ -161,7 +162,11 @@ class TrackedPackageAdapter private constructor(
                         onClick.onAddShortCutCLick(position)
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, c.getString(R.string.button_add_shortcut, packageApp.appName), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                                context,
+                                c.getString(R.string.button_add_shortcut, packageApp.appName),
+                                Toast.LENGTH_SHORT
+                        ).show()
                         return@setOnLongClickListener true
                     }
                 }
@@ -202,11 +207,19 @@ class TrackedPackageAdapter private constructor(
                         if (isPackageInstalled) {
                             onClick.onClickStartApplication(position)
                         } else {
-                            Toast.makeText(context, context.getString(R.string.application_not_found), Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                    context,
+                                    context.getString(R.string.application_not_found),
+                                    Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, context.getString(R.string.button_start_app, packageApp.appName), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                                context,
+                                context.getString(R.string.button_start_app, packageApp.appName),
+                                Toast.LENGTH_SHORT
+                        ).show()
                         return@setOnLongClickListener true
                     }
                 }
@@ -227,7 +240,11 @@ class TrackedPackageAdapter private constructor(
                         }
                     }
                     setOnLongClickListener {
-                        Toast.makeText(context, context.getString(R.string.switch_notification_status, packageApp.appName), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                                context,
+                                context.getString(R.string.switch_notification_status, packageApp.appName),
+                                Toast.LENGTH_LONG
+                        ).show()
                         return@setOnLongClickListener true
                     }
                 }

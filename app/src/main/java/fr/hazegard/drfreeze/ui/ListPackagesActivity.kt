@@ -38,7 +38,8 @@ class ListPackagesActivity : AppCompatActivity() {
     private var menu: Menu? = null
     private var sendDoUpdate = false
     private var listPackage: List<PackageApp> by Delegates.observable(
-            Collections.emptyList()) { _, _, newValue ->
+            Collections.emptyList()
+    ) { _, _, newValue ->
         runOnUiThread {
             main_view_animator.displayedChild = if (newValue.isEmpty()) {
                 1
@@ -108,8 +109,10 @@ class ListPackagesActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE && resultCode == Activity.RESULT_OK
-                && data?.getBooleanExtra(SettingsActivity.UPDATE_FILTER, false) == true) {
+        if (requestCode == SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE
+                && resultCode == Activity.RESULT_OK
+                && data?.getBooleanExtra(SettingsActivity.UPDATE_FILTER, false) == true
+        ) {
             GlobalScope.launch {
                 listPackage = getPackagesAsync()
                 runOnUiThread { packageAdapter.updateList(listPackage) }
@@ -121,7 +124,8 @@ class ListPackagesActivity : AppCompatActivity() {
      * Reset the checkbox to the previous saved state
      */
     private fun resetAdapterContent() {
-        val trackedPackages: MutableMap<Pkg, PackageApp> = packageManager.getTrackedPackagesAsMap().toMutableMap()
+        val trackedPackages: MutableMap<Pkg, PackageApp> = packageManager.getTrackedPackagesAsMap()
+                .toMutableMap()
         packageAdapter.trackedPackages = trackedPackages
     }
 
@@ -131,7 +135,10 @@ class ListPackagesActivity : AppCompatActivity() {
     private fun validateChanges() {
         GlobalScope.launch {
             with(packageAdapter) {
-                packageManager.updateTrackedPackages(packagesToAdd.values.toList(), packagesToRemove.values.toList())
+                packageManager.updateTrackedPackages(
+                        packagesToAdd.values.toList(),
+                        packagesToRemove.values.toList()
+                )
             }
         }
     }
@@ -149,18 +156,28 @@ class ListPackagesActivity : AppCompatActivity() {
     private fun initListView(savedInstanceState: Bundle?) {
         GlobalScope.launch {
             listPackage = getPackagesAsync()
-            val trackedPackages: MutableMap<Pkg, PackageApp> = packageManager.getTrackedPackagesAsMap().toMutableMap()
+            val trackedPackages: MutableMap<Pkg, PackageApp> = packageManager.getTrackedPackagesAsMap()
+                    .toMutableMap()
             val layout: RecyclerView.LayoutManager = LinearLayoutManager(
-                    this@ListPackagesActivity, RecyclerView.VERTICAL, false)
+                    this@ListPackagesActivity,
+                    RecyclerView.VERTICAL,
+                    false
+            )
             var doEdit = false
             savedInstanceState?.let { bundle ->
                 doEdit = bundle.getBoolean(STATE_IS_EDIT)
                 val mapSavedAppToAdd: MutableMap<Pkg, PackageApp>? = bundle.getStringArray(STATE_APP_TO_ADD)
                         ?.map { Pkg(it) }
-                        ?.associateByTo(mutableMapOf(), { it }, { packageUtils.safeCreatePackageApp(it) })
+                        ?.associateByTo(mutableMapOf(),
+                                { it },
+                                { packageUtils.safeCreatePackageApp(it) }
+                        )
                 val mapSavedAppToRemove: MutableMap<Pkg, PackageApp>? = bundle.getStringArray(STATE_APP_TO_REMOVE)
                         ?.map { Pkg(it) }
-                        ?.associateByTo(mutableMapOf(), { it }, { packageUtils.safeCreatePackageApp(it) })
+                        ?.associateByTo(mutableMapOf(),
+                                { it },
+                                { packageUtils.safeCreatePackageApp(it) }
+                        )
                 mapSavedAppToAdd?.let { packages ->
                     packageAdapterFactory.addPackagesToAdd(packages)
                     trackedPackages.putAll(packages)
@@ -200,10 +217,16 @@ class ListPackagesActivity : AppCompatActivity() {
         outState.putBoolean(STATE_IS_EDIT, isEdit)
         if (isEdit) {
             if (packageAdapter.packagesToAdd.isNotEmpty()) {
-                outState.putStringArray(STATE_APP_TO_ADD, packageAdapter.packagesToAdd.keys.map { it.s }.toTypedArray())
+                outState.putStringArray(
+                        STATE_APP_TO_ADD,
+                        packageAdapter.packagesToAdd.keys.map { it.s }.toTypedArray()
+                )
             }
             if (packageAdapter.packagesToRemove.isNotEmpty()) {
-                outState.putStringArray(STATE_APP_TO_REMOVE, packageAdapter.packagesToRemove.keys.map { it.s }.toTypedArray())
+                outState.putStringArray(
+                        STATE_APP_TO_REMOVE,
+                        packageAdapter.packagesToRemove.keys.map { it.s }.toTypedArray()
+                )
             }
         }
         super.onSaveInstanceState(outState)

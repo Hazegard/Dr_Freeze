@@ -19,51 +19,61 @@ class PreferencesHelper @Inject constructor(
      * @return whether the User choose to manage system apps
      */
     fun isSystemAppsEnabled(): Boolean {
-        return defaultSharedPreferences
-                .getBoolean(context.getString(R.string.preferences_show_system_apps), false)
+        return defaultSharedPreferences.getBoolean(
+                context.getString(R.string.preferences_show_system_apps),
+                false
+        )
     }
 
     /**
      * Get the preference on system apps listing
      * @return whether the User choose to manage system apps
      */
-    fun isOnlyLauncherApp(/*context: Context*/): Boolean {
-        return defaultSharedPreferences
-                .getBoolean(context.getString(R.string.preferences_show_only_launcher_apps), true)
+    fun isOnlyLauncherApp(): Boolean {
+        return defaultSharedPreferences.getBoolean(
+                context.getString(R.string.preferences_show_only_launcher_apps),
+                true
+        )
     }
 
     /**
      * Get the preference on boot notification
      * @return whether the user choose to enable notification on boot
      */
-    fun isBootNotificationDisabled(/*context: Context*/): Boolean {
-        return defaultSharedPreferences
-                .getBoolean(context.getString(R.string.preferences_disable_boot_notification), false)
+    fun isBootNotificationDisabled(): Boolean {
+        return defaultSharedPreferences.getBoolean(
+                context.getString(R.string.preferences_disable_boot_notification),
+                false
+        )
     }
 
     /**
      * Get the preference on notifications
      * @return whether the user choose to disable notifications
      */
-    fun isNotificationDisabled(/*context: Context*/): Boolean {
-        return defaultSharedPreferences
-                .getBoolean(context.getString(R.string.preferences_disable_notification), false)
+    fun isNotificationDisabled(): Boolean {
+        return defaultSharedPreferences.getBoolean(
+                context.getString(R.string.preferences_disable_notification),
+                false
+        )
     }
 
     /**
      * Get the preference on persistent notifications
      * @return whether the user choose to disable the persistence of notifications
      */
-    fun isNotificationPersistent(/*context: Context*/): Boolean {
-        return defaultSharedPreferences
-                .getBoolean(context.getString(R.string.preferences_disable_persistent_notification), true)
+    fun isNotificationPersistent(): Boolean {
+        return defaultSharedPreferences.getBoolean(
+                context.getString(R.string.preferences_disable_persistent_notification),
+                true
+        )
     }
 
     /**
      * Update the shared preferences to bypass the not rooted screen
      *
      */
-    fun setBypassRootNeeded(/*context: Context*/) {
+    fun setBypassRootNeeded() {
         defaultSharedPreferences
                 .edit()
                 .putBoolean(context.getString(R.string.preferences_bypass_root_needed), true)
@@ -74,8 +84,10 @@ class PreferencesHelper @Inject constructor(
      * Get the preference to whether show not rooted screen
      *
      */
-    fun doBypassRootNeeded(/*context: Context*/): Boolean {
-        return defaultSharedPreferences
-                .getBoolean(context.getString(R.string.preferences_bypass_root_needed), false)
+    fun doBypassRootNeeded(): Boolean {
+        return defaultSharedPreferences.getBoolean(
+                context.getString(R.string.preferences_bypass_root_needed),
+                false
+        )
     }
 }

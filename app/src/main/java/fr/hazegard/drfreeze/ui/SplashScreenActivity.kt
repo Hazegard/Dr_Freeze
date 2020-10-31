@@ -44,7 +44,11 @@ class SplashScreenActivity : AppCompatActivity() {
                 }
                 RootState.ACCESS_DENIED_BYPASS -> {
                     runOnUiThread {
-                        Toast.makeText(this@SplashScreenActivity, getString(R.string.no_root_warning), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                                this@SplashScreenActivity,
+                                getString(R.string.no_root_warning),
+                                Toast.LENGTH_LONG
+                        ).show()
                     }
                     ManageTrackedAppActivity.newIntent(this@SplashScreenActivity)
                 }

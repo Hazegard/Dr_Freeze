@@ -67,7 +67,10 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
 
     override fun onClickStartApplication(position: Int) {
         GlobalScope.launch {
-            packageUtils.start(trackedPackageAdapter.managedPackage[position], this@ManageTrackedAppActivity)
+            packageUtils.start(
+                    trackedPackageAdapter.managedPackage[position],
+                    this@ManageTrackedAppActivity
+            )
             this@ManageTrackedAppActivity.finishAffinity()
         }
     }
@@ -109,7 +112,10 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         setSupportActionBar(findViewById(R.id.toolbar))
         no_tracked_applications.setOnClickListener {
             val listAppActivityIntent = ListPackagesActivity.newIntent(this)
-            startActivityForResult(listAppActivityIntent, ListPackagesActivity.UPDATE_TRACKED_APPS_CODE)
+            startActivityForResult(
+                    listAppActivityIntent,
+                    ListPackagesActivity.UPDATE_TRACKED_APPS_CODE
+            )
         }
     }
 
@@ -122,9 +128,13 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
             trackedPackageAdapter = trackedPackageAdapterFactory.getTrackedPackageAdapter(
                     this@ManageTrackedAppActivity,
                     this@ManageTrackedAppActivity,
-                    listTrackedApp)
+                    listTrackedApp
+            )
             val rows = computeSpan()
-            val layout = GridLayoutManager(this@ManageTrackedAppActivity, rows).apply {
+            val layout = GridLayoutManager(
+                    this@ManageTrackedAppActivity,
+                    rows
+            ).apply {
                 spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
                         return when (trackedPackageAdapter.getItemViewType(position)) {
@@ -186,12 +196,18 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         return when (item.itemId) {
             R.id.menu_settings -> {
                 val settingActivityIntent = SettingsActivity.newIntent(this)
-                startActivityForResult(settingActivityIntent, SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE)
+                startActivityForResult(
+                        settingActivityIntent,
+                        SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE
+                )
                 true
             }
             R.id.menu_list_apps -> {
                 val listAppActivityIntent = ListPackagesActivity.newIntent(this)
-                startActivityForResult(listAppActivityIntent, ListPackagesActivity.UPDATE_TRACKED_APPS_CODE)
+                startActivityForResult(
+                        listAppActivityIntent,
+                        ListPackagesActivity.UPDATE_TRACKED_APPS_CODE
+                )
                 true
             }
             R.id.menu_enable_update_mode -> {
@@ -213,18 +229,32 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK
-                && ((requestCode == SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE && data?.getBooleanExtra(SettingsActivity.UPDATE_NOTIFICATIONS, false) == true)
-                        || (requestCode == ListPackagesActivity.UPDATE_TRACKED_APPS_CODE && data?.getBooleanExtra(ListPackagesActivity.RESULT, false) == true)
-                        )) {
-            GlobalScope.launch {
-                val listTrackedApp = getTrackedPackagesAsync().toMutableList()
-                runOnUiThread {
-                    trackedPackageAdapter.updateList(listTrackedApp)
-                    updateView()
+        fun checkCodeAndExtra(requestCode: Int, code: Int, data: Intent, extra: String): Boolean {
+            return requestCode == code && data.getBooleanExtra(extra, false)
+        }
+        data?.let {
+            val fromSettingsActivity = checkCodeAndExtra(
+                    requestCode,
+                    SettingsActivity.REQUEST_UPDATE_APP_LIST_CODE,
+                    it,
+                    SettingsActivity.UPDATE_NOTIFICATIONS
+            )
+            val fromListPackageActivity = checkCodeAndExtra(
+                    requestCode,
+                    ListPackagesActivity.UPDATE_TRACKED_APPS_CODE,
+                    it, ListPackagesActivity.RESULT
+            )
+            if (resultCode == Activity.RESULT_OK && (fromSettingsActivity || fromListPackageActivity)) {
+                GlobalScope.launch {
+                    val listTrackedApp = getTrackedPackagesAsync().toMutableList()
+                    runOnUiThread {
+                        trackedPackageAdapter.updateList(listTrackedApp)
+                        updateView()
+                    }
                 }
             }
         }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -258,7 +288,7 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
         showUpdateModeEnabled()
         GlobalScope.launch {
             batchUpdate.enableUpdateMode()
-            runOnUiThread{
+            runOnUiThread {
                 trackedPackageAdapter.updateHeader()
             }
         }
@@ -270,7 +300,6 @@ class ManageTrackedAppActivity : AppCompatActivity(), TrackedPackageAdapter.OnCl
     private fun showUpdateModeEnabled() {
         this.menu.findItem(R.id.menu_enable_update_mode).isVisible = false
         this.menu.findItem(R.id.menu_disable_update_mode).isVisible = true
-
     }
 
     /**

@@ -10,5 +10,7 @@ import fr.hazegard.drfreeze.model.Pkg
  */
 fun PackageManager.isLaunchableApp(pkg: Pkg): Boolean {
     return this.getLaunchIntentForPackage(pkg.s)
-            ?.categories?.contains(Intent.CATEGORY_LAUNCHER) ?: false
+            ?.categories
+            ?.contains(Intent.CATEGORY_LAUNCHER)
+            ?: false
 }

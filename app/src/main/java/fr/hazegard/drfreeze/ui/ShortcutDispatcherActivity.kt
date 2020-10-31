@@ -27,16 +27,22 @@ class ShortcutDispatcherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val packageName: String = intent?.extras?.getString(BUNDLE_PACKAGE_NAME) ?: ""
         if ("" == packageName) {
-            Toast.makeText(this, getString(R.string.application_not_found),
-                    Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                    this,
+                    getString(R.string.application_not_found),
+                    Toast.LENGTH_SHORT
+            ).show()
         } else {
             try {
                 val pkg = Pkg(packageName)
                 val targetPackage = PackageApp(pkg, packageUtils.getAppName(pkg))
                 packageUtils.start(targetPackage, this)
             } catch (e: android.content.pm.PackageManager.NameNotFoundException) {
-                Toast.makeText(this, getString(R.string.application_not_found),
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                        this,
+                        getString(R.string.application_not_found),
+                        Toast.LENGTH_SHORT
+                ).show()
             }
         }
         finish()

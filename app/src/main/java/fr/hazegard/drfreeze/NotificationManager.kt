@@ -17,9 +17,11 @@ import javax.inject.Inject
  * Created by Hazegard on 04/03/18.
  */
 
-class NotificationManager @Inject constructor(private val context: Context,
-                                              private val preferencesHelper: PreferencesHelper,
-                                              private val imageManager: ImageManager) {
+class NotificationManager @Inject constructor(
+        private val context: Context,
+        private val preferencesHelper: PreferencesHelper,
+        private val imageManager: ImageManager
+) {
 
     /**
      * Send multiple notifications displaying that the packages are currently running
@@ -62,7 +64,11 @@ class NotificationManager @Inject constructor(private val context: Context,
 
         val onClickIntent = NotificationActionService.newDisablePackageIntent(context, packageApp.pkg)
         val pendingIntent: PendingIntent = PendingIntent.getService(
-                context, System.currentTimeMillis().toInt(), onClickIntent, PendingIntent.FLAG_ONE_SHOT)
+                context,
+                System.currentTimeMillis().toInt(),
+                onClickIntent,
+                PendingIntent.FLAG_ONE_SHOT
+        )
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = NOTIFICATION_CHANNEL_ID
